@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const UserModel = require('../Model/User');
-const upload=require("../multer")
+const UserModel = require('../Model/User/User');
+const upload=require("../Multer/User/multer")
 const ErrorHandler = require('../Utils/ErrorHandler');
 const path = require('path');
 const fs = require('fs');
@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../Utils/sendMail');
 const CatchAsyncErrors = require('../Middleware/CatchAsyncErrors');
 const sendToken = require('../Utils/jwtToken');
+const ProductModel = require('../Model/Admin/AdminAddProduct');
 
 router.post('/create-user', upload.single('file'), async (req, res, next) => {
 
@@ -117,12 +118,27 @@ router.post('/login', CatchAsyncErrors(async (req, res, next) => {
         if (!isPasswordValid) {
             return next(new ErrorHandler("Invalid Credentials", 400));
         }
-        sendToken(user,201,res)
+        sendToken(user, 201, res)
 
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
-}))
+}));
+
+
+router.get('/featured', async (req, res, next) => {
+    try {
+        const products = await ProductModel.find({});
+        if (products) {
+        res.status(200).json(products);
+    }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+    
+
+})
+
 
 
 

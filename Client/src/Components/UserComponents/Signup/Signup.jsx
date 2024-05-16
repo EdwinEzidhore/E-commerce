@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from '../../Styles/Styles';
+import styles from '../../../Styles/Styles';
 import { Link, Navigate } from 'react-router-dom';
 import { RxAvatar } from "react-icons/rx";
 import axios from 'axios';

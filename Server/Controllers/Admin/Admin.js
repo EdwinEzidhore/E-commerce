@@ -1,0 +1,166 @@
+const express = require('express');
+const router = express.Router();
+const AdminInfo = require('../../Model/Admin/AdminLogin');
+const ProductModel = require('../../Model/Admin/AdminAddProduct');
+const ErrorHandler = require('../../Utils/ErrorHandler');
+const Productupload = require('../../Multer/Admin/multer');
+const path = require('path');
+const UserModel = require('../../Model/User/User');
+
+
+router.post('/Admin', async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        const isAdmin = await AdminInfo.findOne({ email }).select('+password')
+
+        if (!isAdmin) {
+            return next(new ErrorHandler('Warning Traitor!!', 400));
+        }
+        const isPasswordvalid = isAdmin.password;
+            
+        if (password === isPasswordvalid) {
+            res.status(200).json({ message: 'Admin Login successfully' });
+        }
+        // res.status(400).json({ msg: 'invalid credentials' });
+        
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+   
+});
+
+router.post('/addProduct', Productupload.array('file'), async (req, res, next) => {
+    try {
+        const { name,
+            description,
+            brand,
+            originalPrice,
+            sellingPrice,
+            category,
+            status,
+            stock,
+            fabric,
+            color,
+            size,
+        } = req.body;
+       
+        const file = req.files;
+        let arr = [];
+        file.forEach((element) => {
+            arr.push({ name: element.filename, path: element.path });
+        });
+       
+       
+        if (!name || !description || !brand || !originalPrice || !sellingPrice || !category || !status || !stock) {
+            return next(new ErrorHandler('Please,Provide field Values!!', 404));
+        };
+
+        const Image_url = arr.map(photo => photo.name);
+
+
+        const product = await ProductModel.create({
+            name,
+            description,
+            brand,
+            originalPrice,
+            sellingPrice,
+            category,
+            status,
+            stock,
+            productImage: Image_url,
+            Details: [{
+                fabric: fabric,
+                colour: color,
+                size:size,
+           }],
+    
+        });
+
+        if (product) {
+            return res.status(200).json({ success: true, message: `product ${name} successfully added.` })
+        }
+        
+    } catch (error) {
+        return next(new ErrorHandler('server my error', 500))
+    }
+  
+});
+
+router.get('/products', async (req, res,next) => {
+    try {
+        const products = await ProductModel.find({});
+        const sorted = products.reverse();
+        if (products) {
+            res.status(200).json({ products });
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+    
+})
+
+router.get('/users', async (req, res, next) => {
+    try {
+        const users = await UserModel.find({});
+        if (users) {
+            res.status(200).json({ users });
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
+
+router.patch('/item', async (req, res, next) => {
+    try {
+        const { item_id } = req.query;
+        const product = await ProductModel.findById({ _id: item_id });
+
+        if (!product) {
+            return res.status(404).json({ success: false, msg: 'InValid ID' });
+        }
+
+        product.status = product.status === 'Available' ? 'Unavailable' : 'Available';
+
+        const updatedProduct = await ProductModel.findByIdAndUpdate(
+            { _id: item_id },
+            { status: product.status },
+            { new: true });
+        
+       
+       
+        if (product) {
+            res.status(200).json(
+                { updatedProduct }
+            );
+        }
+       
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+   
+});
+
+router.delete('/item', async (req, res,next) => {
+    try {
+        const { item_id } = req.query;
+    
+        const product = await ProductModel.findById({ _id:item_id });
+        if (!product) {
+            return res.status(404).json({ success: false, msg: 'Invalid ID' });
+        }
+        const deleteProduct = await ProductModel.deleteOne({ _id: item_id });
+        const RestProducts = (await ProductModel.find({})).reverse();
+        if (deleteProduct) {
+            return res.status(200).json({ RestProducts });
+        } else {
+            return res.status(400).json({success:false,msg:'Failed to delete Product!'})
+        }
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+module.exports = router;

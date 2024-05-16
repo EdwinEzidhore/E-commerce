@@ -1,0 +1,9 @@
+*{
+    box-sizing: border-box;
+}
+
+.spinner::-webkit-inner-spin-button,
+.spinner::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}

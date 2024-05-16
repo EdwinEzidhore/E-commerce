@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from '../../Styles/Styles';
+import styles from '../../../Styles/Styles';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -84,6 +84,7 @@ function Login() {
                       <div className={`${styles.normalFlex} w-full`}>
                           <h4>Don't have an account?</h4>
                           <Link to="/signup" className='text-blue-600 hover:text-blue-900'>Sign up</Link>
+                         
                       </div>
                       
                   </form>
