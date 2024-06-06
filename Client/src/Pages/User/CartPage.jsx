@@ -13,6 +13,8 @@ import { remove_single_cartItem } from '../../Redux/SingleProduct/CartSlice'
 import {quantity_changed_price} from '../../Redux/SingleProduct/CartSlice'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Loading from '../../Components/UserComponents/Loading/Loading';
+
 
 
 const CartPage = () => {
@@ -21,8 +23,8 @@ const CartPage = () => {
     const dispatch = useDispatch();
     const [err, setErr] = useState(false);
     const navigate = useNavigate();
-    const [userAddress, setUserAddress] = useState([]);
-   
+    const [loading, setLoading] = useState(true);
+    const [networkErr, setNetworkErr] = useState(false);
 
     const cart_Total = useSelector((state => state.cart.totalAmount));
     const discount = useSelector((state => state.cart.discount));
@@ -32,22 +34,18 @@ const CartPage = () => {
 
     useEffect(() => {
         getCartItems();
-        axios.get('http://localhost:3333/api/v2/get-address', { withCredentials: true })
-        .then((res) => {
-        setUserAddress(res.data.Address);
-        })
-      .catch(err => console.log(err));
+
     }, []);
     
     const getCartItems = () => {
         axios.get(`http://localhost:3333/api/v2/getCartItems`,{withCredentials:true})
             .then((res) => {
-               
+                setLoading(false);
                 setCartItems(res.data.cart);
                
-             
             })
             .catch(err => {
+                setNetworkErr(true)
                 // if (err.response.status === 500) {
                 //     setErr(true)
                 // }
@@ -94,9 +92,16 @@ const CartPage = () => {
 
   return (
       <section>
-          <div className='sticky top-0 backdrop-blur-xl z-10 '><Nav /></div>
+          <div className='sticky top-0 backdrop-blur-xl z-10'><Nav /></div>
           {
-             cartItems.products.length >0  ?
+              loading && networkErr===false? <div className='h-96 flex items-center justify-center'><Loading /></div> :
+              <div className={networkErr===true?'flex flex-col items-center justify-center h-96':'hidden'}>
+              <img className='h-20 object-contain' src="/src/images/delete.png" alt="" />
+              <span className='text-slate-500 cursor-default'>Check your Network connection</span>
+          </div>
+          }
+          {
+              cartItems.products.length >0?
                 <div className='container'>
               
                 <div className='grid grid-cols-12 bg-slate-50 font-robo'>
@@ -252,6 +257,7 @@ const CartPage = () => {
 
                                   <div className='flex justify-center h-auto bg-[#e42e55] py-3 '>
                                               <button className='uppercase text-white font-semibold text-sm w-full h-full' onClick={() => {
+                                                 
                                                   if (activeAddress) {
                                                      navigate('/payment') 
                                                   } else {
@@ -269,23 +275,25 @@ const CartPage = () => {
                   </div>
                   
                   :
+
                   
-                  <div className='flex justify-center items-center h-fit flex-col relative top-10'>
-                      <div className='h-72'><img className='h-full' src="/src/images/undraw_undraw_undraw_undraw_undraw_undraw_shopping_bags_2ude_-1-_mnw3_-2-_q7y0_muk6_-2-_l1mh_(2)_m4xj.png" alt="" /></div>
-                      <div className='text-2xl font-bold'>Hey, it feels so light!</div>
-                      {
-                          err === true ? <p className='font-semibold text-md mt-4 text-slate-600'>Please login to add product <button className='h-auto p-1 bg-red-200 rounded-md text-red-500 uppercase ml-3'>Login</button></p> :
-                              <p className='font-semibold text-md mt-4 text-slate-600'>There is nothing in your cart. Let's add some items</p>
-                          
-                      }
-                      {
-                          err!==true &&  <button className='h-auto py-1 px-4 outline uppercase font-thin mt-5 outline-red-700 text-red-700 outline-2'>Add items from wishlist</button>
-                      }
-                     
-                  </div>
-            
+                  <div className={loading===false?'flex justify-center items-center h-fit flex-col relative top-10':'hidden'}>
+                  <div className='h-72'><img className='h-full' src="/src/images/undraw_undraw_undraw_undraw_undraw_undraw_shopping_bags_2ude_-1-_mnw3_-2-_q7y0_muk6_-2-_l1mh_(2)_m4xj.png" alt="" /></div>
+                  <div className='text-2xl font-bold'>Hey, it feels so light!</div>
+                  {
+                      err === true ? <p className='font-semibold text-md mt-4 text-slate-600'>Please login to add product <button className='h-auto p-1 bg-red-200 rounded-md text-red-500 uppercase ml-3'>Login</button></p> :
+                          <p className='font-semibold text-md mt-4 text-slate-600'>There is nothing in your cart. Let's add some items</p>
+                      
+                  }
+                  {
+                      err!==true &&  <button className='h-auto py-1 px-4 outline uppercase font-thin mt-5 outline-red-700 text-red-700 outline-2'>Add items from wishlist</button>
+                  }
+                 
+              </div>
+                      
+                  
+
           }
-          
 
           {
               cartItems.products.length>0 &&  <Footer/>

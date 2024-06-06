@@ -21,8 +21,9 @@ process.on("unhandledRejection", (err) => {
 //config
 if (process.env.NODE_ENV !== 'PRODUCTION') {
     require("dotenv").config({
-        path:'Config/.env'
-    })
+        path: 'Config/.env'
+    });
+
 }
 
 

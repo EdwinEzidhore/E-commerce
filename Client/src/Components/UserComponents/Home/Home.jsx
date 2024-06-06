@@ -6,23 +6,32 @@ import { useDispatch } from 'react-redux';
 import { add } from '../../../Redux/SingleProduct/SingleProductSlice';
 import {addcart,add_cart_price} from '../../../Redux/SingleProduct/CartSlice'
 import { toast } from 'react-toastify';
+import Loading from '../Loading/Loading';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-   
+    const [loading, setLoading] = useState(true);
+    const [networkErr, setNetworkErr] = useState(false);
+
 
     
     useEffect(() => {
         
         axios.get('http://localhost:3333/api/v2/featured',{withCredentials:true})
             .then((res) => {
-                setProducts(res.data.Products);
                 
+                setProducts(res.data.Products);
+                console.log(res.data.Products);
+                setLoading(false);
                 
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                console.log('this is catch error', err);
+                setNetworkErr(true);
+                
+            })
     },[]);
 
     const getSingleProduct = (product) => {
@@ -60,6 +69,8 @@ const Home = () => {
             })
         .catch(err=>console.log(err))
     }
+
+   
 
     return (
      
@@ -149,7 +160,7 @@ const Home = () => {
 
                 <div className='flex flex-wrap justify-center   gap-10'>
                     {
-                        products.map((product, index) => (
+                        loading===false ?products.map((product, index) => (
                             <div className='cards bg-gray-50 w-fit h-fit shadow-lg rounded-md overflow-hidden flex flex-col p-1 outline outline-gray-300 hover:scale-105 ease-out duration-200'  key={index}>
                                 <div className='h-60 flex justify-center' onClick={() => getSingleProduct(product)}>
                                 <img className='  object-cover h-full' src={`http://localhost:3333/${product.productImage[2]}`} alt="" />
@@ -170,7 +181,15 @@ const Home = () => {
                             </div>
                             
                             </div>
-                        ))
+                        )) :
+                            networkErr === true ?
+                                <div className='flex flex-col'>
+                                    <img className='h-20 object-contain' src="/src/images/delete.png" alt="" />
+                                    <span className='text-slate-500 cursor-default'>Check your Network connection</span>
+                                </div>
+                                
+                                 :
+                                <Loading />
                     }
                
 

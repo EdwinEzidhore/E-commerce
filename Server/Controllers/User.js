@@ -14,16 +14,20 @@ const isAuthenticated = require('../Middleware/auth')
 const CartModel = require('../Model/User/Cart');
 const mongoose=require('mongoose')
 const { log } = require('util');
-require('dotenv').config();
-const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const OrderModel = require('../Model/User/Order');
-const AddressModel=require('../Model/User/Address')
+const AddressModel = require('../Model/User/Address');
+require('dotenv').config(
+    {path: 'Config/.env'}
+);
+const Razorpay = require('razorpay');
+
 
 const razorpayInstance = new Razorpay({
-    key_id:'rzp_test_IRcArw33YZDUfI',
-    key_secret: 'qNSA6EWvNuiSENSPvvFavfwp',
+    key_id:process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_SECRET_KEY,
 });
+
 
 
 router.post('/create-user', upload.single('file'), async (req, res, next) => {
@@ -254,8 +258,7 @@ router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
           
             
 
-            cartLength = userCart.products.length;
-            res.status(200).json({ success: true, cart: userCart,cartLength });
+            res.status(200).json({ success: true, cart: userCart });
         }
 
        
@@ -405,7 +408,7 @@ router.post('/verify', async (req, res) => {
         const sign = razorpay_order_id + "|" + razorpay_payment_id;
 
         // Create ExpectedSign
-        const expectedSign = crypto.createHmac("sha256", 'qNSA6EWvNuiSENSPvvFavfwp')
+        const expectedSign = crypto.createHmac("sha256", razorpayInstance.key_secret)
             .update(sign.toString())
             .digest("hex");
 

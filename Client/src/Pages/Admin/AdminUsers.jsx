@@ -51,7 +51,9 @@ function AdminUsers() {
 
                       ))        
             }
-                  <div className={toggledetails===true?'h-96 w-96 outline backdrop-blur-sm absolute left-1/2 -translate-x-2/4 top-12':'hidden'}>
+          <div className={toggledetails === true ? 'h-96 w-1/2 outline backdrop-blur-sm absolute left-1/2 -translate-x-2/4 top-12' : 'hidden'}>
+            
+            
                       
                 </div>
          

@@ -9,7 +9,7 @@ const Nav = () => {
       const cart = useSelector(state => state.cart.cart);
       const [isloggedin, setIsloggedin] = useState(false);
       const [user, setUser] = useState();
-      
+      const [loading, setLoading] = useState(true);
       
       useEffect(() => {
         
@@ -19,7 +19,10 @@ const Nav = () => {
                       setUser(res.data.isUser);
                      
                 })
-                .catch((err) => console.log(err))
+                  .catch((err) => {
+                        console.log(err)
+                       
+                  })
         },[]);
 
      

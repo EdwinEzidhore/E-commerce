@@ -4,9 +4,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
-require('dotenv').config();
-
-
 
 
 app.use('/', express.static('uploads'));
@@ -39,4 +36,5 @@ app.use('/', Admin);
 app.use(ErrorHandler);
 
 module.exports = app;
+
 
