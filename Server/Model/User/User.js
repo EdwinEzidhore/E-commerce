@@ -17,31 +17,6 @@ const UserSchema = new mongoose.Schema({
         minLength: [8, "Password must contain atleast 8 characters"],
         select: false //to avoid retreiving password when using on client side
     },
-    phoneNumber: {
-        type: Number
-    },
-    address: [
-        {
-            country: {
-                type: String
-            },
-            city: {
-                type: String
-            },
-            address1: {
-                type: String
-            },
-            address2: {
-                type: String
-            },
-            zipcode: {
-                type: Number
-            },
-            addressType: {
-                type: String
-            }
-        }
-    ],
     role: {
         type: String,
         default: 'user'
@@ -59,6 +34,10 @@ const UserSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now()
+    },
+    status:{
+        type: Boolean,
+        default:false,
     },
     resetPasswordToken: String,
     resetPasswordTime: Date

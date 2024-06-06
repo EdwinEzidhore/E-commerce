@@ -1,27 +1,77 @@
 import React, { useEffect, useState } from 'react'
 import Footer from '../Footer/Footer'
 import axios from 'axios'
-
+import {useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { add } from '../../../Redux/SingleProduct/SingleProductSlice';
+import {addcart,add_cart_price} from '../../../Redux/SingleProduct/CartSlice'
+import { toast } from 'react-toastify';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+   
 
+    
     useEffect(() => {
-        axios.get('http://localhost:3333/api/v2/featured')
-            .then((res) =>setProducts(res.data))
-        .catch((err)=>console.log(err))
-    })
+        
+        axios.get('http://localhost:3333/api/v2/featured',{withCredentials:true})
+            .then((res) => {
+                setProducts(res.data.Products);
+                
+                
+            })
+            .catch((err) => console.log(err))
+    },[]);
+
+    const getSingleProduct = (product) => {
+        dispatch(add(product));
+        navigate('/p');
+      
+    }
+  
+    const cart = (product) => {
+        let pro_id = product._id;
+        
+        axios.get(`http://localhost:3333/api/v2/cart/?id=${product._id}`,{withCredentials:true})
+            .then(res => {
+                if (res.data.success == false) {
+                    toast.error(res.data.msg);
+                }
+                else {
+                   
+                    toast.success('Added to Bag')
+                    dispatch(addcart(product));
+                    let populated = res.data.populated.products;
+                    const filtered = populated.find((prod) => prod.productID._id == pro_id);
+                    const productDetails = {
+                        productID: filtered.productID._id,
+                        quantity: filtered.quantity,
+                        price: filtered.productID.sellingPrice,
+                        OG_price:filtered.productID.originalPrice,
+                    }
+                    dispatch(add_cart_price(productDetails))
+                    
+
+
+                 
+                }
+            })
+        .catch(err=>console.log(err))
+    }
+
     return (
      
-        <div className='h-screen Hero'>
-            <div className=' md:h-4/6 bg-[#E29578] container   grid grid-cols-2  rounded-lg'>
+        <div className=' Hero'>
+            <div className=' md:h-96 bg-[#E29578] container   grid grid-cols-2  rounded-lg'>
                 
-                <div className='relative top-1/4 md:w-fit p-3 px-10 h-fit'>
+                <div className='relative  md:w-fit p-3 px-10 h-full flex flex-col justify-center'>
                     
                         <h1 className='text-5xl font-frank-lukh tracking-widest my-2 text-[#49111c] '>Find The Best Fashion Style For You</h1> 
                   
                     <h1 className='my-4 text-xl'>Min 30% Off</h1>
-                    <button className='h-auto bg-[#9e2a2b] p-3 rounded-md text-white my-5 font-semibold hover:bg-[#800e13]  ease-out duration-300 '>SHOP NOW</button>
+                    <button className='h-auto bg-[#9e2a2b] p-3 rounded-md text-white my-5 font-semibold hover:bg-[#800e13]  ease-out duration-300 w-32'>SHOP NOW</button>
                     
                 </div>
 
@@ -94,24 +144,27 @@ const Home = () => {
                 <div className='flex justify-center items-center h-full '><h1 className='text-white'>Hot Summer Sales</h1></div>
             </div>
 
-            <div className='featured-cards container mb-16'>
+            <div className='featured-cards container mb-16 '>
                 <div className='p-5 tracking-wider text-xl'><span>Featured Products</span></div>
 
                 <div className='flex flex-wrap justify-center   gap-10'>
                     {
                         products.map((product, index) => (
-                            <div className='cards bg-gray-100 w-72 min-h-[10rem] shadow-lg rounded-md overflow-hidden flex flex-col p-1 outline outline-gray-300 hover:scale-105 ease-out duration-200'>
-                            <img className='w-full h-full object-cover max-h-56' src={`http://localhost:3333/${product.productImage[0]}`} alt="" />
+                            <div className='cards bg-gray-50 w-fit h-fit shadow-lg rounded-md overflow-hidden flex flex-col p-1 outline outline-gray-300 hover:scale-105 ease-out duration-200'  key={index}>
+                                <div className='h-60 flex justify-center' onClick={() => getSingleProduct(product)}>
+                                <img className='  object-cover h-full' src={`http://localhost:3333/${product.productImage[2]}`} alt="" />
+                                </div>
+                            
                             
                             <div className='p-5 '>
-                                    <h2>{ product.description}</h2>
-                                    <div><span>Rs.{ product.sellingPrice}</span>
+                                    <h2 onClick={() => getSingleProduct(product)} className='cursor-default'>{ product.description}</h2>
+                                    <div className='cursor-default'><span onClick={() => getSingleProduct(product)}>Rs.{ product.sellingPrice}</span>
                                     
                                         <div className='flex items-center gap-2'><span className='line-through'>{product.originalPrice }</span>
                                     <span>save upto 20%</span></div>
                                 </div>
                                 <div className='h-auto bg-red-400 w-fit p-2 mt-5 rounded-lg hover:bg-[#c1121f]'>
-                                    <button className='text-white font- uppercase'>Add to Cart</button>
+                                    <button className='text-white font- uppercase' onClick={()=>cart(product)}>Add to Cart</button>
                                 </div>
                                
                             </div>

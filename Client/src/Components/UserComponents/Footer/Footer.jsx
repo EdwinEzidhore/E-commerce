@@ -1,4 +1,6 @@
 import React from 'react'
+import { FaFacebook, FaTwitter,FaLinkedin ,FaYoutube  } from "react-icons/fa";
+import { RiInstagramFill } from "react-icons/ri";
 
 const Footer = () => {
   return (
@@ -15,11 +17,13 @@ const Footer = () => {
                         <div><span className='font-semibold'>Phone</span>:<span className='text-slate-700'> +91 022 2343 23</span></div>
                         <div className='my-4'><span className='uppercase font-semibold '>follow us on</span></div>
                         <div className='flex space-x-2 gap-1'>
-                            <box-icon type='logo' name='facebook'></box-icon>
-                            <box-icon name='twitter' type='logo' ></box-icon>
-                            <box-icon name='instagram-alt' type='logo' ></box-icon>
-                            <box-icon name='linkedin' type='logo' ></box-icon>
-                            <box-icon name='youtube' type='logo' ></box-icon>
+                      
+                          <FaFacebook />
+                          <FaTwitter />
+                          <RiInstagramFill />
+                          <FaLinkedin />
+                          <FaYoutube />
+
                         </div>
                     </div>
 

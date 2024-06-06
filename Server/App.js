@@ -3,20 +3,28 @@ const ErrorHandler = require("./Middleware/Error");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-
 const app = express();
+require('dotenv').config();
+
+
+
 
 app.use('/', express.static('uploads'));
 app.use(express.static('Public/ProductImageuploads'));
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials:true,
+    origin: true,
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization'
 }));
 
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+
+
 
 //user
 const user = require("./Controllers/User");

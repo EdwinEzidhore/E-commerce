@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes  } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, ScrollRestoration, useLocation  } from 'react-router-dom'
 import { Loginpage, Signuppage } from './Routes';
 import { ActivationPage } from './Routes';
 import {ToastContainer} from 'react-toastify';
@@ -13,29 +13,49 @@ import AdminUsers from './Pages/Admin/AdminUsers';
 import ProfilePage from './Pages/User/ProfilePage';
 import ProductSinglePage from './Pages/User/ProductSinglePage';
 import CartPage from './Pages/User/CartPage';
-
-
+import ScrollToTop from './Components/UserComponents/ScrollToTop';
+import {Provider} from 'react-redux'
+import { store } from './Redux/Store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+import PaymentPage from './Pages/User/PaymentPage';
+import PaymentSucesspage from './Pages/User/PaymentSucesspage';
+import Womens from './Pages/User/Womens';
+import Address from './Components/UserComponents/Profile/Address';
 function App() {
+
+  
+  let persistor = persistStore(store);
   return (
-      <div>
-          <BrowserRouter>
+    <div>
+      <Provider store={store}>
+      <PersistGate persistor={persistor}>
+      <BrowserRouter>
+      <ScrollToTop/>
         <Routes>
-          
+        
           {/*User routes */}
-                <Route path='/' element={<HomePage/>}></Route>
+         
+          <Route path='/' element={<HomePage/>}></Route>
                 <Route path='/login' element={<Loginpage />}></Route>
                 <Route path='/signup' element={<Signuppage />}></Route>
                 <Route path='/activation/:activation_token' element={<ActivationPage />}></Route>
           <Route path='/profile' element={<ProfilePage />}></Route>
           <Route path='/p' element={<ProductSinglePage />}></Route>
-          <Route path='/cart' element={<CartPage />}></Route>
+              <Route path='/cart' element={<CartPage />}></Route>
+              <Route path='/payment' element={<PaymentPage />}></Route>
+              <Route path='/payment-sucess' element={<PaymentSucesspage />}></Route>
+              <Route path='/women' element={<Womens />}></Route>
+              <Route path='/Address' element={<Address />}></Route>
 
-          
-          
 
-          
-          
 
+
+
+
+              
+          
+        
           {/*Admin Routess */}
                 <Route path='/Admin' element={<AdminLoginPage/> } />   
                 <Route path='/Admin-Home' element={<AdminHomepage />} />
@@ -58,7 +78,8 @@ function App() {
                 transition: Bounce
               />
           </BrowserRouter>
-         
+          </PersistGate>
+          </Provider>
     </div>
   )
 }

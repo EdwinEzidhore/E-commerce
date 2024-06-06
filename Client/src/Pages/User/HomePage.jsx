@@ -6,7 +6,7 @@ import Home from '../../Components/UserComponents/Home/Home'
 const HomePage = () => {
   return (
       <div>
-       <Nav />
+       <div className='sticky top-0 backdrop-blur-xl z-10  '><Nav /></div>
       <Home/>
    
       </div>

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { array } = require('../../Multer/Admin/multer');
+
 
 
 const ProductSchema = new mongoose.Schema({
@@ -18,7 +18,7 @@ const ProductSchema = new mongoose.Schema({
         type: Array
         
     },
-    Details: [
+    Details: 
         {
             fabric: {
                 type:String
@@ -31,7 +31,7 @@ const ProductSchema = new mongoose.Schema({
             },
           
         }
-    ],
+    ,
     
     originalPrice: {
         type:Number,

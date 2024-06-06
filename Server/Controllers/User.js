@@ -10,6 +10,21 @@ const sendMail = require('../Utils/sendMail');
 const CatchAsyncErrors = require('../Middleware/CatchAsyncErrors');
 const sendToken = require('../Utils/jwtToken');
 const ProductModel = require('../Model/Admin/AdminAddProduct');
+const isAuthenticated = require('../Middleware/auth')
+const CartModel = require('../Model/User/Cart');
+const mongoose=require('mongoose')
+const { log } = require('util');
+require('dotenv').config();
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+const OrderModel = require('../Model/User/Order');
+const AddressModel=require('../Model/User/Address')
+
+const razorpayInstance = new Razorpay({
+    key_id:'rzp_test_IRcArw33YZDUfI',
+    key_secret: 'qNSA6EWvNuiSENSPvvFavfwp',
+});
+
 
 router.post('/create-user', upload.single('file'), async (req, res, next) => {
 
@@ -102,7 +117,7 @@ router.post('/activation', CatchAsyncErrors(async (req, res, next) => {
 })
 );
 
-
+//User Login Route
 router.post('/login', CatchAsyncErrors(async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -119,26 +134,424 @@ router.post('/login', CatchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("Invalid Credentials", 400));
         }
         sendToken(user, 201, res)
+        let usermodel = await UserModel.findByIdAndUpdate(
+            user._id,
+            { status: true },
+            {new:true},
+        );
+        if (usermodel) {
+            return res.status(200).json({ success: true, msg: 'User Login Success', usermodel });
+        }
 
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
 }));
 
-
-router.get('/featured', async (req, res, next) => {
+router.get('/isLoggedIn',isAuthenticated, async (req, res) => {
     try {
-        const products = await ProductModel.find({});
-        if (products) {
-        res.status(200).json(products);
+        const isUser = await UserModel.findOne({ _id: req.user._id });
+        const userStatus = isUser.status;
+        if (userStatus) {
+            return res.status(200).json({success:true,msg:'User is logged in',userStatus,isUser})
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
     }
+})
+
+//HomePage featured product listing Route
+router.get('/featured',isAuthenticated, async (req, res, next) => {
+    try {
+        const isUser = await UserModel.findOne({ _id: req.user._id });
+        
+        const Products = await ProductModel.find({});
+        if (Products) {
+            return res.status(200).json({Products});
+        }
+        
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
     
 
-})
+});
 
+//User cart Route
+router.get('/cart', isAuthenticated, async (req, res, next) => {
+    try {
+       
+        const user_data = await UserModel.findOne({ email: req.user.email });
+        const userId = user_data._id;
+        const { id } = req.query;
+        const product = await ProductModel.findOne({ _id: id });
+       
+        if (product.stock <= 0) {
+            return res.status(200).json({ success: false, msg: 'Product is Out of stock' })
+        }
+        let userCart = await CartModel.findOne({ userId });
+       
+        if (!userCart) {
+            userCart = new CartModel({
+                userId,
+                products: [],
+               
+            });
+        }
+
+        const existingProduct = userCart.products.findIndex((pro) => pro.productID.toString() === id);
+        
+        if (existingProduct !== -1) {
+            res.status(200).json({ success: false, msg: `Item already in cart` })
+        } else {
+           
+           
+            userCart.products.push({
+                productID: new mongoose.Types.ObjectId(id),
+                quantity: 1,
+               
+
+            });
+            
+            await userCart.save();
+            let populated = await CartModel.findOne({ userId: userId }).populate({
+                path: 'products.productID',
+                model: 'product'
+                
+            });
+            
+            res.status(200).json({ msg: 'Product added to cart',populated});
+        }
+      
+       
+        
+        
+
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+});
+
+//To get cartitems on Cart Page
+router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
+    try {
+        const userId = req.user._id;
+        let userCart = await CartModel.findOne({ userId: userId }).populate({
+            path: 'products.productID',
+            model: 'product'
+            
+        });
+        
+        if (!userCart) {
+            userCart = new CartModel({
+                userId,
+                products: [],
+            });
+            
+            res.status(200).json({ success: false, cart: userCart ,cartLength:userCart.products.length});
+        } else {
+          
+            
+
+            cartLength = userCart.products.length;
+            res.status(200).json({ success: true, cart: userCart,cartLength });
+        }
+
+       
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.delete('/', isAuthenticated, async (req, res, next) => {
+    try {
+        const user = await UserModel.findOne({ _id: req.user._id });
+        const { user_id, item_id } = req.query;
+       
+        // if (user._id !== user_id) {
+        //     return res.status(404).json({ success: false, msg: 'User not found' });
+        // }
+        let cart = await CartModel.updateOne(
+            { userId: user_id },
+            {
+                $pull: { products: { productID: item_id } }
+            }
+        )
+        cart = await CartModel.findOne({ userId: user_id }).populate({
+            path: 'products.productID',
+            model: 'product'
+            
+        });
+        const cartLength = cart.products.length;
+       
+        if (cart) {
+            res.status(200).json({ success: true, msg: 'Product removed from cart', cart, cartLength })
+        }
+
+       
+       
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.patch('/qty', async (req, res, next) => {
+
+    try {
+        const { user_id, item_id, ope, } = req.query;
+
+        let curQty = parseInt(req.query.qty);
+        
+        const product = await ProductModel.findOne({ _id: item_id });
+        const stock = product.stock;
+        let cart = await CartModel.findOne({ userId: user_id });
+        const productIndex = cart.products.findIndex(pro => pro.productID._id.toString() === item_id);
+
+
+       
+        if (ope == 'plus' && !stock < curQty) {
+            cart.products[productIndex].quantity = curQty + 1;
+           
+        }
+        else if (ope == 'minus') {
+            cart.products[productIndex].quantity = Math.max(1, curQty - 1);
+        }
+        else {
+            return res.status(204).json({ success: false, msg: 'Product out of stock' });
+        }
+      
+        await cart.save();
+        
+
+        const cartLength = cart.products.lenght;
+        const quantity_changed_item = cart.products.find((product) => product.productID == item_id);
+   
+
+        
+        return res.status(200).json({ success: true, quantity_changed_item, cartLength })
+        
+        
+     
+        
+        
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+    
+});
+
+
+router.get('/getUserInfo', isAuthenticated, async (req, res) => {
+    const user = req.user;
+    const user_status = user.status;
+    const user_id = user._id;
+    
+    if (user_status == true) {
+        const user_details = await UserModel.findOne({ _id: user_id });
+        return res.status(200).json({ user_details })
+    }
+});
+
+router.post('/cart/checkout',isAuthenticated, async (req, res, next) => {
+    try {
+        const amount = req.body.cart_Total;
+        const user_id = req.user.id
+        const user = await UserModel.findOne({ _id: user_id });
+        if (user.status===true) {
+            const cart = await CartModel.findOne({ userId: user_id }).populate({
+                path: 'products.productID',
+                model: 'product'
+                
+            });
+            
+            if (cart) {
+                const options = {
+                    amount: Number(amount * 100),
+                    currency: "INR",
+                    receipt: crypto.randomBytes(10).toString("hex"),
+                }
+        
+                razorpayInstance.orders.create(options, (error, order) => {
+                    if (error) {
+                        console.log(error);
+                        return res.status(500).json({ message: "Something Went Wrong!" });
+                    }
+                    res.status(200).json({msg:'order ', data: order,cart });
+                    // console.log(order)
+                });
+            }
+            
+        }
+
+
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+
+});
+
+
+router.post('/verify', async (req, res) => {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature,cart ,cart_Total} = req.body;
+
+    const user_id = cart.userId;
+    
+
+    try {
+        // Create Sign
+        const sign = razorpay_order_id + "|" + razorpay_payment_id;
+
+        // Create ExpectedSign
+        const expectedSign = crypto.createHmac("sha256", 'qNSA6EWvNuiSENSPvvFavfwp')
+            .update(sign.toString())
+            .digest("hex");
+
+        // console.log(razorpay_signature === expectedSign);
+        const isAuthentic = expectedSign === razorpay_signature;
+     
+        if (isAuthentic) {
+            const user = await UserModel.findOne({ _id: user_id });
+            if (!user) {
+                res.json({ msg: 'Invalid User' });
+            }
+
+            let order = new OrderModel({
+                userId: user_id,
+                products: [],
+                totalAmount: cart_Total,
+                razorpay_order_id:razorpay_order_id,
+                razorpay_payment_id:razorpay_payment_id,
+                razorpay_signature: razorpay_signature,
+                PaymentStatus:'Success',
+            });
+            const cart_item=cart.products.map((item, index) => {
+                
+                order.products.push({
+                    productId: item.productID._id,
+                    price: item.productID.sellingPrice,
+                    quantity: item.quantity,
+                });
+               
+                return ProductModel.updateOne(
+                    { _id: item.productID._id },
+                    { $inc: { stock: -item.quantity } }  
+                );
+            });
+
+            await order.save();
+
+            await Promise.all(cart_item);
+           
+            const user_cart=await CartModel.findOneAndDelete({userId:user_id})
+
+            return res.json({
+                message: "Payement Successfull",order
+            });
+        } else {
+            res.json({msg:'paymet failed'})
+        }
+    } catch (err) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+    
+});
+
+router.patch('/set-address', isAuthenticated, async (req, res, next) => {
+    const user_id = req.user.id;
+    try {
+        const {
+            name,
+            phone,
+            pincode,
+            locality,
+            address,
+            city,
+            state,
+            landmark,
+            alternate_phone,
+            address_type,
+        } = req.body;
+
+        let user = await UserModel.findOne({ _id: user_id });
+        if (!user) {
+            return res.status(400).json({msg:'Please Login to continue'})
+        }
+        let Address = await AddressModel.findOne({userID:user_id });
+
+        if (!Address) {
+
+            Address = new AddressModel({
+                
+                userID: user_id,
+                address: []
+            });
+           
+        }
+        Address.address.push({
+            Name: name,
+            phoneNumber: phone,
+            state: state,
+            city: city,
+            main_address: address,
+            zipcode: pincode,
+            landmark: landmark,
+            locality: locality,
+            alternate_phone: alternate_phone,
+            addressType:address_type,
+            
+        });
+        await Address.save();
+
+        res.status(200).json({msg:'created',Address:Address.address})
+
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+
+});
+
+router.get('/get-address', isAuthenticated, async (req, res) => {
+    const user_id = req.user.id;
+    try {
+        const user = await UserModel.findOne({ _id: user_id });
+        // console.log(user);
+        if (!user) {
+            return res.status(400).json({ msg: 'Pleas login' });
+        }
+        const address = await AddressModel.findOne({ userID: user_id });
+        
+        if (address) {
+            return res.status(200).json({
+                Address: address.address
+                
+             })
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.delete('/remove-address', async (req, res, next) => {
+    const { id } = req.query;
+    // 
+    try {
+         await AddressModel.updateOne({
+            $pull: { address: { _id: id } }
+         });
+        const address = await AddressModel.find({});
+        
+        if (address) {
+            return res.status(200).json({msg:'Address removed',Address:address})
+        }
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
 
 
 

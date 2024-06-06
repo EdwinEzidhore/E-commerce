@@ -1,23 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Nav from '../../Components/UserComponents/Nav/Nav'
 import Footer from '../../Components/UserComponents/Footer/Footer'
 import UserInformation from '../../Components/UserComponents/Profile/UserInformation';
 import Address from '../../Components/UserComponents/Profile/Address';
+import axios from 'axios';
 
 const ProfilePage = () => {
     const [active, setActive] = useState('profile');
+    const [user, setUser] = useState('');
+
+    useEffect(() => {
+        axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
+            .then(res => {
+                
+                setUser(res.data.user_details);
+                
+                
+                
+            })
+            .catch(err => console.log(err)) 
+    }, []);
+
+
     return (
            
         <section>
-            <div className='sticky top-0 backdrop-blur-xl'><Nav /></div>
+            <div className='sticky top-0 backdrop-blur-xl z-10'><Nav /></div>
           
           <div className='mx-auto container   bg-slate-100 p-1'>
                 <div className='grid grid-cols-12 '>
                    
                   <div className='grid col-span-2 h-fit'> 
                       <div className="user flex items-center p-3 mb-4 shadow-lg bg-white">
-                          <img className='h-10' src="/src/images/man.png" alt="" />
-                          <span className='ml-2'>Edwin Ezidhore</span>
+                          <div><img className='max-h-10 rounded-full' src={user && `http://localhost:3333/${user.avatar.url}`} alt="" /></div>
+                            <span className='ml-2'>{user.name }</span>
                       </div>
 
                         <div className=' shadow-lg bg-white p-2'>

@@ -1,18 +1,60 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+
 
 const UserInformation = () => {
+
+    const [user, setUser] = useState();
+    const [per_button, setper_Button] = useState(false);
+    const [email_btn, setEmail_btn] = useState(false);
+    const [mobile_btn, setMobile_btn] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+
+    
+
+    useEffect(() => {
+        axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
+            .then(res => {
+                setUser(res.data.user_details)
+                setName(res.data.user_details.name);
+                setEmail(res.data.user_details.email)
+                
+            })
+            .catch(err => console.log(err)) 
+    }, []);
+
+
+
+
   return (
       <div className='p-4'>
            <form action="">
                           <div className='mb-5'>
                             <div className='py-4 my-2'>
-                                <span className='text-xl font-medium'>Personal Information</span>
-                                <button className='ml-7 text-sky-500'><span>Edit</span></button>
+                      <span className='text-xl font-medium'>Personal Information</span>
+                      {
+                          per_button === false ? <button className='ml-7 text-sky-500' onClick={(e) => {
+                              e.preventDefault();
+                              setper_Button(!per_button);
+                              setName('')
+
+                          }}><span>Edit</span></button> : <button className='ml-7 text-sky-500' onClick={(e) => {
+                              e.preventDefault();
+                                  setper_Button(false);
+                                  setName(user.name);
+                                  
+                           }}><span>cancel</span></button>
+                      }
+                      
                             </div>
                             <div className='flex gap-2'>
-                                <input className='p-2 outline outline-1 outline-slate-300 mx-2 ' type="text" />
-                            <input className='p-2 outline outline-1 outline-slate-300 mx-2 ' type="text" />
-                            <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>
+                      <input className='p-2 outline outline-1 outline-slate-300 mx-2 text-slate-600 font-poppins tracking-wide' type="text" disabled={per_button === false} value={name} />
+
+                      {
+                          per_button===true? <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>:''
+                      }
+                           
                             </div>
                           </div>
                          
@@ -33,26 +75,51 @@ const UserInformation = () => {
 
                           <div className='mb-7'>
                               <div className='flex py-4 items-center my-2'>
-                                <div><span className='text-xl font-medium'>Email Address</span></div>
-                                <div className='ml-7 text-sky-500'><button>Edit</button></div> 
+                      <div><span className='text-xl font-medium'>Email Address</span></div>
+                      {
+                          email_btn === false ? <button className='ml-7 text-sky-500' onClick={(e) => {
+                              e.preventDefault();
+                              setEmail_btn(!per_button);
+                              setEmail('');
+                          }}><span>Edit</span></button> : <button className='ml-7 text-sky-500' onClick={(e) => {
+                              e.preventDefault();
+                                  setEmail_btn(false);
+                                  setEmail(user.email)
+                           }}><span>cancel</span></button>
+                      }
+
                               </div>
                               <div>
                                   <div className='flex'>
-                                  <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 w-60' /></div>
-                                  <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>
+                          <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 w-72 text-slate-600' disabled={!email_btn} value={email}/></div>
+                          {
+                          email_btn===true? <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>:''
+                      }
+
                                   </div>                               
                               </div>
                           </div>
 
                           <div className='mb-5'>
                               <div className='flex items-center py-4 my-2'>
-                                <div><span className='text-xl font-medium'>Mobile Number</span></div>
-                                <div className='ml-7 text-sky-500'><button>Edit</button></div> 
+                      <div><span className='text-xl font-medium'>Mobile Number</span></div>
+                      {
+                          mobile_btn === false ? <button className='ml-7 text-sky-500' onClick={(e) => {
+                              e.preventDefault();
+                              setMobile_btn(!per_button);
+                          }}><span>Edit</span></button> : <button className='ml-7 text-sky-500' onClick={(e) => {
+                              e.preventDefault();
+                              setMobile_btn(false);
+                           }}><span>cancel</span></button>
+                      }
+
                               </div>
                               <div>
                                   <div className='flex items-center '>
                                   <div><input type="text" className='p-2 outline outline-1 outline-slate-300 mx-2 ' /></div>
-                                  <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>
+                                  {
+                          mobile_btn===true? <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>:''
+                      }
                                   </div>                               
                               </div>
                           </div>
