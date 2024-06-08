@@ -400,10 +400,15 @@ router.post('/cart/checkout',isAuthenticated, async (req, res, next) => {
 
 
 router.post('/verify', async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature,cart ,cart_Total} = req.body;
+    const { razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        cart,
+        cart_Total,
+        activeAddress } = req.body;
 
     const user_id = cart.userId;
-    
+
 
     try {
         // Create Sign
@@ -431,7 +436,8 @@ router.post('/verify', async (req, res) => {
                 razorpay_order_id:razorpay_order_id,
                 razorpay_payment_id:razorpay_payment_id,
                 razorpay_signature: razorpay_signature,
-                PaymentStatus:'Success',
+                PaymentStatus: 'Success',
+                Address:activeAddress,
             });
             const cart_item=cart.products.map((item, index) => {
                 
@@ -460,9 +466,54 @@ router.post('/verify', async (req, res) => {
             res.json({msg:'paymet failed'})
         }
     } catch (err) {
-        return next(new ErrorHandler(error.message, 500));
+        return next(new ErrorHandler(err.message, 500));
     }
     
+});
+
+router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
+    const { cart_Total ,activeAddress} = req.body;
+    const user_id = req.user.id;
+
+    try {
+        const cart = await CartModel.findOne({ userId: user_id }).populate({
+            path: 'products.productID',
+            model: 'product'
+            
+        });
+        // console.log(cart);
+        
+        let order = new OrderModel({
+            userId: cart.userId,
+            products: [],
+            totalAmount: cart_Total,
+            OrderStatus: 'Order Placed',
+            PaymentStatus: 'Pending',
+            paymentMethod: 'COD',
+            Address: activeAddress,
+        });
+
+        const cart_item=cart.products.map((pro) => {
+            order.products.push({
+                productId: pro.productID._id,
+                price: pro.productID.sellingPrice,
+                quantity: pro.quantity,
+            });
+           
+        });
+
+        await order.save();
+      
+
+        const user_cart = await CartModel.findOneAndDelete({ userId: user_id });
+
+        return res.status(200).json({msg:'Order placed',order})
+
+      
+         
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
 });
 
 router.patch('/set-address', isAuthenticated, async (req, res, next) => {
@@ -559,17 +610,12 @@ router.delete('/remove-address', async (req, res, next) => {
     }
 });
 
-router.get('/getOrders', async (req, res, next) => {
+router.get('/getOrders', isAuthenticated, async (req, res, next) => {
+    const user_id = req.user.id;
     try {
-        const orders = await OrderModel.find({});
-        // console.log(orders);
-        if (orders) {
+   
+        
 
-        //   console.log(productDetails);
-           
-          
-
-        }
         
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));

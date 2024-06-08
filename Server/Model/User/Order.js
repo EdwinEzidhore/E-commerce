@@ -46,23 +46,24 @@ const OrderModel = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
+        
         // required:true,
     },
     razorpay_order_id: {
         type: String,
-        required: true,
+        // required: true,
     },
     razorpay_payment_id: {
         type: String,
-        required: true,
+        // required: true,
     },
     razorpay_signature: {
         type: String,
-        required: true,
+        // required: true,
     },
     Address: {
         type: Object,
-        // required:true,
+        required:true,
     },
     cancelReason: {
         type:String,

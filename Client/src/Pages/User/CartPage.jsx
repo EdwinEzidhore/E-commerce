@@ -15,7 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loading from '../../Components/UserComponents/Loading/Loading';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-import {  removecart} from '../../Redux/SingleProduct/CartSlice'
+import { removecart } from '../../Redux/SingleProduct/CartSlice'
+import '../../css/loadingbutton.css'
 
 const CartPage = () => {
 
@@ -28,6 +29,7 @@ const CartPage = () => {
     const [isflipped, setIsflipped] = useState(false);
     const [paymentMethod, setPaymetMethod] = useState('');
     const [availability, setAvailability] = useState(true);
+    const [btnLoading, setBtnloading] = useState(null);
 
     const cart_Total = useSelector((state => state.cart.totalAmount));
     const discount = useSelector((state => state.cart.discount));
@@ -101,7 +103,17 @@ const CartPage = () => {
                     })
                     .catch((err) => console.log(err))
             } else if (paymentMethod === 'home') {
-                navigate('/payment-sucess');
+                setBtnloading(true)
+                axios.post('http://localhost:3333/api/v2/cart/checkout/cod', { cart_Total,activeAddress },{withCredentials:true})
+                    .then(res => {
+                        if (res.status === 200) {
+                            navigate('/payment-sucess');
+                            dispatch(removecart());
+                            setBtnloading(false);
+                        }
+                    })
+                    .catch(err => console.log(err));
+               
             }
             
             
@@ -127,6 +139,7 @@ const CartPage = () => {
                     razorpay_signature: response.razorpay_signature,
                     cart,
                     cart_Total,
+                    activeAddress,
                 }, {
                     headers: {
                         'Content-Type': 'application/json'
@@ -138,7 +151,7 @@ const CartPage = () => {
                   if (verifyData.message) {
                     navigate('/payment-sucess');
                     dispatch(removecart());
-                    toast.success(verifyData.message)
+                   
                     }
                 } catch (error) {
                     console.log(error);
@@ -372,10 +385,22 @@ const CartPage = () => {
                                               
                                           </div>
 
-                                          <div className='flex justify-center h-auto bg-[#e42e55] mt-10'>
-                                              <button className='py-3 uppercase text-white font-semibold text-sm w-full  h-full' onClick={(e) => {
+                                          <div className='flex justify-center  bg-[#e42e55] mt-10 '>
+                                              <button className={btnLoading!==true    ?'py-3 uppercase text-white font-semibold text-sm w-full  h-full ':'hidden'} onClick={(e) => {
                                                   handleCheckout(e)
                                               }}>Proceed</button>
+                                              
+                                              <div className={btnLoading?"dot-spinner my-2":'hidden'}>
+                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot"></div>
+                                              </div>
+                                              
                                           </div>
 
                                           
