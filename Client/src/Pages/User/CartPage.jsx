@@ -14,8 +14,8 @@ import {quantity_changed_price} from '../../Redux/SingleProduct/CartSlice'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loading from '../../Components/UserComponents/Loading/Loading';
-
-
+import { IoArrowBackCircleOutline } from "react-icons/io5";
+import {  removecart} from '../../Redux/SingleProduct/CartSlice'
 
 const CartPage = () => {
 
@@ -25,6 +25,9 @@ const CartPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [networkErr, setNetworkErr] = useState(false);
+    const [isflipped, setIsflipped] = useState(false);
+    const [paymentMethod, setPaymetMethod] = useState('');
+    const [availability, setAvailability] = useState(true);
 
     const cart_Total = useSelector((state => state.cart.totalAmount));
     const discount = useSelector((state => state.cart.discount));
@@ -87,6 +90,80 @@ const CartPage = () => {
       
     };
 
+    const handleCheckout = (e) => {
+        e.preventDefault();
+        if (paymentMethod) {
+            if (paymentMethod === 'online') {
+                axios.post('http://localhost:3333/api/v2/cart/checkout', { cart_Total }, { withCredentials: true })
+                    .then((res) => {
+                        console.log(res.data);
+                        handlePaymentVerify(res.data.data, res.data.cart)
+                    })
+                    .catch((err) => console.log(err))
+            } else if (paymentMethod === 'home') {
+                navigate('/payment-sucess');
+            }
+            
+            
+        } else {
+            toast.error('Please select a payment method');
+        }
+    };
+
+    const handlePaymentVerify = async (data,cart) => {
+        const options = {
+            key: 'rzp_test_IRcArw33YZDUfI',
+            amount: data.amount,
+            currency: data.currency,
+            name: "Edwin",
+            description: "Test Mode",
+            order_id: data.id,
+            handler: async (response) => {
+                console.log("response", response)
+                try {
+                  const res = await axios.post('http://localhost:3333/api/v2/verify', {
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    cart,
+                    cart_Total,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                    const verifyData = res.data;
+    
+                  if (verifyData.message) {
+                    navigate('/payment-sucess');
+                    dispatch(removecart());
+                    toast.success(verifyData.message)
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            theme: {
+                color: "#5f63b8"
+            }
+        };
+        const rzp1 = new window.Razorpay(options);
+        rzp1.open();
+    }
+
+    const handlePlaceorderBtn = () => {
+        const check_availability=cartItems.products.findIndex((item) => {
+            return item.productID.status==='Unavailable'
+        })
+
+        if (check_availability === -1) {
+            setIsflipped(!isflipped);
+        } else {
+            setAvailability(false)
+        }
+       
+    }
 
 
 
@@ -134,7 +211,7 @@ const CartPage = () => {
                                       
                                      
                                     
-                                      <div className='text-sm border p-1 px-3 rounded-md  bg-[#09555c] text-white'><button onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
+                                      <div className='text-sm border   rounded-md  bg-[#09555c] text-white'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
                                   </div>
 
                       </div>
@@ -151,15 +228,15 @@ const CartPage = () => {
                       <div className=' p-1'>
                           {
                               cartItems.products.map((item,index) => (
-                                <div className='card flex border p-3 gap-3 mb-1 h-fit relative bg-white shadow-md' key={index}>
+                                <div className={availability===false && item.productID.status==='Unavailable'?'card flex border p-3 gap-3 mb-1 h-fit relative bg-gray-300 shadow-md   ' :'card flex border p-3 gap-3 mb-1 h-fit relative bg-white shadow-md'} key={index}>
                                 <div className='   object-cover flex gap-1'>
   
-                                    <div className=' h-f w-32 flex justify-center item-center'>
+                                    <div className={availability===false && item.productID.status==='Unavailable'?'grayscale h-f w-32 flex justify-center item-center':' h-f w-32 flex justify-center item-center '}>
                                     <img className='h-full object-cover' src={`http://localhost:3333/${item.productID.productImage[0]}`} alt="" />
                                     </div>
                                     
                                 </div>
-                                    <div className=''>
+                                    <div className='w-full'>
                                           <h1 className='text-sm font-semibold'>{item.productID.brand }</h1>
                                       <h4 className='mt-1'>{item.productID.description }</h4>
                                     <h5 className='text-sm text-slate-500 '>sold by ethinic fashion</h5>
@@ -175,7 +252,7 @@ const CartPage = () => {
                                                       }><FiMinus/></button>
                                                   
                                             <input type="number"
-                                                className='bg-slate-200 spinner w-10 text-sm text-center  outline outline-1 outline-slate-500' readOnly value={item.quantity}/>
+                                                className='bg-slate-200 spinner w-8 text-sm text-center   outline outline-1 outline-slate-500' readOnly value={item.quantity}/>
                                                   
                                                       <button className='flex outline rounded-full outline-1 outline-slate-500 p-1.5' onClick={() => incrementorDecrement('plus', item)}><HiOutlinePlusSm /></button></div>
                                       
@@ -187,9 +264,14 @@ const CartPage = () => {
                                         <h1 className='text-[#25858e]'>70% off</h1>
                                     </div>
   
-                                    <div className='flex items-center text-xs'>
-                                        <CgArrowTopRightO />
-                                        <p>14 days return available</p></div>
+                                          <div className='flex items-center text-xs justify-between'>
+                                              <div className='flex items-center'>
+                                              <CgArrowTopRightO />
+                                              <p>14 days return available</p>
+                                              </div>
+                                       
+                                              <div><p className={availability===false?'tracking-wide text-red-500 font-semibold scale-105':'tracking-wide text-red-500 font-semibold '}>{item.productID.status==='Unavailable'?'Currently Unavailable!':''}</p></div>
+                                          </div>
                                     </div>
                                     <div className='absolute top-5 text-2xl right-5'><button onClick={()=>removeItem(item)}><RxCross1  /></button></div>
                                     
@@ -222,12 +304,13 @@ const CartPage = () => {
                               <div className='h-20 my-4 shadow-md'><img className='h-full w-full object-cover' src="/src/images/happy-valentine-s-day-sale-banner-or-promotion-on-blue-background-online-shopping-store-with-mobile-credit-cards-and-shop-elements-illustration-free-vector.jpg" alt="" /></div>
                           </div>
 
-                          <div className="box-3 border p-4 bg-[#f8e4e9] shadow-lg sticky top-20">
-                              <div className='my-3'>
+                                  <div className="box-3 border p-4 bg-[#f8e4e9] shadow-lg sticky top-20 h-80">
+                                      <div className={isflipped?'hidden':'front h-full'}>
+                                      <div className='mb'>
                               <p><span className='uppercase text-sm font-semibold text-slate-800 '>Price details</span><span>({cartItems.products.length} item)</span></p>
                               </div>
                               
-                              <div className=''>
+                              <div className=' h-fit'>
                                  
                                   <div className='flex justify-between text-sm mb-3  text-[black]'>
                                       <span>Total MRP</span>
@@ -255,18 +338,49 @@ const CartPage = () => {
                                               <span>₹{ cart_Total}</span>
                                   </div>
 
-                                  <div className='flex justify-center h-auto bg-[#e42e55] py-3 '>
-                                              <button className='uppercase text-white font-semibold text-sm w-full h-full' onClick={() => {
-                                                 
-                                                  if (activeAddress) {
-                                                     navigate('/payment') 
-                                                  } else {
-                                                      toast.error('Add Delivery address')
-                                                  }
-                                                
+                                  <div className='flex justify-center h-auto bg-[#e42e55]  '>
+                                                  <button className='py-3 uppercase text-white font-semibold text-sm w-full h-full' onClick={() => {
+                                                      
+                                                      handlePlaceorderBtn();
                                       }}>place order</button>
                                   </div>
                               </div>
+
+                                      </div>
+                                      <div className={isflipped?"back h-full  bg-white":'hidden'}>
+                                          <div className='flex space-x-3 items-center '>
+                                              <button className='text-3xl text-gray-600' onClick={()=>setIsflipped(false)}><IoArrowBackCircleOutline /></button>
+                                              <span>Payement Method</span>
+                                          </div>
+
+                                          <div className='flex flex-col items-center  mt-5 '>
+                                             
+                                              <div className='my-4 tracking-wide flex items-center space-x-2'>
+                                                  <input type="radio" id='home' name='payment' value="Cash on Delivery" onChange={(e) => {
+                                                      setPaymetMethod(e.target.id)
+                                                  }}/>
+                                                  <label htmlFor="home">Cash on Delivery</label>
+                                              </div>
+                                                
+                                              <div className=' tracking-wide flex items-center space-x-2'>
+                                                  <input type="radio" id='online' name='payment' value="Online Payment" onChange={(e) => {
+                                                      setPaymetMethod(e.target.id);
+                                                  }}/>
+                                                  <label htmlFor="online">Online Payment</label> 
+                                              </div>
+                                              
+                                              
+                                          </div>
+
+                                          <div className='flex justify-center h-auto bg-[#e42e55] mt-10'>
+                                              <button className='py-3 uppercase text-white font-semibold text-sm w-full  h-full' onClick={(e) => {
+                                                  handleCheckout(e)
+                                              }}>Proceed</button>
+                                          </div>
+
+                                          
+                                      </div>
+
                           </div>
                       </div>
                   </div>

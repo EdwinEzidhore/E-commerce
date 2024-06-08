@@ -4,6 +4,7 @@ import Footer from '../../Components/UserComponents/Footer/Footer'
 import UserInformation from '../../Components/UserComponents/Profile/UserInformation';
 import Address from '../../Components/UserComponents/Profile/Address';
 import axios from 'axios';
+import Orders from '../../Components/UserComponents/Profile/Orders';
 
 const ProfilePage = () => {
     const [active, setActive] = useState('profile');
@@ -38,8 +39,11 @@ const ProfilePage = () => {
 
                         <div className=' shadow-lg bg-white p-2'>
                         <div className='flex my-4 '>
-                            <div><box-icon name='package' type='solid' color='#135D66'></box-icon></div>
-                                <div className='ml-2  uppercase text-slate-500 font-semibold'>My Orders</div>
+                            
+                                
+                                <button className='flex' onClick={()=>setActive('orders')}><box-icon name='package' type='solid' color='#135D66'></box-icon><span className='ml-2  uppercase text-slate-500 font-semibold flex items-center'>My Orders</span></button>
+                                
+                               
                                 
                             </div>
                             <hr />
@@ -107,7 +111,8 @@ const ProfilePage = () => {
 
                   <div className='ml-4 grid col-span-10 bg-white shadow-lg '>
                         {active === 'profile' && <UserInformation />}
-                        {active==='Address' && <Address/>}
+                        {active === 'Address' && <Address />}
+                        {active==='orders' && <Orders/>}
 
 
                   </div>

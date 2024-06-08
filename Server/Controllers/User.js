@@ -12,7 +12,8 @@ const sendToken = require('../Utils/jwtToken');
 const ProductModel = require('../Model/Admin/AdminAddProduct');
 const isAuthenticated = require('../Middleware/auth')
 const CartModel = require('../Model/User/Cart');
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
+const { ObjectId } = require('mongoose').Types;
 const { log } = require('util');
 const crypto = require('crypto');
 const OrderModel = require('../Model/User/Order');
@@ -247,13 +248,14 @@ router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
             
         });
         
+        
         if (!userCart) {
             userCart = new CartModel({
                 userId,
                 products: [],
             });
             
-            res.status(200).json({ success: false, cart: userCart ,cartLength:userCart.products.length});
+            res.status(200).json({ success: false, cart: userCart });
         } else {
           
             
@@ -421,6 +423,7 @@ router.post('/verify', async (req, res) => {
                 res.json({ msg: 'Invalid User' });
             }
 
+        
             let order = new OrderModel({
                 userId: user_id,
                 products: [],
@@ -542,15 +545,32 @@ router.delete('/remove-address', async (req, res, next) => {
     const { id } = req.query;
     // 
     try {
-         await AddressModel.updateOne({
+        await AddressModel.updateOne({
             $pull: { address: { _id: id } }
-         });
+        });
         const address = await AddressModel.find({});
         
         if (address) {
-            return res.status(200).json({msg:'Address removed',Address:address})
+            return res.status(200).json({ msg: 'Address removed', Address: address })
         }
 
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.get('/getOrders', async (req, res, next) => {
+    try {
+        const orders = await OrderModel.find({});
+        // console.log(orders);
+        if (orders) {
+
+        //   console.log(productDetails);
+           
+          
+
+        }
+        
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
