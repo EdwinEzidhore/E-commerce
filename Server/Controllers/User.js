@@ -612,9 +612,44 @@ router.delete('/remove-address', async (req, res, next) => {
 
 router.get('/getOrders', isAuthenticated, async (req, res, next) => {
     const user_id = req.user.id;
+    const ordered_Products = [];
     try {
-   
-        
+
+        const orders = await OrderModel.find({ userId: user_id }).populate({
+            path: 'products.productId',
+            model: 'product'
+        });
+        if (!orders) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+
+        orders.map((item) => {
+            // console.log('first',item);
+            return item.products.map((pro) => {
+                // console.log('sec',pro);
+                ordered_Products.push({
+                    user_ID: item.userId,
+                    item_ID: pro.productId._id,
+                    name: pro.productId.name,
+                    description: pro.productId.description,
+                    brand: pro.productId.brand,
+                    image_url: pro.productId.productImage,
+                    price: pro.price,
+                    category: pro.productId.category,
+                    orderDate: item.orderDate,
+                    orderStatus: item.OrderStatus,
+                    paymentStatus: item.PaymentStatus,
+                    address: item.Address,
+                });
+
+                
+            })
+        });
+
+        return res.status(200).json({ msg: 'Ordered items', orders: ordered_Products });
+
+ 
 
         
     } catch (error) {
