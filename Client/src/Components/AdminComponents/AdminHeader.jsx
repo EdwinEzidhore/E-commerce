@@ -22,7 +22,7 @@ const AdminHeader = () => {
                  
                   <li className='group  '><a href="/Admin-users" className='group-[.active]:bg-gray-600 flex items-center py-2 px-4 text-gray-600 hover:bg-blue-400 hover:text-gray rounded-md my-3 space-x-2 hover:text-white'><box-icon name='user-circle' type='solid' ></box-icon><span>Users</span></a></li>
 
-                  <li className='group  '><a href="#" className='group-[.active]:bg-gray-600 flex items-center py-2 px-4 text-gray-600 hover:bg-blue-400 hover:text-gray rounded-md my-3 space-x-2 hover:text-white '><box-icon name='cart-alt' type='solid' ></box-icon><span>Orders</span></a></li>
+                  <li className='group  '><a href="/Admin-orders" className='group-[.active]:bg-gray-600 flex items-center py-2 px-4 text-gray-600 hover:bg-blue-400 hover:text-gray rounded-md my-3 space-x-2 hover:text-white '><box-icon name='cart-alt' type='solid' ></box-icon><span>Orders</span></a></li>
 
                   
               </ul>

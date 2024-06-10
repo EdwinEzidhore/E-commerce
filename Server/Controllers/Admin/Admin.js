@@ -6,6 +6,9 @@ const ErrorHandler = require('../../Utils/ErrorHandler');
 const Productupload = require('../../Multer/Admin/multer');
 const path = require('path');
 const UserModel = require('../../Model/User/User');
+const { log } = require('console');
+const OrderModel=require('../../Model/User/Order');
+const User = require('../../Model/User/User');
 
 
 router.post('/Admin', async (req, res, next) => {
@@ -163,4 +166,57 @@ router.delete('/item', async (req, res,next) => {
     }
 });
 
+
+router.get('/order', async (req, res, next) => {
+    try {
+        const orders = await OrderModel.find({}).populate('userId');
+        return res.status(200).json(orders)
+        
+        
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.patch('/order_status', async (req, res, next) => {
+    const { order_id } = req.query;
+    const { status } = req.body;
+
+    try {
+        
+        let order = await OrderModel.findOne({ _id: order_id });
+        if (!order) {
+            return res.status(404).json({ msg: 'Error finding product' })
+        }
+        order = await OrderModel.findByIdAndUpdate(
+            { _id: order_id },
+            { OrderStatus: status },
+            { new: true },
+        )
+        return res.status(200).json({ msg: 'order status updated', Order: order });
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.patch('/payment_status', async (req, res, next) => {
+    const { order_id } = req.query;
+    const { status } = req.body;
+
+    try {
+        let order = await OrderModel.findOne({ _id: order_id });
+        if (!order) {
+            return res.status(404).json({ msg: 'Error finding product' })
+        }
+        order = await OrderModel.findByIdAndUpdate(
+            { _id: order_id },
+            { PaymentStatus: status },
+            { new: true },
+        )
+        return res.status(200).json({ msg: 'order payment status updated', Order: order });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
 module.exports = router;

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-const user = require('../../Model/User/User')
+const User = require('../../Model/User/User')
 const products=require('../../Model/Admin/AdminAddProduct')
 
 const OrderModel = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: user,
+        ref: 'User',
         required:true,
     },
     products: [

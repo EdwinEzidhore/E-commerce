@@ -629,6 +629,7 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
             return item.products.map((pro) => {
                 // console.log('sec',pro);
                 ordered_Products.push({
+                    order_ID:item._id,
                     user_ID: item.userId,
                     item_ID: pro.productId._id,
                     name: pro.productId.name,
@@ -647,7 +648,7 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
             })
         });
 
-        return res.status(200).json({ msg: 'Ordered items', orders: ordered_Products });
+        return res.status(200).json({ msg: 'Ordered items', orders: ordered_Products.reverse() });
 
  
 

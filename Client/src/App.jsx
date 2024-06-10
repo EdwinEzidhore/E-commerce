@@ -22,6 +22,7 @@ import PaymentPage from './Pages/User/PaymentPage';
 import PaymentSucesspage from './Pages/User/PaymentSucesspage';
 import Womens from './Pages/User/Womens';
 import Address from './Components/UserComponents/Profile/Address';
+import AdminOrders from './Pages/Admin/AdminOrders';
 function App() {
 
   
@@ -61,7 +62,9 @@ function App() {
                 <Route path='/Admin-Home' element={<AdminHomepage />} />
                 <Route path='/Admin-product' element={ <AdminAddProductpage/>} />
                 <Route path="/addproduct" element={< AddProductForm />} />
-                <Route path="/Admin-users" element={<AdminUsers/>} />
+              <Route path="/Admin-users" element={<AdminUsers />} />
+              <Route path="/Admin-orders" element={<AdminOrders/>} />
+              
           
               </Routes>
               <ToastContainer

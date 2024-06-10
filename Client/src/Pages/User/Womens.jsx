@@ -6,6 +6,9 @@ const Womens = () => {
     const [product, setproduct] = useState([]);
 
     useEffect(() => {
+        getproducts(); 
+    }, []);
+
         const getproducts = async() => {
            
 
@@ -25,9 +28,7 @@ const Womens = () => {
                 console.error(error);
             }
         }
-        getproducts();
-          
-    },[])
+     
 
   return (
       <div>Womens
