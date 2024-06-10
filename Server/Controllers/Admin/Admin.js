@@ -106,12 +106,34 @@ router.get('/users', async (req, res, next) => {
     try {
         const users = await UserModel.find({});
         if (users) {
-            res.status(200).json({ users });
+            res.status(200).json({ users:users });
         }
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
-})
+});
+
+router.patch('/user_status', async (req, res, next) => {
+    try {
+        const { user_id } = req.query;
+        let user = await UserModel.findOne({ _id: user_id });
+        if (!user) {
+            return res.status(200).json({ msg: 'User not found' });
+        }
+        const user_status = !user.status 
+        user = await UserModel.findByIdAndUpdate(
+            { _id: user_id },
+            { status: user_status },
+            { new: true },
+        );
+        const isblocked = user.status === true ? 'Active' : 'Blocked';
+        
+        return res.status(200).json({msg:`User ${isblocked} `,users:user})
+        
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
 
 
 router.patch('/item', async (req, res, next) => {
