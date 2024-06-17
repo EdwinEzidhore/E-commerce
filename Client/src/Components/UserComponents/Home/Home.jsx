@@ -7,6 +7,7 @@ import { add } from '../../../Redux/SingleProduct/SingleProductSlice';
 import {addcart,add_cart_price} from '../../../Redux/SingleProduct/CartSlice'
 import { toast } from 'react-toastify';
 import Loading from '../Loading/Loading';
+import '../../../css/banner.css'
 
 const Home = () => {
     const [products, setProducts] = useState([]);
@@ -15,7 +16,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [networkErr, setNetworkErr] = useState(false);
 
-
+    
     
     useEffect(() => {
         
@@ -43,7 +44,7 @@ const Home = () => {
     const cart = (product) => {
         let pro_id = product._id;
         
-        axios.get(`http://localhost:3333/api/v2/cart/?id=${product._id}`,{withCredentials:true})
+        axios.get(`http://localhost:3333/api/v2/cart/?id=${product._id}`, { withCredentials: true })
             .then(res => {
                 if (res.data.success == false) {
                     toast.error(res.data.msg);
@@ -58,7 +59,7 @@ const Home = () => {
                         productID: filtered.productID._id,
                         quantity: filtered.quantity,
                         price: filtered.productID.sellingPrice,
-                        OG_price:filtered.productID.originalPrice,
+                        OG_price: filtered.productID.originalPrice,
                     }
                     dispatch(add_cart_price(productDetails))
                     
@@ -67,35 +68,20 @@ const Home = () => {
                  
                 }
             })
-        .catch(err=>console.log(err))
-    }
+            .catch(err => console.log(err))
+    };
+
 
    
 
     return (
      
-        <div className=' Hero'>
-            <div className=' md:h-96 bg-[#E29578] container   grid grid-cols-2  rounded-lg'>
-                
-                <div className='relative  md:w-fit p-3 px-10 h-full flex flex-col justify-center'>
-                    
-                        <h1 className='text-5xl font-frank-lukh tracking-widest my-2 text-[#49111c] '>Find The Best Fashion Style For You</h1> 
-                  
-                    <h1 className='my-4 text-xl'>Min 30% Off</h1>
-                    <button className='h-auto bg-[#9e2a2b] p-3 rounded-md text-white my-5 font-semibold hover:bg-[#800e13]  ease-out duration-300 w-32'>SHOP NOW</button>
-                    
-                </div>
+        <div className=' Hero '>
 
-                
-                <div className='w-full  flex items-center  space-x-2 justify-center'>
+             
+ 
 
-                    
-                    <div className='relative'><img className=' h-52 ' src="/src/images/98b6330b140439c3298ed3775148dbf5.jpg" alt="" /></div>
-                    <div className='relative '><img className='img h-80' src="../src/images/image.jpg" alt="" /></div>
-                   
-               </div>
-               
-            </div>
+
 
             <div className='side-carosel container  '>
                 <div className='p-5 tracking-widest text-xl text-slate-600'><span>GRAB THE BEST BRAND FOR YOU</span></div>
@@ -163,12 +149,12 @@ const Home = () => {
                         loading===false ?products.map((product, index) => (
                             <div className='cards bg-gray-50 w-fit h-fit shadow-lg rounded-md overflow-hidden flex flex-col p-1 outline outline-gray-300 hover:scale-105 ease-out duration-200'  key={index}>
                                 <div className='h-60 flex justify-center' onClick={() => getSingleProduct(product)}>
-                                <img className='  object-cover h-full' src={`http://localhost:3333/${product.productImage[2]}`} alt="" />
+                                <img className='  object-cover h-full' src={`http://localhost:3333/${product.productImage[0]}`} alt="" />
                                 </div>
                             
                             
                             <div className='p-5 '>
-                                    <h2 onClick={() => getSingleProduct(product)} className='cursor-default'>{ product.description}</h2>
+                                    <div className='w-52'><h2 onClick={() => getSingleProduct(product)} className='cursor-default'>{ product.description}</h2></div>
                                     <div className='cursor-default'><span onClick={() => getSingleProduct(product)}>Rs.{ product.sellingPrice}</span>
                                     
                                         <div className='flex items-center gap-2'><span className='line-through'>{product.originalPrice }</span>

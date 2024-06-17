@@ -112,11 +112,9 @@ const AddProductForm = () => {
 
   
 
-  if (productImage) {
-    for (let i = 0; i < productImage.length; i++) {
-      formData.append('file', productImage[i]);
-    }
-    };
+    productImage.forEach((image) => {
+      formData.append('file', image.file);
+    });
 
  
     axios.post('http://localhost:3333/addProduct',formData,config)
@@ -147,13 +145,45 @@ const AddProductForm = () => {
 
   const productImageupload = (e) => {
 
-    const file = e.target.files;
-    setproductImage(file);
+    const file = Array.from(e.target.files);
+    const fileObjects = file.map((file, index) => ({ file, index }));
+    setproductImage(fileObjects);
    
- 
-   
-    
-};
+  
+  };
+  
+
+  const handleDragStart = (index) => (e) => {
+    e.dataTransfer.setData('draggedIndex', index);
+  };
+
+  const handleDrop = (index) => (e) => {
+    const draggedIndex = e.dataTransfer.getData('draggedIndex');
+    if (draggedIndex === null || draggedIndex === undefined) return;
+
+    const newImages = [...productImage];
+    const [draggedImage] = newImages.splice(draggedIndex, 1);
+    newImages.splice(index, 0, draggedImage);
+    setproductImage(newImages);
+  };
+
+  const renderImageList = () => (
+    <ul>
+      {productImage.map((image, index) => (
+        <li
+          key={index}
+          draggable
+          onDragStart={handleDragStart(index)}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop(index)}
+          className="file-item"
+        >
+         
+          {image.file.name}
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
     <section>
@@ -211,9 +241,9 @@ const AddProductForm = () => {
 
           <div className='grid grid-cols-2 space-x-2 my-4'>
             <label htmlFor="file">Image</label>
-            <input type="file" id='file' multiple  name='file' accept='.jpg,.png,.jpeg' onChange={productImageupload}/>
+            <input type="file" id='file' multiple  name='file' accept='.jpg,.png,.jpeg,.webp,.avif' onChange={productImageupload}/>
           </div>
-
+{renderImageList()}
           <div className='grid grid-cols-2 space-x-2 my-4'>
             <label htmlFor="og-price">Original Price</label>
             <input type="number" id='og-price' value={product.originalPrice} required name='originalPrice' className={error.name?'py-1 px-3 outline outline-2 outline-red-600 rounded-md ':'py-1 px-3 outline-none rounded-md'} onChange={handleChange} />
@@ -235,9 +265,9 @@ const AddProductForm = () => {
             <select name="category" id="category" value={product.category} required className='py-1 px-3 rounded-md outline-none' onChange={handleChange}>
               <option value=""></option>
               <option value="Men">Men</option>
-              <option value="Men">Women</option>
-              <option value="Men">Kids</option>
-              <option value="uni">Unisex</option>
+              <option value="Women">Women</option>
+              <option value="Kids">Kids</option>
+              <option value="Unisex">Unisex</option>
             </select>
           </div>
 

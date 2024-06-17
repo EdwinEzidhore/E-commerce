@@ -23,6 +23,7 @@ import PaymentSucesspage from './Pages/User/PaymentSucesspage';
 import Womens from './Pages/User/Womens';
 import Address from './Components/UserComponents/Profile/Address';
 import AdminOrders from './Pages/Admin/AdminOrders';
+import Men from './Pages/User/Men';
 function App() {
 
   
@@ -38,16 +39,20 @@ function App() {
           {/*User routes */}
          
           <Route path='/' element={<HomePage/>}></Route>
-                <Route path='/login' element={<Loginpage />}></Route>
-                <Route path='/signup' element={<Signuppage />}></Route>
-                <Route path='/activation/:activation_token' element={<ActivationPage />}></Route>
-          <Route path='/profile' element={<ProfilePage />}></Route>
-          <Route path='/p' element={<ProductSinglePage />}></Route>
+              <Route path='/login' element={<Loginpage />}></Route>
+              <Route path='/signup' element={<Signuppage />}></Route>
+              <Route path='/activation/:activation_token' element={<ActivationPage />}></Route>
+              <Route path='/profile' element={<ProfilePage />}></Route>
+              <Route path='/p' element={<ProductSinglePage />}></Route>
               <Route path='/cart' element={<CartPage />}></Route>
               <Route path='/payment' element={<PaymentPage />}></Route>
               <Route path='/payment-sucess' element={<PaymentSucesspage />}></Route>
               <Route path='/women' element={<Womens />}></Route>
               <Route path='/Address' element={<Address />}></Route>
+              <Route path='/men' element={<Men />}></Route>
+
+              
+
 
 
 

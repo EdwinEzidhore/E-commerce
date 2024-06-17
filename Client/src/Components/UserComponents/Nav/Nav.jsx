@@ -42,7 +42,7 @@ const Nav = () => {
           
                   <a className='hover:scale-110 hover:text-slate-800 ' href="/">Home</a>
                   <a className='hover:scale-110 hover:text-slate-800' href="#">Collections</a>
-                  <a className='hover:scale-110 hover:text-slate-800' href="#">Men</a>
+                  <a className='hover:scale-110 hover:text-slate-800' href="/men">Men</a>
                   <a className='hover:scale-110 hover:text-slate-800' href="/women">Women</a>
         </div>
               </div>

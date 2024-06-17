@@ -71,11 +71,14 @@ router.post('/addProduct', Productupload.array('file'), async (req, res, next) =
             status,
             stock,
             productImage: Image_url,
-            Details: [{
+            Details: {
                 fabric: fabric,
                 colour: color,
                 size:size,
-           }],
+                
+            }
+          
+            
     
         });
 

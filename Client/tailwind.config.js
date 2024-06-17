@@ -3,8 +3,14 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    
    
   ],
+  variants: {
+    extend: {
+      display:['group-hover']
+    }
+  },
   theme: {
     extend: {
       screens: {
@@ -22,11 +28,13 @@ export default {
       },
       container: {
         center:true
-      }
+      },
+     
     },
   },
   plugins: [
-
+    require('tailwind-scrollbar-hide'),
+    
   ],
 }
 

@@ -629,7 +629,7 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
             return item.products.map((pro) => {
                 // console.log('sec',pro);
                 ordered_Products.push({
-                    order_ID:item._id,
+                    order_ID: item._id,
                     user_ID: item.userId,
                     item_ID: pro.productId._id,
                     name: pro.productId.name,
@@ -656,7 +656,17 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
-})
+});
+
+router.get('/women', async (req, res, next) => {
+    console.log(req.query);
+    try {
+        const item = await ProductModel.find(req.query);
+        return res.status(200).json({ msg: 'Product Found', item: item });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    } 
+ });
 
 
 

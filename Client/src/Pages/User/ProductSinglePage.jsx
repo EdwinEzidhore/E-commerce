@@ -11,6 +11,11 @@ const ProductSinglePage = () => {
 
     const [Index, setIndex] = useState(0);
     const SingleProduct = useSelector(state => state.singleProduct);
+
+
+    const buyNowBtn = (product) => {
+        console.log(product);
+    }
     
 
 
@@ -48,12 +53,14 @@ const ProductSinglePage = () => {
                             </div>
       
                             <div className='mt-5'>
-                                <div className='w-full h-auto bg-[#115e59] text-white p-2 flex justify-center my-2 items-center gap-3 font-semibold rounded-lg'>
-                                    <TfiWallet />
-                                    <button>Buy Now</button></div>
-                                <div className='w-full h-auto bg-[#0f766e] text-white p-2 flex items-center gap-3 justify-center my-2 font-semibold rounded-lg'>
-                                    <HiOutlineShoppingCart />
-                                    <button>Add to Cart</button></div>
+                                <div className=' h-auto bg-[#115e59] text-white  flex  my-2 items-center gap-3 font-semibold rounded-lg'>
+                                    
+                                       
+                                          <button className='flex items-center justify-center p-2 w-full' onClick={()=>buyNowBtn(product)}><TfiWallet /><span className='ml-2'>Buy Now</span></button>
+                                        </div>
+                                <div className=' h-auto bg-[#0f766e] text-white  flex items-center gap-3 justify-center my-2 font-semibold rounded-lg'>
+                                   
+                                    <button className='flex items-center justify-center w-full p-2'> <HiOutlineShoppingCart /><span className='ml-2'>Add to Cart</span></button></div>
                             </div>
       
                         </div>
@@ -141,8 +148,8 @@ const ProductSinglePage = () => {
                                 <h1 className='text-xl font-semibold mb-7'>product Details</h1>
                                       <hr />
                                       {
-                                              product.Details.map((pro,index) => (
-                                                <div className='grid grid-cols-6 gap-6 mt-5 pl-5 mb-8' key={index}>
+                                              
+                                                <div className='grid grid-cols-6 gap-6 mt-5 pl-5 mb-8' >
                                     
                                        
                                                 <div className='col col-start-1 text-slate-500'>
@@ -163,7 +170,7 @@ const ProductSinglePage = () => {
                                                     Fabric
                                                 </div>
                                                 <div className='col col-start-2'>
-                                                    {pro.fabric}
+                                                    {}
                                                 </div>
                   
                                                 <div className='col col-start-1 text-slate-500'>
@@ -215,7 +222,7 @@ const ProductSinglePage = () => {
                   
                   
                                            </div>
-                                              ))
+                                             
                                           }
                               
                             </div>
