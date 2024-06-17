@@ -6,22 +6,36 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { addcart, add_cart_price } from '../../Redux/SingleProduct/CartSlice';
 import { toast } from 'react-toastify';
+import Pagination from '../../Components/Pagination';
 
 
 const Womens = () => {
 
     const [product, setProduct] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const [colors, setColor] = useState([]);
     const dispatch = useDispatch();
+    const [totalItems, setTotalItems] = useState(0);
+    const [curntPage, setCurntPage] = useState(1);
 
     useEffect(() => {
-        getItem();
-    }, []);
+        getAllItem();
+   
+    }, [curntPage]);
 
-    const getItem = () => {
-        axios.get(`http://localhost:3333/api/v2/women/?category=Women`)
+ 
+
+    const getAllItem = () => {
+        axios.get(`http://localhost:3333/api/v2/women/?category=Women&page=${curntPage}`)
             .then((res) => {
-                console.log(res.data.item);
-                setProduct(res.data.item)
+                // console.log(res.data);
+                setProduct(res.data.item);
+                setTotalItems(res.data.count)
+                setBrands(res.data.Brands);
+                setColor(res.data.Colors);
+             
+
+
             })
             .catch((err) => {
                 console.log(err);
@@ -59,6 +73,12 @@ const Womens = () => {
     };
 
 
+    const handleChange = (e) => {
+  
+     
+
+    };  
+
   return (
       <section>
           <div className='sticky top-0 backdrop-blur-xl z-10 '><Nav /></div>
@@ -69,7 +89,7 @@ const Womens = () => {
                           <div className='uppercase font-semibold mb-4 text-slate-800'>Filter by price</div>
                           <hr/>
                       <div className='my-4 text-slate-700 space-x-2'>
-                          <input type="radio" id='low' name='price'/>
+                          <input type="radio" id='low' name='price' value='LTh' />
                           <label htmlFor="low">Low to High</label>
                       </div>
                       <div className='mb-5 text-slate-700 space-x-2'>
@@ -78,49 +98,30 @@ const Womens = () => {
                       </div>
                       <div className='text-slate-700'>
                           <div className='uppercase font-semibold my-4 text-slate-800'>Brand</div>
-                          <hr />
-                          <div className='my-3 space-x-2 '>
-                              <input type="checkbox" id='1' name='brand' />
-                              <label htmlFor="1">puma</label>
-                              </div>
-                              <div className='mb-3 space-x-2'>
-                              <input type="checkbox" id='2' name='brand' />
-                              <label htmlFor="2">nike</label>
-                              </div>
-                              <div className='mb-3 space-x-2'>
-                              <input type="checkbox" id='3' name='brand' />
-                              <label htmlFor="3">adidas</label>
-                              </div>
-                              <div className='mb-3 space-x-2'>
-                              <input type="checkbox" id='4' name='brand' />
-                              <label htmlFor="4">england</label>
-                              </div>
-                              <div className='mb-3 space-x-2'>
-                              <input type="checkbox" id='5' name='brand' />
-                              <label htmlFor="5">popy</label>
-                              </div>
-                              <div className='mb-3 space-x-2'>
-                              <input type="checkbox" id='6' name='brand' />
-                              <label htmlFor="6">Allen solly</label>
-                              </div>
-                              
+                              <hr />
+                              {
+                                  brands.length > 0 &&brands.map((brand,index) => (
+                                    <div className='my-3 space-x-2 ' key={index}>
+                                    <input type="radio" id={brand} name='brand' value={brand} onChange={(e)=>handleChange(e)}/>
+                                        <label htmlFor={brand}>{ brand}</label>
+                                    </div>
+                                  ))
+                              }
+
                           </div>
                           
-                          <div className='text-slate-700'>
+                          <div className='text-slate-700 mt-5'>
                               <div className='uppercase font-semibold mb-4 text-slate-800'>Color</div>
-                              <hr/>
-                              <div  className='mb-3 space-x-2'>
-                                  <input type="checkbox" id='1' />
-                                  <label htmlFor="1">Red</label>
-                              </div >
-                              <div className='mb-3 space-x-2'>
-                                  <input type="checkbox" id='2' />
-                                  <label htmlFor="2">white</label>
-                              </div>
-                              <div  className='mb-3 space-x-2'>
-                                  <input type="checkbox" id='3' />
-                                  <label htmlFor="3">Blue</label>
-                              </div>
+                              <hr />
+                              {
+                                  colors.length > 0 && colors.map((color, index) => (
+                                    <div  className='mb-3 space-x-2' key={index}>
+                                    <input type="radio" id={color} name='color' value={color} onChange={(e)=>handleChange(e)} />
+                                          <label htmlFor={color}>{color }</label>
+                                </div >
+                                  ))
+                              }
+
                           </div>
                           <div className='flex justify-between my-5'>
                               <div className='h-auto border bg-emerald-500  rounded-md text-white font-semibold'>
@@ -138,12 +139,12 @@ const Womens = () => {
 
                   <div className=' col-span-10 border items-start flex flex-col ml-3 p-5 h-auto shadow-lg'>
                       
-                        <div className='mb-5'><button className='h-fit w-fit p-1 bg-gray-200 px-2 rounded-md'>All</button></div>
+                        <div className='mb-5'><button onClick={()=>getAllItem()} className='h-fit w-fit p-1 bg-gray-200 px-2 rounded-md'>All</button></div>
                      
                       <div className='flex flex-wrap  gap-5  '>
                           {
-                              product.length > 0 ? product.map((item) => (
-                                <div className='card h-fit   outline-2 p-4 w-fit rounded-lg flex-none '>
+                              product.length > 0 ? product.map((item,index) => (
+                                <div  className='card h-fit  p-4 w-fit rounded-lg flex-none ' key={index}>
                           
                                 <div className='relative group h-56   flex items-center justify-center hover:scale-110 transition duration-500'>
                                     <div className='absolute hidden group-hover:flex rounded-full   bg-red-100 hover:bg-red-200 heart '>
@@ -212,11 +213,11 @@ const Womens = () => {
 
 
                       </div>
-
+                      <Pagination totalItems={totalItems} ItemsPerPage={8} CurntPage={curntPage} setCurntPage={setCurntPage} />
                   </div>
               </div>
           </div>
-          
+        
           <div className='mt-5'><Footer/></div>
 </section>
   )

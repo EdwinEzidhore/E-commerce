@@ -659,10 +659,38 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
 });
 
 router.get('/women', async (req, res, next) => {
-    console.log(req.query);
+    const page = req.query.page;
+    const pageLimit = 8;
     try {
-        const item = await ProductModel.find(req.query);
-        return res.status(200).json({ msg: 'Product Found', item: item });
+        const excludeFields = ['sort', 'page'];
+        const queryObj = { ...req.query };
+        excludeFields.forEach((el) => {
+            delete queryObj[el];
+
+        });
+        console.log(queryObj);
+
+        const item = await ProductModel.find(queryObj)
+        let totalItems = item.length;
+        
+
+        const brands = item.map((el) => el.brand);
+        const colors = item.map((el) => el.Details.colour);
+
+        
+        const filteredBrand = brands.filter((el, index) => {//Removing duplicate brand names from brands
+            return brands.indexOf(el) === index
+        });
+
+        const filteredColor = colors.filter((el, index) => {//Removing duplicate brand names from brands
+            return colors.indexOf(el) === index
+        });
+
+        const products = await ProductModel.find(queryObj).skip((page * pageLimit) - pageLimit).limit(pageLimit);
+        
+
+        return res.status(200).json({ msg: 'Product Found', item: products, Brands: filteredBrand, Colors: filteredColor, count: totalItems });
+        
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     } 
