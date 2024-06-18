@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 const Nav = () => {
       const navigate = useNavigate();
-      const cart = useSelector(state => state.cart.cart);
+    
       const [isloggedin, setIsloggedin] = useState(false);
       const [user, setUser] = useState();
       const [loading, setLoading] = useState(true);
@@ -51,7 +51,7 @@ const Nav = () => {
 
                         <div className='relative py-3 px-2'>
                               {
-                                    cart.length !== 0 ? <button onClick={()=>navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6   bg-[#e07097] text-center'><span className=' text-xs   font-bold  rounded-full'>{ cart.length}</span></div></button> :''
+                                  <button onClick={()=>navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6   bg-[#e07097] text-center'><span className=' text-xs   font-bold  rounded-full'></span></div></button> 
                               }
                           
                           <button><a href="/cart"><box-icon type='solid' name='shopping-bags'></box-icon></a></button>

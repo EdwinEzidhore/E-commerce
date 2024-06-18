@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 const ProductSinglePage = () => {
 
     const [Index, setIndex] = useState(0);
+    
     const SingleProduct = useSelector(state => state.singleProduct);
 
 

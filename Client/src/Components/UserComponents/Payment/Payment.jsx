@@ -3,13 +3,13 @@ import React from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
-import {  removecart} from '../../../Redux/SingleProduct/CartSlice';
+
 
 const Payment = () => {
 
-  const cart_Total = useSelector((state => state.cart.totalAmount));
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
  
   const handlecheckout = () => {
     axios.post('http://localhost:3333/api/v2/cart/checkout', { cart_Total }, { withCredentials: true })
@@ -47,7 +47,7 @@ const Payment = () => {
 
               if (verifyData.message) {
                 navigate('/payment-sucess');
-                dispatch(removecart());
+                
                 toast.success(verifyData.message)
                 }
             } catch (error) {

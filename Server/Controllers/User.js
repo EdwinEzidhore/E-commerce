@@ -24,6 +24,7 @@ require('dotenv').config(
 const Razorpay = require('razorpay');
 
 
+
 const razorpayInstance = new Razorpay({
     key_id:process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_SECRET_KEY,
@@ -247,6 +248,16 @@ router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
             model: 'product'
             
         });
+        let totalAmount = 0;
+        let discount = 0;
+        userCart.products.forEach((el) => {
+           
+            totalAmount += el.productID.sellingPrice * el.quantity;
+            discount +=  el.productID.originalPrice -el.productID.sellingPrice ;
+        });
+
+        console.log("dis" + discount);
+        console.log( "ttl" +totalAmount);
         
         
         if (!userCart) {
@@ -255,12 +266,12 @@ router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
                 products: [],
             });
             
-            res.status(200).json({ success: false, cart: userCart });
+            res.status(200).json({ success: false, cart: userCart});
         } else {
           
             
 
-            res.status(200).json({ success: true, cart: userCart });
+            res.status(200).json({ success: true, cart: userCart,total: totalAmount ,discount:discount});
         }
 
        
@@ -668,7 +679,7 @@ router.get('/women', async (req, res, next) => {
             delete queryObj[el];
 
         });
-        console.log(queryObj);
+      
 
         const item = await ProductModel.find(queryObj)
         let totalItems = item.length;
@@ -694,7 +705,42 @@ router.get('/women', async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     } 
- });
+});
+ 
+router.get('/men', async (req, res, next) => {
+    const page = req.query.page;
+    const pageLimit = 8;
+    try {
+        const excludeFields = ['sort', 'page'];
+        const queryObj = { ...req.query };
+        excludeFields.forEach((el) => {
+            delete queryObj[el];
+
+        });
+       
+        const items = await ProductModel.find(queryObj);
+
+        let totalItems = items.length;
+        
+
+        const brands = items.map((el) => el.brand);
+        const colors = items.map((el) => el.Details.colour);
+
+        
+        const filteredBrand = brands.filter((el, index) => {//Removing duplicate brand names from brands
+            return brands.indexOf(el) === index
+        });
+
+        const filteredColor = colors.filter((el, index) => {//Removing duplicate brand names from brands
+            return colors.indexOf(el) === index
+        });
+        const products = await ProductModel.find(queryObj).skip((page * pageLimit) - pageLimit).limit(pageLimit);
+
+        res.status(200).json({msg:'Product Found',item:products, Brands: filteredBrand, Colors: filteredColor,count: totalItems})
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
 
 
 

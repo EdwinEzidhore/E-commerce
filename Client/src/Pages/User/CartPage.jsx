@@ -9,19 +9,15 @@ import { HiOutlinePlusSm } from "react-icons/hi";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch,useSelector } from 'react-redux';
-import { remove_single_cartItem } from '../../Redux/SingleProduct/CartSlice'
-import {quantity_changed_price} from '../../Redux/SingleProduct/CartSlice'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loading from '../../Components/UserComponents/Loading/Loading';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-import { removecart } from '../../Redux/SingleProduct/CartSlice'
 import '../../css/loadingbutton.css'
 
 const CartPage = () => {
 
     const [cartItems, setCartItems] = useState({products:[]});
-    const dispatch = useDispatch();
     const [err, setErr] = useState(false);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -30,9 +26,10 @@ const CartPage = () => {
     const [paymentMethod, setPaymetMethod] = useState('');
     const [availability, setAvailability] = useState(true);
     const [btnLoading, setBtnloading] = useState(null);
+    const [totalAmount, setTotalAmount] = useState(null);
+    const [discount, setDiscount] = useState(null);
 
-    const cart_Total = useSelector((state => state.cart.totalAmount));
-    const discount = useSelector((state => state.cart.discount));
+
     const activeAddress = useSelector((state) => state.address.activeAddress);
 
 
@@ -47,6 +44,8 @@ const CartPage = () => {
             .then((res) => {
                 setLoading(false);
                 setCartItems(res.data.cart);
+                setTotalAmount(res.data.total);
+                setDiscount(res.data.discount);
                
             })
             .catch(err => {
@@ -60,7 +59,7 @@ const CartPage = () => {
 
     const removeItem = (item) => {
         
-        dispatch(remove_single_cartItem(item));
+        
         const user_id = cartItems.userId;
         const item_id = item.productID._id;
        
@@ -84,7 +83,7 @@ const CartPage = () => {
                         productId: res.data.quantity_changed_item.productID,
                         new_quantity:res.data.quantity_changed_item.quantity,
                     }
-                    dispatch(quantity_changed_price(productDetails))
+                    
                 }
 
             })
@@ -108,7 +107,6 @@ const CartPage = () => {
                     .then(res => {
                         if (res.status === 200) {
                             navigate('/payment-sucess');
-                            dispatch(removecart());
                             setBtnloading(false);
                         }
                     })
@@ -150,7 +148,7 @@ const CartPage = () => {
     
                   if (verifyData.message) {
                     navigate('/payment-sucess');
-                    dispatch(removecart());
+                    
                    
                     }
                 } catch (error) {
@@ -327,7 +325,7 @@ const CartPage = () => {
                                  
                                   <div className='flex justify-between text-sm mb-3  text-[black]'>
                                       <span>Total MRP</span>
-                                              <span>₹{ cart_Total}</span>
+                                              <span>₹{ totalAmount}</span>
                                      </div>
                                      <div className='flex justify-between mb-3 text-sm'>
                                       <span>Discount on MRP</span>
@@ -348,7 +346,7 @@ const CartPage = () => {
                                   <hr className='border-slate-400'></hr>
                                   <div className='flex justify-between my-4 font-semibold'>
                                       <span className='uppercase'>Toatl Amount</span>
-                                              <span>₹{ cart_Total}</span>
+                                              <span>₹{ totalAmount}</span>
                                   </div>
 
                                   <div className='flex justify-center h-auto bg-[#e42e55]  '>

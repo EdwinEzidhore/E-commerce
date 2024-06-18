@@ -4,7 +4,6 @@ import axios from 'axios'
 import {useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { add } from '../../../Redux/SingleProduct/SingleProductSlice';
-import {addcart,add_cart_price} from '../../../Redux/SingleProduct/CartSlice'
 import { toast } from 'react-toastify';
 import Loading from '../Loading/Loading';
 import '../../../css/banner.css'
@@ -52,7 +51,6 @@ const Home = () => {
                 else {
                    
                     toast.success('Added to Bag')
-                    dispatch(addcart(product));
                     let populated = res.data.populated.products;
                     const filtered = populated.find((prod) => prod.productID._id == pro_id);
                     const productDetails = {
@@ -61,7 +59,7 @@ const Home = () => {
                         price: filtered.productID.sellingPrice,
                         OG_price: filtered.productID.originalPrice,
                     }
-                    dispatch(add_cart_price(productDetails))
+                   
                     
 
 

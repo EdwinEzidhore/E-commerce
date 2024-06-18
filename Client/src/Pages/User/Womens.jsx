@@ -4,7 +4,6 @@ import Footer from '../../Components/UserComponents/Footer/Footer';
 import '../../css/style.css'
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { addcart, add_cart_price } from '../../Redux/SingleProduct/CartSlice';
 import { toast } from 'react-toastify';
 import Pagination from '../../Components/Pagination';
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop'; 
