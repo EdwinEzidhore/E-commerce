@@ -22,6 +22,9 @@ require('dotenv').config(
     {path: 'Config/.env'}
 );
 const Razorpay = require('razorpay');
+// const { default: products } = require('razorpay/dist/types/products');
+
+
 
 
 
@@ -172,8 +175,16 @@ router.get('/featured',isAuthenticated, async (req, res, next) => {
         const isUser = await UserModel.findOne({ _id: req.user._id });
         
         const Products = await ProductModel.find({});
+        const sliced=Products.reverse().slice(0, 6);
+       
+        const FilteredBrand = Products.filter((el, index, self) =>
+            index === self.findIndex((t) => t.brand === el.brand)
+          );
+        
+        
+        
         if (Products) {
-            return res.status(200).json({Products});
+            return res.status(200).json({ msg:'sucess',products:sliced,Brands:FilteredBrand});
         }
         
     } catch (error) {

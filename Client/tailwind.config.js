@@ -1,14 +1,19 @@
 /** @type {import('tailwindcss').Config} */
+const flowbite = require("flowbite-react/tailwind");
+
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-    
+    flowbite.content(),
    
   ],
   variants: {
     extend: {
-      display:['group-hover']
+      display: ['group-hover'],
+      aspectRatio: {
+        '3/2':'3 / 2',
+      }
     }
   },
   theme: {

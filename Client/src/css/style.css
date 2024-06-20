@@ -69,9 +69,11 @@
 .content:hover{
   transform: translateY();
   animation: showcontent 0.3s linear 1 forwards;
+
 }
 @keyframes showcontent{
   to{
+  
     transform: translateY(-25px);
   }
 }

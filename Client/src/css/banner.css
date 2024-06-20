@@ -3,14 +3,49 @@
     margin: 0;
     box-sizing: border-box;
 }
-/* .carousel{
+
+.wrapper{
+  
+    max-width: 1536px;
+    margin-inline: auto;
     position: relative;
+    overflow: hidden;
+    mask-image: linear-gradient(
+        to right,
+        rgba(0,0,0,0),
+        rgba(0,0,0,1) 20%,
+        rgba(0,0,0,1) 80%,
+        rgba(0,0,0,0)
+
+    );
+}
+@keyframes scrollleft{
+
+    to{
+    left: -200px;
+    }
+}
+
+.item{
+    position: absolute;
+    border-radius: 6px;
+    left: 100%;
+    animation-name: scrollleft;
+    animation-duration: 30s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    margin-right: 20px;
    
 }
-.carousel-card{
-    display: flex;
-    
-    position: absolute;
+
   
-    
-} */
+
+
+.item1 { animation-delay: -26.25s; }
+.item2 { animation-delay: -22.5s; }
+.item3 { animation-delay: -18.75s; }
+.item4 { animation-delay: -15s; }
+.item5 { animation-delay: -11.25s; }
+.item6 { animation-delay: -7.5s; }
+.item7 { animation-delay: -3.75s; }
+.item8 { animation-delay: 0s; }
