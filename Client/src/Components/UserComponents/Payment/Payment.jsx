@@ -12,7 +12,7 @@ const Payment = () => {
 
  
   const handlecheckout = () => {
-    axios.post('http://localhost:3333/api/v2/cart/checkout', { cart_Total }, { withCredentials: true })
+    axios.post('http://localhost:3333/api/v2/cart/checkout', { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         handlePaymentVerify(res.data.data,res.data.cart)

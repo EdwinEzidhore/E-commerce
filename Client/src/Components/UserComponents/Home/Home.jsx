@@ -143,15 +143,13 @@ const Home = () => {
                 <div className='card-wrapper  container grid grid-rows-1 grid-cols-3 gap-2 w-fit mb-5'>
                     {
                         newArrivals.length > 0 ? newArrivals.map((product) => (
-                            <div className='card h-fit relative  p-4 w-fit rounded-lg flex-none   shadow-lg bg-slate-50'>
+                            <div className='card h-fit relative  p-4 w-fit rounded-lg flex-none   shadow-lg bg-slate-50' key={product._id} onClick={()=>getSingleProduct(product)}>
                             <img className='h-12 z-10 absolute left-0 top-0 drop-shadow-md' src="/src/images/new (1).png" alt="products" />
                               
                               <div className='relative group h-56   flex items-center justify-center hover:scale-105 transition duration-500 '>
                                   <div className='absolute hidden group-hover:flex rounded-full   bg-red-100 hover:bg-red-200 heart '>
                                  
-                                      <button className='
-                                      
-                                          group/button
+                                      <button className=' group/button
                                           rounded-full p-1 backdrop-blur 
                                           font-semibold
                                           relative before:content-[attr(data-tip)] before:absolute before:px-3 before:py-2 before:left-1/2 before:top-0 before:w-max before:max-w-xs before:-translate-x-1/2 before:-translate-y-full  before:bg-red-500 before:text-white before:rounded-md before:opacity-0
@@ -213,11 +211,11 @@ const Home = () => {
                 <div className='side-carosel-items flex  space-x-4 overflow-scroll scrollbar-hide mb-5 p-5'>
                     
                     {
-                        brands.length > 0 ? brands.map((item) => (
+                        brands.length > 0 ? brands.map((item,index) => (
                       
-                        <div className='h-60 bg-red-300 shadow-lg w-60 flex-none rounded-lg grid row-span-3 overflow-hidden relative'>
+                        <div className='h-60 bg-red-300 shadow-lg w-60 flex-none rounded-lg grid row-span-3 overflow-hidden relative' key={index}>
                         <img className='h-full object-contain hover:scale-105 duration-300' src={`http://localhost:3333/${item.productImage[0]}`} alt="" />
-                            <div className='absolute bottom-0 h-auto  w-full bg-gray-300 font-semibold font-serif text-[#100f0f] tracking-wide p-2 uppercase text-center '><span className=''>{item.brand }</span></div>
+                            <div className='absolute bottom-0 h-auto  w-full bg-gray-300 font-semibold font-serif text-[#100f0f] tracking-wide p-2 uppercase text-center '><span >{item.brand }</span></div>
                       
                      
                     </div>

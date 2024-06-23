@@ -1,7 +1,7 @@
 import React, {useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+
 
 
 const Nav = () => {
@@ -30,64 +30,55 @@ const Nav = () => {
       return (
         
       
-          <nav className=' mx-auto flex  items-center py-4 md:justify-evenly font-poppins'>
-              <div className='flex'>  
-        <span className='text-2xl font-extrabold text-[#02c39a]'>S</span><span className='text-xl font-bold text-[#00a896]'>hopify</span>
-        <img className='h-6' src="/src/images/icons8-shopping-cart-48.png" alt="" />
-            
+          <nav className=' mx-auto flex  items-center py-4 md:justify-evenly font-poppins '>
+              <div className=' h-fit'>  
+                  <div className='text-center tracking-wider'><span className='text-3xl font-serif font-semibold'>E</span><span className='font-semibold text-3xl font-frank-lukh'>ZIRE</span></div>
+                  <div className='text-xs '><span className='tracking-widest text-gray-500 font-extralight font-sans'>FASHION STORE</span></div>
               </div>
-              <div className='md:flex md:space-x-7 gap-4 items-center uppercase tracking-wide '>
-        <input className='bg-[#FFDDD2] py-2 px-1 w-80 rounded-lg outline-none' type="search" placeholder='Search' name="" id="" /> 
-        <div className='flex gap-4 space-x-6 ease-out text-slate-500'>
-          
-                  <a className='hover:scale-110 hover:text-slate-800 ' href="/">Home</a>
-                  <a className='hover:scale-110 hover:text-slate-800' href="#">Collections</a>
-                  <a className='hover:scale-110 hover:text-slate-800' href="/men">Men</a>
-                  <a className='hover:scale-110 hover:text-slate-800' href="/women">Women</a>
-        </div>
-              </div>
-              <div className='md:flex space-x-6 items-center'>
-              
-
-                        <div className='relative py-3 px-2'>
-                              {
-                                  <button onClick={()=>navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6   bg-[#e07097] text-center'><span className=' text-xs   font-bold  rounded-full'></span></div></button> 
-                              }
-                          
-                          <button><a href="/cart"><box-icon type='solid' name='shopping-bags'></box-icon></a></button>
+              <div className='flex bg-[#03071e] px-12 rounded-full py-2'>
+                  <div className='md:flex md:space-x-7 gap-4 items-center  tracking-wide'>
+                        <input className='bg-[#ffffff]  px-4 w-80 rounded-full py-1 outline-none text-md' type="search" placeholder='Search' name="" id="" /> 
+                        <div className='flex gap-4 space-x-6 ease-out text-[white] uppercase tracking-wider font-light'>
+                              <a className='hover:scale-110   text-sm ' href="/">Home</a>
+                            
+                              <a className='hover:scale-110  text-sm ' href="/men">Men</a>
+                              <a className='hover:scale-110  text-sm ' href="/women">Women</a>
                         </div>
-                        <div>
-                              {
-                                    isloggedin ?
-                                          <div className='flex space-x-6'>
-                                                <button><box-icon name='heart'></box-icon></button>
-                                                <button><box-icon name='bell' type='solid' ></box-icon></button>
-                                          </div> : ''
-                                          
-                              }
-                        </div>
+                  </div>
+              <div className='md:flex ml-12 space-x-6 md:items-center'>
+                  <div className='relative px-4 py-2'>
+                        {
+                              <button onClick={()=>navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6    text-center '><span className=' text-xs bg-red-500 py-1 px-2  font-bold  rounded-full'>1</span></div></button> 
+                        }
+                                    <button>
 
-                        <div>
+                                          <a href="/cart"><box-icon name='shopping-bags' type='solid' color='#ffffff' ></box-icon></a>
+                                    </button>
+                  </div>
+                  <div>
+                        {
+                              isloggedin ?
+                                    <div className='flex space-x-6'>
+                                                      <button><box-icon name='heart' type='solid' color='#f86666' ></box-icon></button>
+
+                                    </div> : ''                  
+                        }
+                  </div>
+                  <div>
                         <button className='' onClick={()=>navigate('/profile')}>
                               {
                                     isloggedin ? <img className='h-8 border rounded-full' src={`http://localhost:3333/${user.avatar.url}`} alt="" />:<box-icon type='solid' name='user-circle'></box-icon>
                               }
-                                    
-
                         </button>
-                        </div>
-
-
-              </div>
-                  <div className='flex space-x-1 gap-1'>
-                        {
-                              isloggedin==true?'': <button className='h-auto bg-orange-400 py-1 px-2 rounded text-white' onClick={()=>navigate('/Login')}>Login</button>
-                        }
-                   
-                   
-              </div>
-         
-          </nav>
+                  </div>
+            </div>
+            </div>
+            <div className='flex space-x-1 gap-1'>
+                  {
+                        isloggedin==true?'': <button className='h-auto bg-orange-400 py-1 px-2 rounded text-white' onClick={()=>navigate('/Login')}>Login</button>
+                  }
+            </div>
+         </nav>
     
   )
 }

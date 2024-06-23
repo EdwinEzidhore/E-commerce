@@ -7,7 +7,7 @@ const Pagination = ({ totalItems, ItemsPerPage, CurntPage, setCurntPage }) => {
     };
     
   return (
-      <div className='flex items-center justify-center space-x-2 w-full mt-12'>
+      <div className='flex items-center justify-center space-x-2 w-full mt-5'>
           {
               [...new Array(Math.ceil(totalItems / ItemsPerPage))].map((rec, index) => (
                 <div className={index+1 ===CurntPage?`h-auto outline outline-blue-600 bg-blue-500 text-white font-semibold `:` h-auto outline outline-1 outline-slate-400 bg-gray-300 text-gray-600`} key={index}>

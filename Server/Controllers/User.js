@@ -170,9 +170,11 @@ router.get('/isLoggedIn',isAuthenticated, async (req, res) => {
 })
 
 //HomePage featured product listing Route
-router.get('/featured',isAuthenticated, async (req, res, next) => {
+router.get('/featured', async (req, res, next) => {
     try {
-        const isUser = await UserModel.findOne({ _id: req.user._id });
+
+        // const isUser = await UserModel.findOne({ _id: req.user._id });
+
         
         const Products = await ProductModel.find({});
         const sliced=Products.reverse().slice(0, 6);
@@ -720,34 +722,34 @@ router.get('/women', async (req, res, next) => {
  
 router.get('/men', async (req, res, next) => {
     const page = req.query.page;
+  
     const pageLimit = 8;
     try {
         const excludeFields = ['sort', 'page'];
         const queryObj = { ...req.query };
         excludeFields.forEach((el) => {
             delete queryObj[el];
-
         });
-       
-        const items = await ProductModel.find(queryObj);
+        
 
+        
+        //to find totalitems ,brands and colors in men section
+        const items = await ProductModel.find({category:'Men'});
         let totalItems = items.length;
-        
-
         const brands = items.map((el) => el.brand);
-        const colors = items.map((el) => el.Details.colour);
-
-        
+        const colors = items.map((el) => el.Details.colour);        
         const filteredBrand = brands.filter((el, index) => {//Removing duplicate brand names from brands
             return brands.indexOf(el) === index
         });
-
         const filteredColor = colors.filter((el, index) => {//Removing duplicate brand names from brands
             return colors.indexOf(el) === index
         });
-        const products = await ProductModel.find(queryObj).skip((page * pageLimit) - pageLimit).limit(pageLimit);
 
-        res.status(200).json({msg:'Product Found',item:products, Brands: filteredBrand, Colors: filteredColor,count: totalItems})
+
+
+        // const products = await ProductModel.find(queryObj).skip((page * pageLimit) - pageLimit).limit(pageLimit);
+
+        res.status(200).json({msg:'Product Found',item:items, Brands: filteredBrand, Colors: filteredColor,count: totalItems})
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
