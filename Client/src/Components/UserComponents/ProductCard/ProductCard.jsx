@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ProductCard = ({product,cart}) => {
+const ProductCard = ({product,AddtoCart}) => {
   return (
     <div className='flex flex-wrap  gap-5 '>
                           {
@@ -44,7 +44,7 @@ const ProductCard = ({product,cart}) => {
                                     </div>
                                   
                                         <div className='outline rounded-full mt-2 bg-gray-200 outline-stone-200 hover:bg-[#b5b5ff]'>
-                                            <button onClick={()=>cart(item)} className='rounded-full  p-1 
+                                            <button onClick={()=>AddtoCart(item)} className='rounded-full  p-1 
                                             relative before:content-[attr(data-tip)] before:absolute before:px-3 before:py-2 before:left-1/2 before:top-0 before:w-max before:max-w-xs before:-translate-x-1/2 before:-translate-y-full  before:bg-[#5555ca] before:text-white before:rounded-md before:opacity-0
                                      before:transition-all before:text-xs
   

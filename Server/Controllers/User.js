@@ -682,47 +682,46 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
     }
 });
 
-router.get('/women', async (req, res, next) => {
-    const page = req.query.page;
-    const pageLimit = 8;
-    try {
-        const excludeFields = ['sort', 'page'];
-        const queryObj = { ...req.query };
-        excludeFields.forEach((el) => {
-            delete queryObj[el];
+// router.get('/women', async (req, res, next) => {
+//     const page = req.query.page;
+//     const pageLimit = 8;
+//     try {
+//         const excludeFields = ['sort', 'page'];
+//         const queryObj = { ...req.query };
+//         excludeFields.forEach((el) => {
+//             delete queryObj[el];
 
-        });
+//         });
       
 
-        const item = await ProductModel.find(queryObj)
-        let totalItems = item.length;
+//         const item = await ProductModel.find(queryObj)
+//         let totalItems = item.length;
         
 
-        const brands = item.map((el) => el.brand);
-        const colors = item.map((el) => el.Details.colour);
+//         const brands = item.map((el) => el.brand);
+//         const colors = item.map((el) => el.Details.colour);
 
         
-        const filteredBrand = brands.filter((el, index) => {//Removing duplicate brand names from brands
-            return brands.indexOf(el) === index
-        });
+//         const filteredBrand = brands.filter((el, index) => {//Removing duplicate brand names from brands
+//             return brands.indexOf(el) === index
+//         });
 
-        const filteredColor = colors.filter((el, index) => {//Removing duplicate brand names from brands
-            return colors.indexOf(el) === index
-        });
+//         const filteredColor = colors.filter((el, index) => {//Removing duplicate brand names from brands
+//             return colors.indexOf(el) === index
+//         });
 
-        const products = await ProductModel.find(queryObj).skip((page * pageLimit) - pageLimit).limit(pageLimit);
+//         const products = await ProductModel.find(queryObj).skip((page * pageLimit) - pageLimit).limit(pageLimit);
         
 
-        return res.status(200).json({ msg: 'Product Found', item: products, Brands: filteredBrand, Colors: filteredColor, count: totalItems });
+//         return res.status(200).json({ msg: 'Product Found', item: products, Brands: filteredBrand, Colors: filteredColor, count: totalItems });
         
-    } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
-    } 
-});
+//     } catch (error) {
+//         return next(new ErrorHandler(error.message, 500));
+//     } 
+// });
  
-router.get('/men', async (req, res, next) => {
+router.get('/category', async (req, res, next) => {
     const page = req.query.page;
-  
     const pageLimit = 8;
     try {
         const excludeFields = ['sort', 'page'];
@@ -731,10 +730,9 @@ router.get('/men', async (req, res, next) => {
             delete queryObj[el];
         });
         
-
         
         //to find totalitems ,brands and colors in men section
-        const items = await ProductModel.find({category:'Men'});
+        const items = await ProductModel.find(queryObj);
         let totalItems = items.length;
         const brands = items.map((el) => el.brand);
         const colors = items.map((el) => el.Details.colour);        
