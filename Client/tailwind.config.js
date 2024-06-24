@@ -6,6 +6,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     flowbite.content(),
+     
    
   ],
   variants: {
@@ -39,7 +40,7 @@ export default {
   },
   plugins: [
     require('tailwind-scrollbar-hide'),
-    
+   
   ],
 }
 

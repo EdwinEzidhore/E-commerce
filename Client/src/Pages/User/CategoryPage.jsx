@@ -6,6 +6,7 @@ import Pagination from '../../Components/Pagination';
 import Footer from '../../Components/UserComponents/Footer/Footer';
 import axios from 'axios';
 import { toast } from 'react-toastify'; 
+import ScrollToTop from '../../Components/UserComponents/ScrollToTop'
 
 const CategoryPage = ({category}) => {
 
@@ -129,6 +130,7 @@ const CategoryPage = ({category}) => {
 
   return (
       <div>
+          <ScrollToTop dependency={product}/>
           <div className='sticky top-0 backdrop-blur-xl z-10 '><Nav /></div>
           <div className='container '>
             <div className='grid grid-cols-12 overflow-y-auto h-screen scroll-smooth'>

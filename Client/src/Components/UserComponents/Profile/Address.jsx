@@ -94,7 +94,8 @@ const Address = () => {
       axios.get('http://localhost:3333/api/v2/get-address', { withCredentials: true })
         .then((res) => {
         
-        setUserAddress(res.data.Address);
+          setUserAddress(res.data.Address);
+          console.log(res.data);
         dispatch(setAddresses(res.data.Address));
         
      

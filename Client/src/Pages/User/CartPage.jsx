@@ -103,7 +103,7 @@ const CartPage = () => {
                     .catch((err) => console.log(err))
             } else if (paymentMethod === 'home') {
                 setBtnloading(true)
-                axios.post('http://localhost:3333/api/v2/cart/checkout/cod', { cart_Total,activeAddress },{withCredentials:true})
+                axios.post('http://localhost:3333/api/v2/cart/checkout/cod', {activeAddress },{withCredentials:true})
                     .then(res => {
                         if (res.status === 200) {
                             navigate('/payment-sucess');

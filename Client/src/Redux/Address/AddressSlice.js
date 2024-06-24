@@ -10,9 +10,10 @@ const AddressSlice = createSlice({
     name: 'address',
     initialState,
     reducers: {
-        setAddresses(state, action) {
+      setAddresses(state, action) {
+        console.log('Slice',action.payload);
             state.addresses = action.payload;
-            if (state.addresses.length === 1) {
+            if (state.addresses.length > 1) {
               state.activeAddress = state.addresses[0];
             }
           },

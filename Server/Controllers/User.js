@@ -204,17 +204,18 @@ router.get('/cart', isAuthenticated, async (req, res, next) => {
         const userId = user_data._id;
         const { id } = req.query;
         const product = await ProductModel.findOne({ _id: id });
-       
+    
+
         if (product.stock <= 0) {
             return res.status(200).json({ success: false, msg: 'Product is Out of stock' })
         }
+       
         let userCart = await CartModel.findOne({ userId });
        
         if (!userCart) {
             userCart = new CartModel({
                 userId,
                 products: [],
-               
             });
         }
 
@@ -241,12 +242,7 @@ router.get('/cart', isAuthenticated, async (req, res, next) => {
             
             res.status(200).json({ msg: 'Product added to cart',populated});
         }
-      
-       
-        
-        
-
-
+    
     } catch (error) {
         return next(new ErrorHandler(error.message, 500))
     }
@@ -261,28 +257,23 @@ router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
             model: 'product'
             
         });
-        let totalAmount = 0;
-        let discount = 0;
-        userCart.products.forEach((el) => {
-           
-            totalAmount += el.productID.sellingPrice * el.quantity;
-            discount +=  el.productID.originalPrice -el.productID.sellingPrice ;
-        });
-
-        console.log("dis" + discount);
-        console.log( "ttl" +totalAmount);
-        
-        
         if (!userCart) {
             userCart = new CartModel({
                 userId,
                 products: [],
+                
             });
             
             res.status(200).json({ success: false, cart: userCart});
         } else {
-          
-            
+
+            let totalAmount = 0;
+            let discount = 0;
+            userCart.products.forEach((el) => {
+               
+                totalAmount += el.productID.sellingPrice * el.quantity;
+                discount +=  el.productID.originalPrice -el.productID.sellingPrice ;
+            });
 
             res.status(200).json({ success: true, cart: userCart,total: totalAmount ,discount:discount});
         }
@@ -496,7 +487,7 @@ router.post('/verify', async (req, res) => {
 });
 
 router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
-    const { cart_Total ,activeAddress} = req.body;
+    const { activeAddress} = req.body;
     const user_id = req.user.id;
 
     try {
@@ -505,24 +496,31 @@ router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
             model: 'product'
             
         });
-        // console.log(cart);
+      
+        let totalAmount = 0;
+        cart.products.forEach((item) => {
+            totalAmount += item.productID.sellingPrice * item.quantity;
+        });
+
         
         let order = new OrderModel({
             userId: cart.userId,
             products: [],
-            totalAmount: cart_Total,
+            totalAmount: totalAmount,
             OrderStatus: 'Order Placed',
             PaymentStatus: 'Pending',
             paymentMethod: 'COD',
             Address: activeAddress,
         });
 
+       
         const cart_item=cart.products.map((pro) => {
             order.products.push({
                 productId: pro.productID._id,
                 price: pro.productID.sellingPrice,
                 quantity: pro.quantity,
             });
+            
            
         });
 
@@ -641,17 +639,18 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
 
         const orders = await OrderModel.find({ userId: user_id }).populate({
             path: 'products.productId',
-            model: 'product'
+            model:'product'
         });
+        
         if (!orders) {
             return res.status(404).json({ msg: 'User not found' });
         }
 
-
         orders.map((item) => {
             // console.log('first',item);
+            // res.json(item)
             return item.products.map((pro) => {
-                // console.log('sec',pro);
+            //   console.log(pro);
                 ordered_Products.push({
                     order_ID: item._id,
                     user_ID: item.userId,
@@ -659,7 +658,8 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
                     name: pro.productId.name,
                     description: pro.productId.description,
                     brand: pro.productId.brand,
-                    image_url: pro.productId.productImage,
+                    color: pro.productId.Details.colour,
+                    image_url: pro.productId.productImage[0],
                     price: pro.price,
                     category: pro.productId.category,
                     orderDate: item.orderDate,
@@ -681,6 +681,62 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
         return next(new ErrorHandler(error.message, 500));
     }
 });
+
+router.patch('/cancel_order', async (req, res,next) => {
+    const { orderID } = req.query;
+    try {
+        let order = await OrderModel.findOne({ _id: orderID });
+        console.log(order);
+        if (!order) {
+            return res.json({ msg: 'Order not found' });
+        }
+        order = await OrderModel.findOneAndUpdate(
+            { _id: orderID },
+            {
+                $set:{
+                    OrderStatus: 'Cancelled',
+                    PaymentStatus:'Failed',
+                   
+                },
+            },
+          {new:true}
+        );
+        return res.status(200).json({msg:`Order cancelled`})
+    } catch (error) {
+    
+    }
+});
+
+router.patch('/return_order', async (req, res, next) => {
+    const { orderID } = req.query;
+    const { returnForm } = req.body;
+
+
+    try {
+        let order = await OrderModel.findOne({ _id: orderID });
+        console.log(order);
+        if (!order) {
+            return res.status(404).json({ msg: 'Order not found' });
+        }
+        order = await OrderModel.findOneAndUpdate(
+            { _id: orderID },
+            
+            {
+                $set: {
+                    OrderStatus: 'Returned',
+                    returnReason: returnForm.reason,
+                    InReturn: returnForm.inReturn,
+                }
+            },
+            {new:true},
+        );
+        
+        return res.status(200).json({msg:'Order returned'})
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
 
 // router.get('/women', async (req, res, next) => {
 //     const page = req.query.page;

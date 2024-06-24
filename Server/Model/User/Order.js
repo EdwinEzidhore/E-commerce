@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const User = require('../../Model/User/User')
-const products=require('../../Model/Admin/AdminAddProduct')
+const products = require('../../Model/Admin/AdminAddProduct')
+
+
 
 const OrderModel = new mongoose.Schema({
     userId: {
@@ -12,7 +14,6 @@ const OrderModel = new mongoose.Schema({
         {
             productId: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: products,
                 required:true,
             },
             price: {
@@ -69,6 +70,9 @@ const OrderModel = new mongoose.Schema({
         type:String,
     },
     returnReason: {
+        type:String
+    },
+    InReturn: {
         type:String
     }
 });
