@@ -7,10 +7,12 @@ import Footer from '../../Components/UserComponents/Footer/Footer';
 import axios from 'axios';
 import { toast } from 'react-toastify'; 
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop'
+import { useDispatch } from 'react-redux';
+import { setCartLength } from '../../Redux/Cart/CartSlice';
 
 const CategoryPage = ({category}) => {
 
-    
+    const dispatch = useDispatch();
     const [product, setProduct] = useState([]);
     const [originalProduct, setOriginalProduct] = useState([]);
 
@@ -120,7 +122,7 @@ const CategoryPage = ({category}) => {
                     toast.error(res.data.msg);
                 }
                 else {
-                   
+                    dispatch(setCartLength(res.data.length));
                     toast.success('Added to Bag')
 
                 }
@@ -131,12 +133,12 @@ const CategoryPage = ({category}) => {
   return (
       <div>
           <ScrollToTop dependency={product}/>
-          <div className='sticky top-0 backdrop-blur-xl z-10 '><Nav /></div>
+          <div className='sticky top-0 backdrop-blur-xl z-10 '><Nav length /></div>
           <div className='container '>
-            <div className='grid grid-cols-12 overflow-y-auto h-screen scroll-smooth'>
+            <div className='grid grid-cols-12 '>
                   <SideBar brands={brands} colors={colors} handlebrandChange={handlebrandChange} handleColorChange={handleColorChange} handleSortChange={handleSortChange} handleClearBtn={ handleClearBtn} />
 
-            <div className='grid col-span-10 border  ml-3 p-5 overflow-y-auto h-screen scroll-smooth'>
+            <div className='grid col-span-10 border  ml-3 p-5 overflow-y-auto h-screen scroll-smooth scrollbar-default'>
                 <ProductCard product={product} AddtoCart={cart} />
                 <Pagination totalItems={totalItems} ItemsPerPage={8} CurntPage={curntPage} setCurntPage={setCurntPage} />
             </div>

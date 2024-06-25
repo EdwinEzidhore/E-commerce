@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
 import { combineReducers } from "@reduxjs/toolkit";
 import AddressSlice from "./Address/AddressSlice";
+import CartSlice from "./Cart/CartSlice";
 
 
 const persistConfig = {
@@ -13,7 +14,8 @@ const persistConfig = {
 }
 const reducer = combineReducers({
   singleProduct: SingleProductSlice,
-  address:AddressSlice,
+  address: AddressSlice,
+  cart:CartSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)

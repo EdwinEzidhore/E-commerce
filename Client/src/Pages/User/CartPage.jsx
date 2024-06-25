@@ -14,9 +14,11 @@ import { toast } from 'react-toastify';
 import Loading from '../../Components/UserComponents/Loading/Loading';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import '../../css/loadingbutton.css'
+import { decrement, setCartLength } from '../../Redux/Cart/CartSlice';
 
 const CartPage = () => {
 
+    const dispatch = useDispatch();
     const [cartItems, setCartItems] = useState({products:[]});
     const [err, setErr] = useState(false);
     const navigate = useNavigate();
@@ -65,8 +67,12 @@ const CartPage = () => {
        
         axios.delete(`http://localhost:3333/api/v2/?user_id=${user_id}&item_id=${item_id}`, { withCredentials: true })
             .then((res) => {
-                setCartItems(res.data.cart);
-                getCartItems();
+                if (res.status === 200) {
+                    dispatch(decrement());
+                    setCartItems(res.data.cart);
+                    getCartItems();
+                }
+               
             })
             .catch(err => console.log(err))
     };
@@ -108,6 +114,7 @@ const CartPage = () => {
                         if (res.status === 200) {
                             navigate('/payment-sucess');
                             setBtnloading(false);
+                            dispatch(setCartLength(0));
                         }
                     })
                     .catch(err => console.log(err));

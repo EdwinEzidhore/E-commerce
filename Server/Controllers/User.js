@@ -161,6 +161,9 @@ router.get('/isLoggedIn',isAuthenticated, async (req, res) => {
     try {
         const isUser = await UserModel.findOne({ _id: req.user._id });
         const userStatus = isUser.status;
+       
+        
+
         if (userStatus) {
             return res.status(200).json({success:true,msg:'User is logged in',userStatus,isUser})
         }
@@ -234,13 +237,16 @@ router.get('/cart', isAuthenticated, async (req, res, next) => {
             });
             
             await userCart.save();
+
+
             let populated = await CartModel.findOne({ userId: userId }).populate({
                 path: 'products.productID',
                 model: 'product'
                 
             });
-            
-            res.status(200).json({ msg: 'Product added to cart',populated});
+            const length = userCart.products.length;
+           
+            res.status(200).json({ msg: 'Product added to cart',populated,length:length});
         }
     
     } catch (error) {

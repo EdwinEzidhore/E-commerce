@@ -25,6 +25,7 @@ import Address from './Components/UserComponents/Profile/Address';
 import AdminOrders from './Pages/Admin/AdminOrders';
 import Men from './Pages/User/Men';
 import CategoryPage from './Pages/User/CategoryPage';
+import Maintenance from './Components/UserComponents/Loading/Maintenance';
 function App() {
 
   
@@ -51,12 +52,12 @@ function App() {
               <Route path='/women' element={<Womens />}></Route>
               <Route path='/Address' element={<Address />}></Route>
               <Route path='/men' element={<Men />}></Route>
-
               <Route path='/cat' element={<CategoryPage />}></Route>
 
 
               
 
+              <Route path='/maintenance' element={<Maintenance />}></Route>
 
 
 

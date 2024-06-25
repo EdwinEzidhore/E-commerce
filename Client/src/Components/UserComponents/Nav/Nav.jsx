@@ -1,6 +1,7 @@
 import React, {useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
 
@@ -11,12 +12,15 @@ const Nav = () => {
       const [user, setUser] = useState();
       const [loading, setLoading] = useState(true);
       
+      const cartLength = useSelector(state => state.cart.length);
+
       useEffect(() => {
         
             axios.get('http://localhost:3333/api/v2/isLoggedIn',{withCredentials:true})
                 .then((res) => {
                     setIsloggedin(res.data.userStatus);
                       setUser(res.data.isUser);
+                      setCartLength(res.data.length)
                      
                 })
                   .catch((err) => {
@@ -48,7 +52,7 @@ const Nav = () => {
               <div className='md:flex ml-12 space-x-6 md:items-center'>
                   <div className='relative px-4 py-2'>
                         {
-                              <button onClick={()=>navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6    text-center '><span className=' text-xs bg-red-500 py-1 px-2  font-bold  rounded-full'>1</span></div></button> 
+                                    cartLength >0 && <button onClick={() => navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6    text-center '><span className=' text-xs bg-red-500 py-1 px-2  font-bold  rounded-full'>{ cartLength}</span></div></button> 
                         }
                                     <button>
 

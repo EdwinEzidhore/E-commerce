@@ -57,7 +57,7 @@ const ProfilePage = () => {
                               <ul className='mb-6'>
                              <li className='my-3'><button onClick={()=>{setActive('profile')}} className={active==='profile'? 'text-sky-500':''}>Profile Information</button></li>
                               <li className='my-3'><button onClick={()=>setActive('Address')} className={active==='Address'?'text-sky-500':''}>Manage Address</button></li>
-                              <li className='my-3'>PAN Information</li>
+                              <li className='my-3'><a href="/maintenance">PAN Information</a></li>
                               
                           </ul>
                           </div>
@@ -67,14 +67,14 @@ const ProfilePage = () => {
                       <div className=''>
                                 <div className='flex uppercase text-slate-500 font-semibold my-4'>
                                 <box-icon name='wallet-alt' type='solid' color='#135D66' ></box-icon>
-                                    <span className='ml-2'>Payments</span>
+                                    <span className='ml-2'><a href="/maintenance">Payments</a></span>
                                 </div>
                           <div className='ml-7'>
                              
                               <ul className='mb-6'>
-                              <li className='my-3'>Gift Cards</li>
-                              <li className='my-3'>Saved UPI</li>
-                              <li className='my-3'>Saved Cards</li>
+                              <li className='my-3'><a href="/maintenance">Gift Cards</a></li>
+                              <li className='my-3'><a href="/maintenance">Saved UPI</a></li>
+                              <li className='my-3'><a href="/maintenance">Saved Cards</a></li>
                               
                           </ul>
                           </div>
@@ -84,15 +84,15 @@ const ProfilePage = () => {
                       <div className=''>
                                 <div className='flex text-slate-500 font-semibold uppercase my-4'>
                                 <box-icon name='folder' type='solid' color='#135D66' ></box-icon>
-                                    <span className='ml-2'>My Stuff</span>
+                                    <span className='ml-2'><a href="/maintenace">My Stuff</a></span>
                                 </div>
                           <div className='ml-7'>
                               
                               <ul className='mb-6'>
-                                <li className='my-3'>My Coupons</li>
-                                <li className='my-3'>My Reviews and Rating</li>
-                                <li className='my-3'>All Notification</li>
-                                <li className='my-3'>My Whishlist</li>
+                                <li className='my-3'><a href="/maintenance">My Coupons</a></li>
+                                <li className='my-3'><a href="/maintenance">My Reviews and Rating</a></li>
+                                <li className='my-3'><a href="/maintenance">All Notification</a></li>
+                                <li className='my-3'><a href="/maintenance">My Whishlist</a></li>
                                   
                               
                           </ul>
