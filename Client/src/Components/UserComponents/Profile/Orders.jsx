@@ -8,6 +8,7 @@ import { IoChevronBack } from "react-icons/io5";
 const Orders = () => {
 
     const [orders, setOrders] = useState([]);
+    const [allOrders, setAllOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modal, setToggleModal] = useState(false);
     const [modalItem, setModalItem] = useState()
@@ -15,6 +16,10 @@ const Orders = () => {
         reason: '',
         inReturn: ''
     });
+    const [selectedStatus, setSelectedStatus] = useState('');
+
+    
+ 
 
     const ReturnFormChange = (e) => {
         e.preventDefault();
@@ -40,14 +45,11 @@ const Orders = () => {
         axios.get('http://localhost:3333/api/v2/getOrders', { withCredentials: true })
             .then(res => {
                 setOrders(res.data.orders);
+                setAllOrders(res.data.orders);
                 setLoading(false);
                 console.log(res.data.orders);
             })
             .catch(err => console.log(err));
-    };
-
-    if (loading) {
-        return <div className='grid place-content-center '><Loading/></div>
     };
 
     const handleOrderCancel = async (item) => {
@@ -63,11 +65,11 @@ const Orders = () => {
             })
     };
 
-    const handleReturn = async (e,item) => {
+    const handleReturn = async (e, item) => {
         e.preventDefault();
         const orderID = modalItem.order_ID;
         console.log(orderID);
-        await axios.patch(`http://localhost:3333/api/v2/return_order/?orderID=${orderID}`,{returnForm})
+        await axios.patch(`http://localhost:3333/api/v2/return_order/?orderID=${orderID}`, { returnForm })
             .then((res) => {
                 if (res.status === 200) {
                     setReturnForm({
@@ -82,16 +84,68 @@ const Orders = () => {
                 console.log(err);
             });
 
-    }
+    };
+
+    const handleStatusChange = (e) => {
+        const { value, checked } = e.target;
+        if (checked) {
+            setSelectedStatus(value);
+        } else {
+            setSelectedStatus('');
+        }
+    };
+
+    const ApplyFilters = () => {
+        let updatedList = [...allOrders];
+
+        if (selectedStatus.length > 0) {
+            updatedList = updatedList.filter((order) => {
+                return order.orderStatus === selectedStatus;
+            });
+            console.log(updatedList);
+        }
+
+        setOrders(updatedList)
+    };
+
+    useEffect(() => {
+        ApplyFilters()
+    }, [selectedStatus]);
+
+    if (loading) {
+        return <div className='grid place-content-center '><Loading/></div>
+    };
+
   return (
       <div className='p-5 '>
-          <div className='border '>
-              
+          <div className='filter border flex p-5 mb-4'>
+              <div className='mr-5 font-semibold uppercase border-slate-400 border-r-2 pr-4'>
+                  FilterBy
+              </div>
+              <div className='flex space-x-5 gap-2 text-slate-800'>
+              <div>
+                  <input type="checkbox" id='way' value='Shipped' onChange={(e)=>handleStatusChange(e)}/>
+                  <label className='ml-1' htmlFor="way">On the way</label>
+              </div>
+              <div>
+                  <input type="checkbox" id='delivered' value='Delivered' onChange={(e)=>handleStatusChange(e)}/>
+                  <label className='ml-1' htmlFor="delivered">Delivered</label>
+              </div>
+              <div>
+                  <input type="checkbox" id='cancelled' value='Cancelled' onChange={(e)=>handleStatusChange(e)}/>
+                  <label className='ml-1' htmlFor="cancelled">Cancelled</label>
+              </div>
+              <div>
+                  <input type="checkbox" id='returned' value='Returned' onChange={(e)=>handleStatusChange(e)}/>
+                  <label className='ml-1' htmlFor="returned">Returned</label>
+              </div>
+              </div>
+
           </div>
           {
               orders.length > 0 ? orders.map((item,index) => (
           
-                  item.orderStatus!=='Cancelled'?
+                  item.orderStatus!==''?
                 <div className='card border p-5 flex justify-between space-x-4 shadow-lg mb-2 relative' key={index} >
                 <div className='h-32  flex  items-center justify-center' >
                     <img className='h-full w-28 object-contain' src={`http://localhost:3333/${item.image_url}`} alt="" />
@@ -129,11 +183,16 @@ const Orders = () => {
                                   :
                                   <div className='w-fit'>
  
-                                  <div className='flex'>
+                                      {
+                                          item.orderStatus !== 'Cancelled' ? <>
+                                                   <div className='flex'>
                                   <box-icon name='radio-circle-marked' color='#06a016' ></box-icon><span className='text-slate-700'>Item yet to be delivered</span></div>
                                   <div className='flex mt-5'>
                                  <box-icon  name='map' type='solid' color='#2788e7' ></box-icon>
                                       <span className='text-sm font-semibold text-gray-700'>Track your Order</span> </div>
+                                          </>:''
+                                      }
+                             
                                 
                               </div>
                       }
@@ -146,7 +205,8 @@ const Orders = () => {
                                               {
                                                   item.orderStatus === 'Returned' ? <div className='text-slate-600'>< span className=''>The item is scheduled for Return</span></div> :
                                                   <button className='bg-red-200 px-5 py-3 rounded-md text-xs font-semibold uppercase' onClick={() => toggleModal(item)}>Return</button>
-                                            }
+                                              }
+                                             
                                              </div>
                                           {
                                               modal &&
@@ -200,8 +260,15 @@ const Orders = () => {
 
                                       </>
                               
-                                  :
-                                    <div className='h-auto'><button onClick={()=>handleOrderCancel(item)} className='bg-red-200 px-5 py-3 rounded-md text-xs font-semibold uppercase'>Cancel Order</button></div>
+                                      :
+                                     
+                                      <div className='h-auto'>
+                                          {
+                                              item.orderStatus === 'Cancelled' ? <div className='h-auto p-1 bg-red-600 text-white font-semibold rounded-md text-sm cursor-default'>Cancelled!</div>
+                                                  :
+                                              <button onClick={() => handleOrderCancel(item)} className='bg-red-200 px-5 py-3 rounded-md text-xs font-semibold uppercase'>Cancel Order</button>
+                                          }
+                                          </div>
                                     
                           }
                      
@@ -218,6 +285,7 @@ const Orders = () => {
                   
                   <div className='flex justify-center items-center mt-12 flex-col'>
                       <div className='h-48 '><img className='h-full' src="src/images/8401.jpg" alt="" /></div>
+                      <div><h1 className=''>No results Found!</h1></div>
                       <div className='mt-5 text-xl font font-semibold tracking-wider text-slate-600'>Don't Wait, Order Now!</div>
                   </div>
                       
