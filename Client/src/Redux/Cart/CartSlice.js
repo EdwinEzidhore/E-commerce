@@ -14,7 +14,10 @@ const CartSlice = createSlice({
             console.log(state.length );
         },
         decrement(state, action) {
-            state.length  -= 1;
+            if (state.length > 0) {
+                state.length  -= 1;
+            }
+            
         }
     }
 });

@@ -18,10 +18,12 @@ const { log } = require('util');
 const crypto = require('crypto');
 const OrderModel = require('../Model/User/Order');
 const AddressModel = require('../Model/User/Address');
+const WishlistModel=require('../Model/User/Wishlist')
 require('dotenv').config(
     {path: 'Config/.env'}
 );
 const Razorpay = require('razorpay');
+const Wishlist = require('../Model/User/Wishlist');
 // const { default: products } = require('razorpay/dist/types/products');
 
 
@@ -157,15 +159,24 @@ router.post('/login', CatchAsyncErrors(async (req, res, next) => {
     }
 }));
 
-router.get('/isLoggedIn',isAuthenticated, async (req, res) => {
+router.get('/isLoggedIn', isAuthenticated, async (req, res,next) => {
+    const user_id = req.user._id;
     try {
-        const isUser = await UserModel.findOne({ _id: req.user._id });
+        const isUser = await UserModel.findOne({ _id: user_id });
         const userStatus = isUser.status;
        
+        const cart = await CartModel.findOne({userId: user_id});
+        if (!cart) {
+            cart = new CartModel({
+                user_id,
+                products: [],
+            });
+        }
+        let cart_length = cart.products.length;
         
 
         if (userStatus) {
-            return res.status(200).json({success:true,msg:'User is logged in',userStatus,isUser})
+            return res.status(200).json({success:true,msg:'User is logged in',userStatus,isUser,CartLength:cart_length})
         }
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
@@ -186,7 +197,7 @@ router.get('/featured', async (req, res, next) => {
             index === self.findIndex((t) => t.brand === el.brand)
           );
         
-        
+ 
         
         if (Products) {
             return res.status(200).json({ msg:'sucess',products:sliced,Brands:FilteredBrand});
@@ -382,8 +393,9 @@ router.get('/getUserInfo', isAuthenticated, async (req, res) => {
 
 router.post('/cart/checkout',isAuthenticated, async (req, res, next) => {
     try {
-        const amount = req.body.cart_Total;
+        
         const user_id = req.user.id
+        console.log(user_id);
         const user = await UserModel.findOne({ _id: user_id });
         if (user.status===true) {
             const cart = await CartModel.findOne({ userId: user_id }).populate({
@@ -391,8 +403,14 @@ router.post('/cart/checkout',isAuthenticated, async (req, res, next) => {
                 model: 'product'
                 
             });
+
             
             if (cart) {
+                let amount = 0;
+                cart.products.forEach((item) => {
+                    amount += item.productID.sellingPrice * item.quantity;
+                });
+    
                 const options = {
                     amount: Number(amount * 100),
                     currency: "INR",
@@ -404,14 +422,12 @@ router.post('/cart/checkout',isAuthenticated, async (req, res, next) => {
                         console.log(error);
                         return res.status(500).json({ message: "Something Went Wrong!" });
                     }
-                    res.status(200).json({msg:'order ', data: order,cart });
+                    res.status(200).json({msg:'order ', data: order,cart,amount:amount });
                     // console.log(order)
                 });
             }
             
         }
-
-
 
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
@@ -480,7 +496,7 @@ router.post('/verify', async (req, res) => {
            
             const user_cart=await CartModel.findOneAndDelete({userId:user_id})
 
-            return res.json({
+            return res.status(200).json({
                 message: "Payement Successfull",order
             });
         } else {
@@ -797,7 +813,7 @@ router.get('/category', async (req, res, next) => {
         const items = await ProductModel.find(queryObj);
         let totalItems = items.length;
         const brands = items.map((el) => el.brand);
-        const colors = items.map((el) => el.Details.colour);        
+        const colors = items.map((el) => el.Details.colour);
         const filteredBrand = brands.filter((el, index) => {//Removing duplicate brand names from brands
             return brands.indexOf(el) === index
         });
@@ -809,7 +825,147 @@ router.get('/category', async (req, res, next) => {
 
         // const products = await ProductModel.find(queryObj).skip((page * pageLimit) - pageLimit).limit(pageLimit);
 
-        res.status(200).json({msg:'Product Found',item:items, Brands: filteredBrand, Colors: filteredColor,count: totalItems})
+        res.status(200).json({ msg: 'Product Found', item: items, Brands: filteredBrand, Colors: filteredColor, count: totalItems })
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.post('/similar', async (req, res, next) => {
+    const { SingleProduct } = req.body;
+    
+    try {
+        let item = await ProductModel.findOne({ _id: SingleProduct._id });
+        if (!item) {
+            return res.status(404).json({ msg: 'Product not found' });
+        }
+        const category = item.category;
+        const name = item.name;
+        item = await ProductModel.find({
+            category: category,
+            name: name,
+        });
+        item = item.filter((pro) => {
+            return SingleProduct._id !== pro._id.toString();
+        });
+        if (item) {
+            return res.status(200).json({ msg: 'Similar products', products: item });
+        }
+        
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+
+router.post('/wishlist', isAuthenticated, async (req, res, next) => {
+    const { id } = req.query;
+    const user_id = req.user._id;
+    
+    try {
+        const isuser = await UserModel.findOne({ _id: user_id });
+        if (isuser) {
+            const item = await ProductModel.findOne({ _id: id });
+            let userWishlist = await WishlistModel.findOne({ userId: user_id });
+            if (!userWishlist) {
+                userWishlist = new WishlistModel({
+                    userId: user_id,
+                    products: [],
+                });
+            }
+            const existingProduct = userWishlist.products.findIndex((pro) => pro.productID.toString() === id);
+        
+            if (existingProduct !== -1) {
+                res.status(200).json({ success: false, msg: `Item already in wishList` })
+            } else {
+                userWishlist.products.push({
+                    productID: new mongoose.Types.ObjectId(id),
+                
+                });
+            }
+            await userWishlist.save();
+
+
+            let populated = await WishlistModel.findOne({ userId: user_id }).populate({
+                path: 'products.productID',
+                model: 'product'
+                
+            });
+          
+            const length = userWishlist.products.length;
+           
+            res.status(200).json({success:true, msg: 'Product added to wishList', populated, length: length });
+
+        } else {
+            return res.status(404).json({ msg: 'User is not loggedIn' })
+        }
+         
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.get('/get-wishlist', isAuthenticated, async (req, res, next) => {
+    const user_id = req.user._id;
+    try {
+        const isuser = await UserModel.findOne({ _id: user_id });
+       
+        if (!isuser) {
+            return res.status(404).json({ msg: 'User is not logged in' });
+        } else {
+            let userWishlist = await WishlistModel.findOne({ userId: user_id }).populate({
+                path: 'products.productID',
+                model: 'product'
+            }).lean();//converts mongoose documents to plain javascript object(toavoid of nesting of datas under productID)
+
+            if (userWishlist && userWishlist.products) {
+                userWishlist.products = userWishlist.products.map(product => {
+                    const { productID, ...rest } = product;//destructuring productID ,productID holds the populated product product
+                    return { ...rest, ...productID };//...rest spreads the original fields of the product//...productID spreads the fileds from the populated productID
+                });
+            }
+            
+           
+            if (!userWishlist) {
+                userWishlist = new WishlistModel({
+                    userId: user_id,
+                    products: [],
+                });
+                return res.status(200).json({ msg: 'user wishlist', wishlist: userWishlist })
+            }
+            let items = userWishlist.products.length;
+            
+            return res.status(200).json({
+                msg: 'wishlist',
+                wishlist: userWishlist,
+                items: items,
+            })
+
+        }
+        
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.delete('/remove-wishlist',isAuthenticated, async (req, res, next) => {
+    const { id } = req.query;
+    const user_id = req.user._id;
+   
+    try {
+        let wishList = await WishlistModel.updateOne(
+            { userId: user_id },
+            {
+                $pull: { products: { productID: id } }
+            }
+           
+        );
+        if (wishList.modifiedCount === 0) {
+            return next(new ErrorHandler('Product not found in wishlist or already removed', 404));
+        }
+        res.status(200).json({ success: true, msg: 'Product removed from wishlist' });
+        
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }

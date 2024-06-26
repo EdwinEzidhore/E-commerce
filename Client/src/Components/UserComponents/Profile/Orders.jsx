@@ -124,7 +124,7 @@ const Orders = () => {
               </div>
               <div className='flex space-x-5 gap-2 text-slate-800'>
               <div>
-                  <input type="checkbox" id='way' value='Shipped' onChange={(e)=>handleStatusChange(e)}/>
+                  <input type="checkbox" id='way' value='Order Placed' onChange={(e)=>handleStatusChange(e)}/>
                   <label className='ml-1' htmlFor="way">On the way</label>
               </div>
               <div>
@@ -162,7 +162,7 @@ const Orders = () => {
                         <span className='font-semibold text-emerald-600'>₹{ item.price}</span>
                 </div>
                       <div className='w-40'>
-                    <div className='font-semibold uppercase text-sm tracking-wide text-slate-800'>{item.orderStatus==='Order Placed' && 'Shipped'? 'Deliver to:':'Delivered to:'}</div>
+                    <div className='font-semibold uppercase text-sm tracking-wide text-slate-800'>{item.orderStatus==='Order Placed' || 'Shipped' || 'Cancelled'? 'Deliver to:':'Delivered to:'}</div>
                           <div className='text-sm font-sans font-semibold text-slate-600'>{item.address.main_address }</div>
                       </div>
                       {

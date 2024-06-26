@@ -10,6 +10,7 @@ import '../../../css/banner.css';
 import { Carousel } from "flowbite-react";
 
 
+
 const Home = () => {
     const [newArrivals, setNewArrivals] = useState([]);
     const [brands, setBrands] = useState([]);
@@ -18,25 +19,33 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [networkErr, setNetworkErr] = useState(false);
 
-    
-    
+
+
     useEffect(() => {
-        
+        getFeatured();
+      
+    }, []);
+
+
+    const getFeatured = () => {
         axios.get('http://localhost:3333/api/v2/featured',{withCredentials:true})
-            .then((res) => {
-                
-                setNewArrivals(res.data.products);
-                setBrands(res.data.Brands)
-                console.log(res.data);
-                setLoading(false);
-                
-            })
-            .catch((err) => {
-                console.log('this is catch error', err);
-                setNetworkErr(true);
-                
-            })
-    },[]);
+        .then((res) => {
+            
+            setNewArrivals(res.data.products);
+            setBrands(res.data.Brands);
+            setLoading(false);
+            
+            
+        })
+        .catch((err) => {
+            console.log('this is catch error', err);
+            setNetworkErr(true);
+            
+        })
+    }
+        
+
+    
 
     const getSingleProduct = (product) => {
         dispatch(add(product));
@@ -55,19 +64,7 @@ const Home = () => {
                 else {
                    
                     toast.success('Added to Bag')
-                    let populated = res.data.populated.products;
-                    const filtered = populated.find((prod) => prod.productID._id == pro_id);
-                    const productDetails = {
-                        productID: filtered.productID._id,
-                        quantity: filtered.quantity,
-                        price: filtered.productID.sellingPrice,
-                        OG_price: filtered.productID.originalPrice,
-                    }
-                   
-                    
 
-
-                 
                 }
             })
             .catch(err => console.log(err))
@@ -171,13 +168,13 @@ const Home = () => {
                           </div>
                                     <div className='text-center text-sm mt-2 tracking-wide text-red-600 font-poppins'>{ true==='Unavailable'?'Currently Unavailable':''}</div>
                               <div className='w-56 p-1 content bg-white'>
-                                        <div className='text-xs text-slate-400 uppercase font-semibold mb-1 text-center'>Men</div>
-                                        <div className='text-sm uppercase font-semibold text-slate-600 text-center'>jack & jonhs</div>
-                                        <div className='font-semibold text-lg text-[#1e1616] leading-5 mb-1 h-12 text-center'>Men Black Polo Collar T-shirt</div> 
+                                    <div className='text-xs text-slate-400 uppercase font-semibold mb-1 text-center'>{ product.category}</div>
+                                    <div className='text-sm uppercase font-semibold text-slate-600 text-center'>{product.brand }</div>
+                                    <div className='font-semibold text-lg text-[#1e1616] leading-5 mb-1 h-12 text-center'><a href='/p' className='hover:text-gray-700 ' onClick={()=>getSingleProduct(product)}>{product.description }</a></div> 
                               <div className=' space-x-2 items-center justify-between'>
-                                  <div className='space-x-3 flex items-center justify-center'>
-                                       <span className='font-semibold text-lg text-emerald-700'>₹2400</span>
-                                           <span className='line-through text-slate-400'>₹3999</span>   
+                                  <div className='space-x-3 flex items-center justify-center mt-3'>
+                                            <span className='font-semibold text-lg text-emerald-700'>₹{ product.sellingPrice}</span>
+                                            <span className='line-through text-slate-400'>₹{ product.originalPrice}</span>   
                                   </div>
     
                               </div>

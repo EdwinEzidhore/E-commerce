@@ -1,12 +1,14 @@
 import React, {useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCartLength } from '../../../Redux/Cart/CartSlice';
 
 
 
 const Nav = () => {
       const navigate = useNavigate();
+      const dispatch = useDispatch();
     
       const [isloggedin, setIsloggedin] = useState(false);
       const [user, setUser] = useState();
@@ -17,10 +19,11 @@ const Nav = () => {
       useEffect(() => {
         
             axios.get('http://localhost:3333/api/v2/isLoggedIn',{withCredentials:true})
-                .then((res) => {
-                    setIsloggedin(res.data.userStatus);
-                      setUser(res.data.isUser);
-                      setCartLength(res.data.length)
+                  .then((res) => {
+                     
+                        setIsloggedin(res.data.userStatus);
+                        setUser(res.data.isUser);
+                        dispatch(setCartLength(res.data.CartLength));
                      
                 })
                   .catch((err) => {
@@ -63,7 +66,7 @@ const Nav = () => {
                         {
                               isloggedin ?
                                     <div className='flex space-x-6'>
-                                                      <button><box-icon name='heart' type='solid' color='#f86666' ></box-icon></button>
+                                                      <button><a href="/wishlist"><box-icon name='heart' type='solid' color='#f86666' ></box-icon></a></button>
 
                                     </div> : ''                  
                         }

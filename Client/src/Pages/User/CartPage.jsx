@@ -101,10 +101,10 @@ const CartPage = () => {
         e.preventDefault();
         if (paymentMethod) {
             if (paymentMethod === 'online') {
-                axios.post('http://localhost:3333/api/v2/cart/checkout', { cart_Total }, { withCredentials: true })
+                axios.post('http://localhost:3333/api/v2/cart/checkout', {},{ withCredentials: true })
                     .then((res) => {
                         console.log(res.data);
-                        handlePaymentVerify(res.data.data, res.data.cart)
+                        handlePaymentVerify(res.data.data, res.data.cart,res.data.amount)
                     })
                     .catch((err) => console.log(err))
             } else if (paymentMethod === 'home') {
@@ -127,7 +127,7 @@ const CartPage = () => {
         }
     };
 
-    const handlePaymentVerify = async (data,cart) => {
+    const handlePaymentVerify = async (data,cart,total) => {
         const options = {
             key: 'rzp_test_IRcArw33YZDUfI',
             amount: data.amount,
@@ -143,7 +143,7 @@ const CartPage = () => {
                     razorpay_payment_id: response.razorpay_payment_id,
                     razorpay_signature: response.razorpay_signature,
                     cart,
-                    cart_Total,
+                    cart_Total:total,
                     activeAddress,
                 }, {
                     headers: {
@@ -152,10 +152,10 @@ const CartPage = () => {
                 });
     
                     const verifyData = res.data;
-    
+   
                   if (verifyData.message) {
                     navigate('/payment-sucess');
-                    
+                      dispatch(setCartLength(0));
                    
                     }
                 } catch (error) {
@@ -256,7 +256,7 @@ const CartPage = () => {
                                 </div>
                                     <div className='w-full'>
                                           <h1 className='text-sm font-semibold'>{item.productID.brand }</h1>
-                                      <h4 className='mt-1'>{item.productID.description }</h4>
+                                      <h4 className='mt-1 w-80'>{item.productID.description }</h4>
                                     <h5 className='text-sm text-slate-500 '>sold by ethinic fashion</h5>
                                     
                                     <div className='flex items-center  space-x-5 mt-3 gap-5 mb-2 '>

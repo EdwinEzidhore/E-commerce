@@ -9,9 +9,12 @@ import { toast } from 'react-toastify';
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop'
 import { useDispatch } from 'react-redux';
 import { setCartLength } from '../../Redux/Cart/CartSlice';
+import { add } from '../../Redux/SingleProduct/SingleProductSlice';
+import { useNavigate } from 'react-router-dom';
 
 const CategoryPage = ({category}) => {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [product, setProduct] = useState([]);
     const [originalProduct, setOriginalProduct] = useState([]);
@@ -130,6 +133,13 @@ const CategoryPage = ({category}) => {
             .catch(err => console.log(err))
     };
 
+    const getSingleProduct = (product) => {
+        console.log('from category page',product);
+        dispatch(add(product));
+        navigate('/p');
+      
+    }
+
   return (
       <div>
           <ScrollToTop dependency={product}/>
@@ -139,7 +149,7 @@ const CategoryPage = ({category}) => {
                   <SideBar brands={brands} colors={colors} handlebrandChange={handlebrandChange} handleColorChange={handleColorChange} handleSortChange={handleSortChange} handleClearBtn={ handleClearBtn} />
 
             <div className='grid col-span-10 border  ml-3 p-5 overflow-y-auto h-screen scroll-smooth scrollbar-default'>
-                <ProductCard product={product} AddtoCart={cart} />
+                <ProductCard product={product} AddtoCart={cart} singleProduct={getSingleProduct} />
                 <Pagination totalItems={totalItems} ItemsPerPage={8} CurntPage={curntPage} setCurntPage={setCurntPage} />
             </div>
         </div>

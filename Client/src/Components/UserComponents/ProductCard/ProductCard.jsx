@@ -1,13 +1,13 @@
 import React from 'react'
 
-const ProductCard = ({product,AddtoCart}) => {
+const ProductCard = ({product,AddtoCart,singleProduct}) => {
   return (
     <div className='flex flex-wrap  gap-5 '>
                           {
                               product.length > 0 ? product.map((item,index) => (
-                                <div  className='card h-fit  p-4 w-fit rounded-lg flex-none ' key={index}>
+                                <div  className='card h-fit  p-4 w-fit rounded-lg flex-none ' key={index} >
                           
-                                <div className='relative group h-56   flex items-center justify-center hover:scale-110 transition duration-500'>
+                                <div className='relative group h-56   flex items-center justify-center hover:scale-110 transition duration-500' onClick={()=>singleProduct(item)}>
                                     <div className='absolute hidden group-hover:flex rounded-full   bg-red-100 hover:bg-red-200 heart '>
                                    
                                         <button className='
@@ -29,14 +29,14 @@ const ProductCard = ({product,AddtoCart}) => {
                
                                       </button>
                                     </div> 
-                                      <img className='h-full w-48 object-contain ' src={`http://localhost:3333/${item.productImage[0]}`} alt="" />
+                                      <img className='h-full w-48 object-contain ' src={`http://localhost:3333/${item.productImage[0]}`} alt="img" />
                                 
                             </div>
                                       <div className='text-center text-sm mt-2 tracking-wide text-red-600 font-poppins'>{ item.status==='Unavailable'?'Currently Unavailable':''}</div>
                                 <div className='w-56 p-1 content bg-white'>
                                           <div className='text-xs text-slate-400 uppercase font-semibold mb-1 text-center'>{ item.category}</div>
                                           <div className='text-sm uppercase font-semibold text-slate-600 text-center'>{ item.brand}</div>
-                                          <div className='font-semibold text-lg text-[#1e1616] leading-5 mb-2 h-12 text-center'>{item.description }</div> 
+                                          <div className='font-semibold text-lg text-[#1e1616] leading-5 mb-2 h-12 text-center hover:text-gray-600'><a href="/p" onClick={()=>singleProduct(item)}>{item.description }</a></div> 
                                 <div className='flex space-x-2 items-center justify-between'>
                                     <div className='space-x-3'>
                                                   <span className='font-semibold text-lg text-emerald-700'>₹{ item.sellingPrice}</span>

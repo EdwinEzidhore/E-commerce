@@ -26,6 +26,7 @@ import AdminOrders from './Pages/Admin/AdminOrders';
 import Men from './Pages/User/Men';
 import CategoryPage from './Pages/User/CategoryPage';
 import Maintenance from './Components/UserComponents/Loading/Maintenance';
+import Wishlist from './Pages/User/Wishlist';
 function App() {
 
   
@@ -53,6 +54,8 @@ function App() {
               <Route path='/Address' element={<Address />}></Route>
               <Route path='/men' element={<Men />}></Route>
               <Route path='/cat' element={<CategoryPage />}></Route>
+              <Route path='/wishlist' element={<Wishlist />}></Route>
+
 
 
               
