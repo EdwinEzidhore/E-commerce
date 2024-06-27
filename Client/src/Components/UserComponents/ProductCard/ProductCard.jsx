@@ -1,17 +1,17 @@
 import React from 'react'
 
-const ProductCard = ({product,AddtoCart,singleProduct}) => {
+const ProductCard = ({product,AddtoCart,singleProduct,setWishList}) => {
   return (
     <div className='flex flex-wrap  gap-5 '>
                           {
                               product.length > 0 ? product.map((item,index) => (
                                 <div  className='card h-fit  p-4 w-fit rounded-lg flex-none ' key={index} >
                           
-                                <div className='relative group h-56   flex items-center justify-center hover:scale-110 transition duration-500' onClick={()=>singleProduct(item)}>
-                                    <div className='absolute hidden group-hover:flex rounded-full   bg-red-100 hover:bg-red-200 heart '>
+                                <div className='relative group h-56   flex items-center justify-center hover:scale-110 transition duration-500' >
+                                    <div className='absolute hidden group-hover:flex rounded-full   bg-red-100 hover:bg-red-200 heart'>
                                    
                                         <button className='
-                                        
+                                        z-10
                                             group/button
                                             rounded-full p-1 backdrop-blur 
                                             font-semibold
@@ -22,14 +22,14 @@ const ProductCard = ({product,AddtoCart,singleProduct}) => {
                                      after:transition-all  hover:before:opacity-100 hover:after:opacity-100 
   
   
-                                        text-xl  ' data-tip='Add to wishlist'>
+                                        text-xl  ' data-tip='Add to wishlist' onClick={()=>setWishList(item)}>
                                             <svg className='heart-svg fill-red-400 group-hover/button:fill-red-600 ' width="25px" height="25px" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
                                           <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" />
                                           </svg>
                
                                       </button>
                                     </div> 
-                                      <img className='h-full w-48 object-contain ' src={`http://localhost:3333/${item.productImage[0]}`} alt="img" />
+                                      <img className='h-full w-48 object-contain ' src={`http://localhost:3333/${item.productImage[0]}`} alt="img" onClick={()=>singleProduct(item)}/>
                                 
                             </div>
                                       <div className='text-center text-sm mt-2 tracking-wide text-red-600 font-poppins'>{ item.status==='Unavailable'?'Currently Unavailable':''}</div>

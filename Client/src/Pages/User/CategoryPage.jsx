@@ -134,10 +134,29 @@ const CategoryPage = ({category}) => {
     };
 
     const getSingleProduct = (product) => {
-        console.log('from category page',product);
+        console.log('from category page', product);
         dispatch(add(product));
         navigate('/p');
       
+    };
+
+    const setWishList = (product) => {
+        const item_id = product._id;
+        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {},{withCredentials:true})
+            .then((res) => {
+                if (res.status === 200 && res.data.success===true) {
+                    navigate('/wishlist');
+                    toast.success('Added to Wishlist')
+                }
+                if (res.data.success === false) {
+                    toast.error('Item already on Wishlist')
+                }
+                
+            })
+            .catch((err) => {
+            console.log(err);
+        })
+
     }
 
   return (
@@ -149,7 +168,7 @@ const CategoryPage = ({category}) => {
                   <SideBar brands={brands} colors={colors} handlebrandChange={handlebrandChange} handleColorChange={handleColorChange} handleSortChange={handleSortChange} handleClearBtn={ handleClearBtn} />
 
             <div className='grid col-span-10 border  ml-3 p-5 overflow-y-auto h-screen scroll-smooth scrollbar-default'>
-                <ProductCard product={product} AddtoCart={cart} singleProduct={getSingleProduct} />
+                      <ProductCard product={product} AddtoCart={cart} singleProduct={getSingleProduct} setWishList={ setWishList} />
                 <Pagination totalItems={totalItems} ItemsPerPage={8} CurntPage={curntPage} setCurntPage={setCurntPage} />
             </div>
         </div>

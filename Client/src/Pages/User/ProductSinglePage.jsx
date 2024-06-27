@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { setCartLength } from '../../Redux/Cart/CartSlice'
 import { add } from '../../Redux/SingleProduct/SingleProductSlice';
 import { useNavigate } from 'react-router-dom';
+import ScrollToTop from '../../Components/UserComponents/ScrollToTop'
 
 
 const ProductSinglePage = () => {
@@ -22,7 +23,7 @@ const ProductSinglePage = () => {
     
     const SingleProduct = useSelector(state => state.singleProduct);
 
-    console.log(SingleProduct);
+  
 
     useEffect(() => {
         getSimilarProducts();  
@@ -88,7 +89,8 @@ const ProductSinglePage = () => {
 
     return (
      
-      <section >
+        <section >
+            <ScrollToTop/>
           <div className='  backdrop-blur-2xl'>
               <Nav />
           </div>

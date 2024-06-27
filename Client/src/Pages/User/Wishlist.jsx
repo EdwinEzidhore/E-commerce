@@ -9,6 +9,7 @@ import { setCartLength } from '../../Redux/Cart/CartSlice'
 import {  useNavigate } from 'react-router-dom';
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
+import ScrollToTop from '../../Components/UserComponents/ScrollToTop'
 
 const Wishlist = () => {
 
@@ -87,6 +88,7 @@ const Wishlist = () => {
 
   return (
       <div className=''>
+          <ScrollToTop dependency={wishlist}/>
           <Nav />
           <div className='h-screen'>
               
@@ -94,7 +96,7 @@ const Wishlist = () => {
               {
                   !loading ?  <div>
                   {
-                    wishlist.length > 0? <div className='card-wrapper  container grid grid-cols-4 gap-2 w-fit mb-5 mt-5'>
+                    wishlist.length > 0? <div className='card-wrapper h-fit   container grid grid-cols-4 gap-2 w-fit mb-5 mt-5'>
                                 {
                                     wishlist.length > 0 && wishlist.map((product,index)=>(
                                         <div className='card h-fit relative  p-4 w-fit rounded-lg flex-none   shadow-lg bg-slate-50'  key={index} >
@@ -140,7 +142,7 @@ const Wishlist = () => {
                                    }
                                  </div>
                               :
-                                <div className='flex items-center justify-center flex-col'>
+                                <div className='flex items-center justify-center flex-col h-96'>
                                   <div className='h-52'><img className='h-full' src="/src/images/10194.jpg" alt="img" /></div>
                                   {
                                       isUserErr?        <div>
@@ -158,9 +160,9 @@ const Wishlist = () => {
                   :
                   <div className='h-96 flex items-center justify-center'><Loading/></div>  
               }
-
+<Footer/>
           </div>
-          <Footer/>
+          
     </div>
   )
 }

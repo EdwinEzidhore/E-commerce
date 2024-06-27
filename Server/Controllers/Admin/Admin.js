@@ -6,9 +6,10 @@ const ErrorHandler = require('../../Utils/ErrorHandler');
 const Productupload = require('../../Multer/Admin/multer');
 const path = require('path');
 const UserModel = require('../../Model/User/User');
-const { log } = require('console');
+const { log, count } = require('console');
 const OrderModel=require('../../Model/User/Order');
 const User = require('../../Model/User/User');
+const CouponModel=require('../../Model/Admin/Coupon')
 
 
 router.post('/Admin', async (req, res, next) => {
@@ -242,6 +243,94 @@ router.patch('/payment_status', async (req, res, next) => {
         return res.status(200).json({ msg: 'order payment status updated', Order: order });
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.post('/addCoupon', async (req, res, next) => {
+    const {
+        code,
+        couponType,
+        description,
+        discount,
+        minimumOrder,
+        expiryDate,
+        status
+    } = req.body;
+    try {
+        let coupon = await CouponModel.create({
+            code: code,
+            couponType: couponType,
+            amount: discount,
+            description: description,
+            minimumPurchase: minimumOrder,
+            expiryDate: expiryDate,
+            status: status,
+            
+        });
+        if (!coupon) {
+            return res.status(404).json({ success: false, msg: 'failed to add coupon' });
+        }
+        return res.status(200).json({ success: true, msg: 'Coupon added', coupon: coupon });
+        
+        
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.get('/getCoupon', async (req, res, next) => {
+    try {
+        const coupons = await CouponModel.find({});
+        if (coupons) {
+            return res.status(200).json({ success: true, msg: 'Coupons', coupon: coupons })
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.patch('/block-coupon', async (req, res, next) => {
+    const { id } = req.query;
+    
+    try {
+        let coupon = await CouponModel.findOne({ _id: id });
+        if (!coupon) {
+            return res.status(200).json({ success: false, msg: 'No coupon found' });
+        }
+        const couponstatus = coupon.status === 'Active' ? 'InActive' : 'Active'
+        coupon = await CouponModel.updateOne(
+            { _id: id },
+            { status: couponstatus },
+            { new: true },
+        );
+        if (coupon.modifiedCount === 0) {
+            return next(new ErrorHandler('Coupon not found or already removed', 404));
+        }
+        
+        return res.status(200).json({ success: true, msg: `coupon ${couponstatus}` })
+    } catch (error) {
+        
+    }
+});
+
+router.delete('/delete-coupon', async (req, res, next) => {
+    const { id } = req.query;
+    
+    try {
+        let coupon = await CouponModel.findOne({ _id: id });
+        if (!coupon) {
+            return res.status(404).json({ success: false, msg: 'coupon not found' });
+
+        }
+        coupon = await CouponModel.deleteOne({ _id: id });
+        if (coupon.deletedCount === 1) {
+            return res.status(200).json({ success: true, msg: 'Coupon deleted' });
+
+        }
+        
+       
+    } catch (error) {
+        
     }
 })
 module.exports = router;

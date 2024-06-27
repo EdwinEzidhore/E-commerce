@@ -70,8 +70,25 @@ const Home = () => {
             .catch(err => console.log(err))
     };
 
+    const setWishList = (product) => {
+        const item_id = product._id;
+        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {},{withCredentials:true})
+            .then((res) => {
+                if (res.status === 200 && res.data.success===true) {
+                    navigate('/wishlist');
+                    toast.success('Added to Wishlist')
+                }
+                if (res.data.success === false) {
+                    toast.error('Item already on Wishlist')
+                }
+                
+            })
+            .catch((err) => {
+            console.log(err);
+        })
 
-   
+    };
+
 
     return (
      
@@ -140,7 +157,7 @@ const Home = () => {
                 <div className='card-wrapper  container grid grid-rows-1 grid-cols-3 gap-2 w-fit mb-5'>
                     {
                         newArrivals.length > 0 ? newArrivals.map((product) => (
-                            <div className='card h-fit relative  p-4 w-fit rounded-lg flex-none   shadow-lg bg-slate-50' key={product._id} onClick={()=>getSingleProduct(product)}>
+                            <div className='card h-fit relative  p-4 w-fit rounded-lg flex-none   shadow-lg bg-slate-50' key={product._id} >
                             <img className='h-12 z-10 absolute left-0 top-0 drop-shadow-md' src="/src/images/new (1).png" alt="products" />
                               
                               <div className='relative group h-56   flex items-center justify-center hover:scale-105 transition duration-500 '>
@@ -156,14 +173,14 @@ const Home = () => {
                                    after:transition-all  hover:before:opacity-100 hover:after:opacity-100 
     
     
-                                      text-xl  ' data-tip='Add to wishlist'>
+                                      text-xl  ' data-tip='Add to wishlist' onClick={()=>setWishList(product)}>
                                           <svg className='heart-svg fill-red-400 group-hover/button:fill-red-600 ' width="25px" height="25px" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
                                         <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" />
                                         </svg>
              
                                     </button>
                                   </div> 
-                                    <img className='h-full w-48 object-contain rounded-lg' src={`http://localhost:3333/${product.productImage[0]}`}  alt="" />
+                                    <img className='h-full w-48 object-contain rounded-lg' src={`http://localhost:3333/${product.productImage[0]}`}  alt="img" onClick={()=>getSingleProduct(product)}/>
                               
                           </div>
                                     <div className='text-center text-sm mt-2 tracking-wide text-red-600 font-poppins'>{ true==='Unavailable'?'Currently Unavailable':''}</div>

@@ -430,7 +430,7 @@ const CartPage = () => {
                       
                   }
                   {
-                      err!==true &&  <button className='h-auto py-1 px-4 outline uppercase font-thin mt-5 outline-red-700 text-red-700 outline-2'>Add items from wishlist</button>
+                      err!==true &&  <button className='h-auto py-1 px-4 outline uppercase font-thin mt-5 outline-red-700 text-red-700 outline-2' onClick={()=>navigate('/wishlist')}>Add items from wishlist</button>
                   }
                  
               </div>
