@@ -15,6 +15,7 @@ import Loading from '../../Components/UserComponents/Loading/Loading';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import '../../css/loadingbutton.css'
 import { decrement, setCartLength } from '../../Redux/Cart/CartSlice';
+import Coupon from '../../Components/UserComponents/Modal/Coupon';
 
 const CartPage = () => {
 
@@ -30,6 +31,10 @@ const CartPage = () => {
     const [btnLoading, setBtnloading] = useState(null);
     const [totalAmount, setTotalAmount] = useState(null);
     const [discount, setDiscount] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [coupons, setCoupons] = useState([]);
+    const [selectedCoupon, setSelectedCoupon] = useState(null);
+    const [couponDiscount, setCouponDiscount] = useState(0);
 
 
     const activeAddress = useSelector((state) => state.address.activeAddress);
@@ -39,7 +44,7 @@ const CartPage = () => {
     useEffect(() => {
         getCartItems();
 
-    }, []);
+    }, [selectedCoupon]);
     
     const getCartItems = () => {
         axios.get(`http://localhost:3333/api/v2/getCartItems`,{withCredentials:true})
@@ -48,6 +53,7 @@ const CartPage = () => {
                 setCartItems(res.data.cart);
                 setTotalAmount(res.data.total);
                 setDiscount(res.data.discount);
+                setCoupons(res.data.coupons);
                
             })
             .catch(err => {
@@ -84,12 +90,6 @@ const CartPage = () => {
             .then(res => {
                 if (res.status === 200) {
                     getCartItems();
-
-                    const productDetails = {
-                        productId: res.data.quantity_changed_item.productID,
-                        new_quantity:res.data.quantity_changed_item.quantity,
-                    }
-                    
                 }
 
             })
@@ -101,7 +101,7 @@ const CartPage = () => {
         e.preventDefault();
         if (paymentMethod) {
             if (paymentMethod === 'online') {
-                axios.post('http://localhost:3333/api/v2/cart/checkout', {},{ withCredentials: true })
+                axios.post('http://localhost:3333/api/v2/cart/checkout', {selectedCoupon},{ withCredentials: true })
                     .then((res) => {
                         console.log(res.data);
                         handlePaymentVerify(res.data.data, res.data.cart,res.data.amount)
@@ -109,7 +109,7 @@ const CartPage = () => {
                     .catch((err) => console.log(err))
             } else if (paymentMethod === 'home') {
                 setBtnloading(true)
-                axios.post('http://localhost:3333/api/v2/cart/checkout/cod', {activeAddress },{withCredentials:true})
+                axios.post('http://localhost:3333/api/v2/cart/checkout/cod', {activeAddress,selectedCoupon},{withCredentials:true})
                     .then(res => {
                         if (res.status === 200) {
                             navigate('/payment-sucess');
@@ -171,8 +171,8 @@ const CartPage = () => {
     }
 
     const handlePlaceorderBtn = () => {
-        const check_availability=cartItems.products.findIndex((item) => {
-            return item.productID.status==='Unavailable'
+        const check_availability = cartItems.products.findIndex((item) => {
+            return item.productID.status === 'Unavailable'
         })
 
         if (check_availability === -1) {
@@ -181,9 +181,16 @@ const CartPage = () => {
             setAvailability(false)
         }
        
-    }
+    };
 
-
+    const closeModal = (Coupon,CouponDiscount) => {
+        setModalOpen(false);
+        setCouponDiscount(CouponDiscount); 
+        setSelectedCoupon(Coupon);
+        
+            
+        
+    };
 
   return (
       <section>
@@ -229,19 +236,10 @@ const CartPage = () => {
                                       
                                      
                                     
-                                      <div className='text-sm border   rounded-md  bg-[#09555c] text-white'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
+                                      <div className='text-sm border   rounded-md  bg-[#1c7293] text-white'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
                                   </div>
 
                       </div>
-
-                      {/* <div className='border mt-2 bg-white shadow-md p-4'>
-                          <div className='text-sm font-semibold mb-3'><span>Available Offers</span></div>
-                          <div className='text-slate-500 text-sm font-thin mb-4'><p>₹1000 Off On Selected Banks Credit Non EMI, Credit and Debit Card EMI TransactionsT&C</p></div>
-                          <div className='border w-fit p-2   text-sm font-semibold bg-[#72969a] text-[#fff9f9] rounded-md'><button>Show more +</button></div>
-                      </div> */}
-
-                
-
 
                       <div className=' p-1'>
                           {
@@ -263,7 +261,7 @@ const CartPage = () => {
                                               <button className='h-auto bg-gray-200  px-2'>size: <span className='font-semibold text-sm me'>{ item.productID.Details.size}</span></button>
                                         <div className='flex items-center gap-3'>
                                                   
-                                                      <button className=' p-1.5 flex  outline rounded-full outline-1 outline-slate-500'  onClick={(e)=>{
+                                                      <button className=' p-1.5 flex  outline rounded-full outline-1 outline-slate-500' disabled={selectedCoupon?true:false}  onClick={(e)=>{
                                                             incrementorDecrement('minus',item)
                                                       }
                                                      
@@ -309,12 +307,18 @@ const CartPage = () => {
                               <div className='mb-3'><span className='text-slate-600 font-semibold text-sm '>Coupons</span></div>
                               <div className='flex justify-between'>
                                   <div className='flex items-center space-x-3'>
-                                      <FaTag />
+                                              <FaTag />
+                                              {
+                                                  
+                                              }
                                       <span className='text-sm font-semibold'>Apply Coupons</span>
                                   </div>
-                                  <button className='outline outline-2 outline-[#09555c] bg-[#eafbfddd] text-[#1e5960] py-1 px-4 text-sm uppercase'>Apply</button>
+                                  <button className='outline outline-2 outline-[#1c7293]  text-[#1c7293] py-1 px-4 text-sm uppercase hover:bg-[#1c7293] hover:outline-white hover:text-white duration-300' onClick={()=>setModalOpen(!modalOpen)}>Apply</button>
                               </div>
-                              <div className='pl-7 mt-2 text-sm'><p>Getupto ₹200 off on first order</p></div>
+                                      <div className='pl-7 mt-2 text-sm'><p>Getupto ₹200 off on first order</p></div>
+                                      {
+                                          modalOpen && <Coupon closeModal={closeModal} coupons={coupons} cartTotal={ totalAmount} activeCoupon={selectedCoupon}/>
+                                      }
                           </div>
 
                           <div className="box-2 ">
@@ -322,7 +326,7 @@ const CartPage = () => {
                               <div className='h-20 my-4 shadow-md'><img className='h-full w-full object-cover' src="/src/images/happy-valentine-s-day-sale-banner-or-promotion-on-blue-background-online-shopping-store-with-mobile-credit-cards-and-shop-elements-illustration-free-vector.jpg" alt="" /></div>
                           </div>
 
-                                  <div className="box-3 border p-4 bg-[#f8e4e9] shadow-lg sticky top-20 h-80">
+                                  <div className="box-3 border p-4 bg-[#f0f3ff] shadow-lg sticky top-20 h-80">
                                       <div className={isflipped?'hidden':'front h-full'}>
                                       <div className='mb'>
                               <p><span className='uppercase text-sm font-semibold text-slate-800 '>Price details</span><span>({cartItems.products.length} item)</span></p>
@@ -339,8 +343,11 @@ const CartPage = () => {
                                               <span className='text-[#37c137]'>-₹{ discount}</span>
                                   </div>
                                   <div className='flex justify-between mb-3 text-sm '>
-                                      <span>Coupon Discount</span>
-                                      <button className='text-red-600'>Apply coupon</button>
+                                                  <span>Coupon Discount</span>
+                                                  {
+                                                      couponDiscount > 0 ? <span>₹{ couponDiscount}</span> :<button className='text-red-600'>Apply coupon</button>
+                                                  }
+                                      
                                      </div>
                                      <div className='flex justify-between mb-3 text-sm'>
                                       <span>Platform fee</span>
@@ -352,11 +359,11 @@ const CartPage = () => {
                                   </div>
                                   <hr className='border-slate-400'></hr>
                                   <div className='flex justify-between my-4 font-semibold'>
-                                      <span className='uppercase'>Toatl Amount</span>
-                                              <span>₹{ totalAmount}</span>
+                                      <span className='uppercase text-sm'>Total Amount</span>
+                                              <span>₹{ totalAmount-couponDiscount}</span>
                                   </div>
 
-                                  <div className='flex justify-center h-auto bg-[#e42e55]  '>
+                                  <div className='flex justify-center h-auto bg-[#1c7293]  '>
                                                   <button className='py-3 uppercase text-white font-semibold text-sm w-full h-full' onClick={() => {
                                                       
                                                       handlePlaceorderBtn();
@@ -368,42 +375,49 @@ const CartPage = () => {
                                       <div className={isflipped?"back h-full  bg-white":'hidden'}>
                                           <div className='flex space-x-3 items-center '>
                                               <button className='text-3xl text-gray-600' onClick={()=>setIsflipped(false)}><IoArrowBackCircleOutline /></button>
-                                              <span>Payement Method</span>
+                                              <span className='font-semibold text-slate-700'>Payement Method</span>
                                           </div>
 
                                           <div className='flex flex-col items-center  mt-5 '>
                                              
                                               <div className='my-4 tracking-wide flex items-center space-x-2'>
-                                                  <input type="radio" id='home' name='payment' value="Cash on Delivery" onChange={(e) => {
+                                                  <input className='h-4 w-4' type="radio" id='home' name='payment' value="Cash on Delivery" onChange={(e) => {
                                                       setPaymetMethod(e.target.id)
                                                   }}/>
-                                                  <label htmlFor="home">Cash on Delivery</label>
+                                                  <label htmlFor="home" className='text-sm font-semibold text-slate-700 font-sans'>Cash on Delivery</label>
+                                                  <div>
+                                                      <img className='h-9' src="/src/images/cash-on-delivery.png" alt="" />
+                                                  </div>
                                               </div>
                                                 
                                               <div className=' tracking-wide flex items-center space-x-2'>
-                                                  <input type="radio" id='online' name='payment' value="Online Payment" onChange={(e) => {
+                                                  <input className='w-4 h-4' type="radio" id='online' name='payment' value="Online Payment" onChange={(e) => {
                                                       setPaymetMethod(e.target.id);
-                                                  }}/>
-                                                  <label htmlFor="online">Online Payment</label> 
+                                                  }} />
+                                                
+                                                  <label htmlFor="online" className='font-semibold text-sm font-sans text-slate-700'>Online Payment</label> 
+                                                  <div>
+                                                      <img className='h-9' src="/src/images/online-payment.png" alt="online" />
+                                                 </div>
                                               </div>
                                               
                                               
                                           </div>
 
-                                          <div className='flex justify-center  bg-[#e42e55] mt-10 '>
+                                          <div className='flex justify-center  bg-[#1c7293] mt-10 '>
                                               <button className={btnLoading!==true    ?'py-3 uppercase text-white font-semibold text-sm w-full  h-full ':'hidden'} onClick={(e) => {
                                                   handleCheckout(e)
                                               }}>Proceed</button>
                                               
                                               <div className={btnLoading?"dot-spinner my-2":'hidden'}>
-                                                <div className="dot-spinner__dot"></div>
-                                                <div className="dot-spinner__dot"></div>
-                                                <div className="dot-spinner__dot"></div>
-                                                <div className="dot-spinner__dot"></div>
-                                                <div className="dot-spinner__dot"></div>
-                                                <div className="dot-spinner__dot"></div>
-                                                <div className="dot-spinner__dot"></div>
-                                                <div className="dot-spinner__dot"></div>
+                                                <div className="dot-spinner__dot "></div>
+                                                <div className="dot-spinner__dot "></div>
+                                                <div className="dot-spinner__dot "></div>
+                                                <div className="dot-spinner__dot "></div>
+                                                <div className="dot-spinner__dot "></div>
+                                                <div className="dot-spinner__dot "></div>
+                                                <div className="dot-spinner__dot "></div>
+                                                <div className="dot-spinner__dot "></div>
                                               </div>
                                               
                                           </div>

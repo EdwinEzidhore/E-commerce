@@ -18,7 +18,8 @@ const { log } = require('util');
 const crypto = require('crypto');
 const OrderModel = require('../Model/User/Order');
 const AddressModel = require('../Model/User/Address');
-const WishlistModel=require('../Model/User/Wishlist')
+const WishlistModel = require('../Model/User/Wishlist');
+const CouponModel = require('../Model/Admin/Coupon');
 require('dotenv').config(
     {path: 'Config/.env'}
 );
@@ -165,7 +166,7 @@ router.get('/isLoggedIn', isAuthenticated, async (req, res,next) => {
         const isUser = await UserModel.findOne({ _id: user_id });
         const userStatus = isUser.status;
        
-        const cart = await CartModel.findOne({userId: user_id});
+        let cart = await CartModel.findOne({userId: user_id});
         if (!cart) {
             cart = new CartModel({
                 user_id,
@@ -267,6 +268,7 @@ router.get('/cart', isAuthenticated, async (req, res, next) => {
 
 //To get cartitems on Cart Page
 router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
+    
     try {
         const userId = req.user._id;
         let userCart = await CartModel.findOne({ userId: userId }).populate({
@@ -292,7 +294,15 @@ router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
                 discount +=  el.productID.originalPrice -el.productID.sellingPrice ;
             });
 
-            res.status(200).json({ success: true, cart: userCart,total: totalAmount ,discount:discount});
+            const coupons = await CouponModel.find({});
+            
+            res.status(200).json({
+                success: true,
+                cart: userCart,
+                total: totalAmount,
+                discount: discount,
+                coupons: coupons,
+            });
         }
 
        
@@ -391,11 +401,12 @@ router.get('/getUserInfo', isAuthenticated, async (req, res) => {
     }
 });
 
-router.post('/cart/checkout',isAuthenticated, async (req, res, next) => {
+router.post('/cart/checkout', isAuthenticated, async (req, res, next) => {
+    const { selectedCoupon } = req.body;
+   
     try {
         
-        const user_id = req.user.id
-        console.log(user_id);
+        const user_id = req.user.id;
         const user = await UserModel.findOne({ _id: user_id });
         if (user.status===true) {
             const cart = await CartModel.findOne({ userId: user_id }).populate({
@@ -404,13 +415,17 @@ router.post('/cart/checkout',isAuthenticated, async (req, res, next) => {
                 
             });
 
-            
+            let amount = 0;
             if (cart) {
-                let amount = 0;
+                
                 cart.products.forEach((item) => {
                     amount += item.productID.sellingPrice * item.quantity;
                 });
-    
+
+                if (selectedCoupon) {
+                    amount > selectedCoupon.minimumPurchase ? amount -= selectedCoupon.amount:null;
+                }
+  
                 const options = {
                     amount: Number(amount * 100),
                     currency: "INR",
@@ -509,8 +524,9 @@ router.post('/verify', async (req, res) => {
 });
 
 router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
-    const { activeAddress} = req.body;
+    const { activeAddress,selectedCoupon} = req.body;
     const user_id = req.user.id;
+    console.log(selectedCoupon);
 
     try {
         const cart = await CartModel.findOne({ userId: user_id }).populate({
@@ -524,6 +540,9 @@ router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
             totalAmount += item.productID.sellingPrice * item.quantity;
         });
 
+        if (selectedCoupon) {
+            totalAmount > selectedCoupon.amount ? totalAmount -= selectedCoupon.amount:null;
+        }
         
         let order = new OrderModel({
             userId: cart.userId,
@@ -548,6 +567,9 @@ router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
 
         await order.save();
       
+        const coupon = await CouponModel.findById(
+            
+        )
 
         const user_cart = await CartModel.findOneAndDelete({ userId: user_id });
 

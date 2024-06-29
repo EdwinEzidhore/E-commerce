@@ -115,7 +115,7 @@ const Home = () => {
             </Carousel>
             </div>
  
-            <div className='flex container justify-evenly my-10 p-5'>
+            <div className='flex container justify-evenly my-10 p-5 '>
                 <div className='flex space-x-2'>
                     <div className='h-12'><img className='h-full ' src="src/images/save-money.png" alt="" /></div>
                     <div >
@@ -149,7 +149,7 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className='New-arivals'>
+            <div className='New-arivals '>
                 <div className='text-center uppercase '>
                     <h1 className='text-xl font-serif font-semibold text-gray-600 tracking-wider'>New Arrivals</h1>
                     <hr  className='border container border-gray-300 my-5'/>
@@ -227,7 +227,7 @@ const Home = () => {
                     {
                         brands.length > 0 ? brands.map((item,index) => (
                       
-                        <div className='h-60 bg-red-300 shadow-lg w-60 flex-none rounded-lg grid row-span-3 overflow-hidden relative' key={index}>
+                        <div className='h-60 bg-red-300 shadow-lg w-60 flex-none rounded-lg grid row-span-3 overflow-hidden relative scrollbar-hide' key={index}>
                         <img className='h-full object-contain hover:scale-105 duration-300' src={`http://localhost:3333/${item.productImage[0]}`} alt="" />
                             <div className='absolute bottom-0 h-auto  w-full bg-gray-300 font-semibold font-serif text-[#100f0f] tracking-wide p-2 uppercase text-center '><span >{item.brand }</span></div>
                       
