@@ -104,7 +104,10 @@ const CartPage = () => {
                 axios.post('http://localhost:3333/api/v2/cart/checkout', {selectedCoupon},{ withCredentials: true })
                     .then((res) => {
                         console.log(res.data);
-                        handlePaymentVerify(res.data.data, res.data.cart,res.data.amount)
+                        const { data, cart, amount, coupon } = res.data;
+                       
+                        handlePaymentVerify(data, cart, amount, coupon);
+                       
                     })
                     .catch((err) => console.log(err))
             } else if (paymentMethod === 'home') {
@@ -127,7 +130,7 @@ const CartPage = () => {
         }
     };
 
-    const handlePaymentVerify = async (data,cart,total) => {
+    const handlePaymentVerify = async (data,cart,total,coupon) => {
         const options = {
             key: 'rzp_test_IRcArw33YZDUfI',
             amount: data.amount,
@@ -145,6 +148,7 @@ const CartPage = () => {
                     cart,
                     cart_Total:total,
                     activeAddress,
+                    coupon:coupon,
                 }, {
                     headers: {
                         'Content-Type': 'application/json'
@@ -186,10 +190,7 @@ const CartPage = () => {
     const closeModal = (Coupon,CouponDiscount) => {
         setModalOpen(false);
         setCouponDiscount(CouponDiscount); 
-        setSelectedCoupon(Coupon);
-        
-            
-        
+        setSelectedCoupon(Coupon);  
     };
 
   return (

@@ -295,13 +295,17 @@ router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
             });
 
             const coupons = await CouponModel.find({});
+            let filteredCoupons = coupons.filter((coupon) => {
+              return !coupon.redeemed.some((el) => el.user !== userId);
+            });
+            
             
             res.status(200).json({
                 success: true,
                 cart: userCart,
                 total: totalAmount,
                 discount: discount,
-                coupons: coupons,
+                coupons: filteredCoupons,
             });
         }
 
@@ -426,6 +430,7 @@ router.post('/cart/checkout', isAuthenticated, async (req, res, next) => {
                     amount > selectedCoupon.minimumPurchase ? amount -= selectedCoupon.amount:null;
                 }
   
+               
                 const options = {
                     amount: Number(amount * 100),
                     currency: "INR",
@@ -437,7 +442,7 @@ router.post('/cart/checkout', isAuthenticated, async (req, res, next) => {
                         console.log(error);
                         return res.status(500).json({ message: "Something Went Wrong!" });
                     }
-                    res.status(200).json({msg:'order ', data: order,cart,amount:amount });
+                    res.status(200).json({msg:'order ', data: order,cart,amount:amount ,coupon:selectedCoupon?selectedCoupon:null});
                     // console.log(order)
                 });
             }
@@ -457,8 +462,11 @@ router.post('/verify', async (req, res) => {
         razorpay_signature,
         cart,
         cart_Total,
-        activeAddress } = req.body;
+        activeAddress,
+        coupon,
+    } = req.body;
 
+    
     const user_id = cart.userId;
 
 
@@ -509,7 +517,20 @@ router.post('/verify', async (req, res) => {
 
             await Promise.all(cart_item);
            
-            const user_cart=await CartModel.findOneAndDelete({userId:user_id})
+            const user_cart = await CartModel.findOneAndDelete({ userId: user_id });
+
+            if (coupon) {
+                await CouponModel.findOneAndUpdate(
+                    { _id: coupon._id },
+                    {
+                        $set: {
+                            redeemed: { user: user_id, status: true }
+                           
+                        }
+                    },
+                   {new:true},
+                );
+            }
 
             return res.status(200).json({
                 message: "Payement Successfull",order
@@ -541,7 +562,19 @@ router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
         });
 
         if (selectedCoupon) {
-            totalAmount > selectedCoupon.amount ? totalAmount -= selectedCoupon.amount:null;
+            totalAmount > selectedCoupon.amount ? totalAmount -= selectedCoupon.amount : null;
+            
+            const coupon = await CouponModel.findOneAndUpdate(
+                { _id: selectedCoupon._id },
+                {
+                    $set: {
+                        redeemed: { user: user_id, status: true }
+                       
+                    }
+                },
+               {new:true},
+            );
+            console.log(coupon);
         }
         
         let order = new OrderModel({
@@ -567,9 +600,8 @@ router.post('/cart/checkout/cod',isAuthenticated, async (req, res, next) => {
 
         await order.save();
       
-        const coupon = await CouponModel.findById(
-            
-        )
+
+       
 
         const user_cart = await CartModel.findOneAndDelete({ userId: user_id });
 
