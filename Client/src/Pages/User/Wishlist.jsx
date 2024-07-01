@@ -32,15 +32,17 @@ const Wishlist = () => {
                     setWishList(res.data.wishlist.products);
                     setLoading(false);
                 }
-                if (res.status === 404) {
-                    setIsuserErr(true);
-                }
-                if (res.status === 500) {
-                    console.log('Network error');
-                }
+
 
             })
             .catch(err => {
+                const { success, messgae } = err.response.data;
+                const { status } = err.response;
+
+                if (success === false && status === 401) {
+                    setLoading(false);
+                    setIsuserErr(true);
+                }
                 console.log(err);
             });
     };
@@ -147,7 +149,7 @@ const Wishlist = () => {
                                   {
                                       isUserErr?        <div>
                                       <div className='text-lg font-semibold tracking-wider text-slate-700'>Please Login to add Items</div>
-                                      <div className='text-center mt-4'><button className='h-auto px-4 py-1 rounded-md text-[#0e5f76] outline oultine-1 font-semibold uppercase outline-[#0e5f76] hover:text-white hover:outline-white hover:bg-[#0e5f76] duration-300'>Login</button></div>
+                                      <div className='text-center mt-4'><button className='h-auto px-4 py-1 rounded-md text-[#0e5f76] outline oultine-1 font-semibold uppercase outline-[#0e5f76] hover:text-white hover:outline-white hover:bg-[#0e5f76] duration-300' onClick={()=>navigate('/login')}>Login</button></div>
                                       </div> :
                                           
                                           <div className='text-lg font-semibold tracking-wide text-slate-600'>Your WishList is Empty!</div>

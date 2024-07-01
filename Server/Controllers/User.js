@@ -267,47 +267,51 @@ router.get('/cart', isAuthenticated, async (req, res, next) => {
 });
 
 //To get cartitems on Cart Page
-router.get('/getCartItems', isAuthenticated, async (req, res, next) => {
+router.get('/getCartItems',isAuthenticated, async (req, res, next) => {
     
     try {
         const userId = req.user._id;
-        let userCart = await CartModel.findOne({ userId: userId }).populate({
-            path: 'products.productID',
-            model: 'product'
-            
-        });
-        if (!userCart) {
-            userCart = new CartModel({
-                userId,
-                products: [],
+        
+      
+            let userCart = await CartModel.findOne({ userId: userId }).populate({
+                path: 'products.productID',
+                model: 'product'
                 
             });
-            
-            res.status(200).json({ success: false, cart: userCart});
-        } else {
+            if (!userCart) {
+                userCart = new CartModel({
+                    userId,
+                    products: [],
+                    
+                });
+                
+                res.status(200).json({ success: false, cart: userCart});
+            } else {
+    
+                let totalAmount = 0;
+                let discount = 0;
+                userCart.products.forEach((el) => {
+                   
+                    totalAmount += el.productID.sellingPrice * el.quantity;
+                    discount +=  el.productID.originalPrice -el.productID.sellingPrice ;
+                });
+    
+                const coupons = await CouponModel.find({});
+                let filteredCoupons = coupons.filter((coupon) => {
+                  return !coupon.redeemed.some((el) => el.user !== userId);
+                });
+                
+                
+                res.status(200).json({
+                    success: true,
+                    cart: userCart,
+                    total: totalAmount,
+                    discount: discount,
+                    coupons: filteredCoupons,
+                });
+            }
+        
 
-            let totalAmount = 0;
-            let discount = 0;
-            userCart.products.forEach((el) => {
-               
-                totalAmount += el.productID.sellingPrice * el.quantity;
-                discount +=  el.productID.originalPrice -el.productID.sellingPrice ;
-            });
-
-            const coupons = await CouponModel.find({});
-            let filteredCoupons = coupons.filter((coupon) => {
-              return !coupon.redeemed.some((el) => el.user !== userId);
-            });
-            
-            
-            res.status(200).json({
-                success: true,
-                cart: userCart,
-                total: totalAmount,
-                discount: discount,
-                coupons: filteredCoupons,
-            });
-        }
 
        
 
@@ -1003,7 +1007,7 @@ router.get('/get-wishlist', isAuthenticated, async (req, res, next) => {
     }
 });
 
-router.delete('/remove-wishlist',isAuthenticated, async (req, res, next) => {
+router.delete('/remove-wishlist', isAuthenticated, async (req, res, next) => {
     const { id } = req.query;
     const user_id = req.user._id;
    
@@ -1022,6 +1026,15 @@ router.delete('/remove-wishlist',isAuthenticated, async (req, res, next) => {
         
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.get('/search', async (req, res) => {
+    try {
+        const products = await ProductModel.find({});
+        return res.status(200).json({ msg: 'products', products });
+    } catch (error) {
+        return new ErrorHandler(error.message, 500);
     }
 })
 

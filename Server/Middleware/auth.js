@@ -8,7 +8,7 @@ const isAuthenticated = CatchAsyncErrors(async (req, res, next) => {
     
 
     if (!token) {
-        return next(new ErrorHandler("Please login to continue"), 401);
+        return next(new ErrorHandler("Please login to continue",401));
     
     }
 

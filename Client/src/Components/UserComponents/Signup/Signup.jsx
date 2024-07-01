@@ -67,19 +67,28 @@ function Signup() {
     };
     
   return (
-    <div className='min-h-screen bg-[#786c6c] flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+      <div className='min-h-screen bg-[#786white6c] flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+                        <div className=' h-fit lg:mb-0 mb-2'>  
+                  <div className='text-center tracking-wider '>
+                        <span className='text-3xl font-serif font-semibold'>E</span>
+                        <span className='font-semibold text-3xl font-frank-lukh'>ZIRE</span>
+                  </div>
+                  <div className='text-xs text-center'>
+                        <span className='md:tracking-widest text-gray-500 font-extralight font-sans '>FASHION STORE</span>
+                  </div>
+              </div>
     <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>SignUp</h2>
     </div>
 
     <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
-        <div className='bg-white py-8 px-4 shadow-sm rounded-lg sm:px-10'>
+        <div className='bg-slate-200 py-8 px-4 shadow-lg border rounded-lg sm:px-10'>
                   <form encType='multipart/form-data' action="/uploads" method='post' className='space-y-5' onSubmit={handleOnSubmit} >
                 <div>
                     
                     <label htmlFor="text" className='block text-sm font-medium text-gray-700'>First and last name</label>
                     <div className='mt-1'>
-                    <input className='appearence-none bg-[#dfd6d6] block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm' type="text"
+                    <input className='appearence-none bg-[] block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm' type="text"
                         name='name' autoComplete='name' required placeholder=' Full Name' value={userinfo.name} onChange={handleChange} />
                 </div>
                       </div>
@@ -88,7 +97,7 @@ function Signup() {
                     
                     <label htmlFor="email" className='block text-sm font-medium text-gray-700'>Email address</label>
                     <div className='mt-1'>
-                    <input className='appearence-none bg-[#dfd6d6] block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm' type="email"
+                    <input className='appearence-none bg-[#] block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm' type="email"
                         name='email' autoComplete='email' required placeholder='email' value={userinfo.email} onChange={handleChange} />
                         
                 </div>
@@ -98,7 +107,7 @@ function Signup() {
                     
                     <label htmlFor="password" className='block text-sm font-medium text-gray-700'>Set password</label>
                     <div className='mt-1'>
-                    <input className='appearence-none bg-[#dfd6d6] block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm' type="password"
+                    <input className='appearence-none bg-[#] block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm' type="password"
                         name='password' autoComplete='current-password' required placeholder='password' value={userinfo.password} onChange={handleChange} />
                         
                 </div>

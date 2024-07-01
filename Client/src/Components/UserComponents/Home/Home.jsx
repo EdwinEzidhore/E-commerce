@@ -187,7 +187,7 @@ const Home = () => {
                               <div className='w-56 p-1 content bg-white'>
                                     <div className='text-xs text-slate-400 uppercase font-semibold mb-1 text-center'>{ product.category}</div>
                                     <div className='md:text-sm sm:text-xs uppercase font-semibold text-slate-600 text-center'>{product.brand }</div>
-                                    <div className='font-semibold text-lg sm:text-sm text-[#1e1616] leading-5 mb-1 h-12 text-center'><a href='/p' className='hover:text-gray-700 ' onClick={()=>getSingleProduct(product)}>{product.description }</a></div> 
+                                    <div className='font-semibold md:text-lg sm:text-sm text-[#1e1616] md:leading-5 mb-1 h-12 text-center'><a href='/p' className='hover:text-gray-700 ' onClick={()=>getSingleProduct(product)}>{product.description }</a></div> 
                               <div className=' space-x-2 items-center justify-between'>
                                   <div className='space-x-3 flex items-center justify-center mt-3'>
                                             <span className='font-semibold  text-lg text-emerald-700'>₹{ product.sellingPrice}</span>

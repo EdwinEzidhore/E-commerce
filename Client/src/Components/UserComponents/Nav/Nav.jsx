@@ -10,6 +10,7 @@ import { FaHeart } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
 import { BiSolidCategory } from "react-icons/bi";
+import SearchResultsList from './SearchResultsList';
 
 const Nav = () => {
       const navigate = useNavigate();
@@ -19,6 +20,8 @@ const Nav = () => {
       const [user, setUser] = useState();
       const [loading, setLoading] = useState(true);
       const [isMenuOpen, setIsMenuOpen] = useState(false);
+      const [searchInput, setSearchInput] = useState('');
+      const [searchResults, setSearchResults] = useState([]);
 
       const toggleMenu = () => {
             setIsMenuOpen(!isMenuOpen);
@@ -42,11 +45,28 @@ const Nav = () => {
                   })
         },[]);
 
+      useEffect(() => {
+            getSearchItems();
+      },[searchInput]);
      
+      const getSearchItems = () => {
+            axios.get('http://localhost:3333/api/v2/search')
+                  .then((res) => {
+                        let results = res.data.products;
+                        results = results.filter((item) => {
+                              return searchInput && item && item.name && item.name.toLowerCase().includes(searchInput) || item.description.toLowerCase().includes(searchInput)  ;
+                        });
+                        setSearchResults(results);
+                  })
+                  .catch((err) => {
+                        console.log(err)
+                  });
+      }
 
       return (
             <>
-            <nav className=' mx-auto  lg:flex   flex-nowrap md:items-center py-4 md:px-2 xl:px-12 md:justify-evenly font-poppins '>
+                  <nav className=' mx-auto  lg:flex   flex-nowrap md:items-center py-4 md:px-2 xl:px-12 md:justify-evenly font-poppins '>
+                   
               <div className=' h-fit lg:mb-0 mb-2'>  
                   <div className='text-center tracking-wider '>
                         <span className='text-3xl font-serif font-semibold'>E</span>
@@ -58,9 +78,10 @@ const Nav = () => {
               </div>
             <div className='md:flex   lg:justify-center md:justify-between  items-center   md:bg-[#03071e] lg:px-12 md:px-6  md:rounded-full py-2 '>
                   <div className='md:flex lg:space-x-7 md:space-x-3 lg:gap-4 md:gap-3 items-center  tracking-wide'>
-                        <div className=' flex items-center  bg-white rounded-full py-1 px-2 input-container relative'>
-                              <input className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none text-md expandable-input ' type="search" placeholder='Search' name="" id="" /> 
-                              <div className='absolute  right-4 search text-xl'><a href="#" className='text-slate-700'><BsSearch /></a></div>
+                        <div className=' flex items-center  bg-white rounded-full py-1 px-2 input-container relative '>
+                              <input className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none text-md expandable-input ' type="search" placeholder='Search' name="search" id="search" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/> 
+                                          <div className='absolute  right-4 search text-xl'><a href="#" className='text-slate-700'><BsSearch /></a></div>
+                                          {searchInput.length > 0 && <SearchResultsList results={ searchResults} />}
                         </div>
                               <div className='flex sm:justify-between  md:p-0 sm:p-2  ease-out md:text-[white]  uppercase tracking-wider font-light md:bg-transparent sm:bg-[#333333]'>
                                     <div className=' lg:gap-4 md:space-x-6  md:gap-2 hidden md:block'>
@@ -127,8 +148,11 @@ const Nav = () => {
                         isloggedin==true?'': <button className='h-auto bg-orange-400 py-1 px-2 rounded text-white' onClick={()=>navigate('/Login')}>Login</button>
                   }
             </div>
-                  </nav>
-                  
+            </nav>
+
+                     
+                   
+
                               {/* Side Menu */}
             <div className={`fixed top-0 z-20 left-0 h-full pl-4 w-64 bg-[#333333] shadow-lg transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
                   <div className='flex flex-col p-5'>

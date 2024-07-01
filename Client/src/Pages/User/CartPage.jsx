@@ -21,7 +21,7 @@ const CartPage = () => {
 
     const dispatch = useDispatch();
     const [cartItems, setCartItems] = useState({products:[]});
-    const [err, setErr] = useState(false);
+    const [loginerr, setLoginErr] = useState(false);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [networkErr, setNetworkErr] = useState(false);
@@ -47,21 +47,32 @@ const CartPage = () => {
     }, [selectedCoupon]);
     
     const getCartItems = () => {
-        axios.get(`http://localhost:3333/api/v2/getCartItems`,{withCredentials:true})
+        axios.get(`http://localhost:3333/api/v2/getCartItems`, { withCredentials: true })
             .then((res) => {
-                setLoading(false);
-                setCartItems(res.data.cart);
-                setTotalAmount(res.data.total);
-                setDiscount(res.data.discount);
-                setCoupons(res.data.coupons);
+                console.log(res.data.message);
+                if (res.status === 200) {
+                    setLoading(false);
+                    setCartItems(res.data.cart);
+                    setTotalAmount(res.data.total);
+                    setDiscount(res.data.discount);
+                    setCoupons(res.data.coupons);
+                }
+
                
             })
             .catch(err => {
-                setNetworkErr(true)
-                // if (err.response.status === 500) {
-                //     setErr(true)
-                // }
-            } )
+                const { success, message } = err.response.data;
+                const { status } = err.response;
+                
+                if (success === false && status === 401) {
+                    setLoading(false);
+                    setLoginErr(true)
+                }
+                if (success === false && status === 500) {
+                    setLoading(false);
+                    setNetworkErr(true);
+                } 
+            });
         }
 
 
@@ -436,16 +447,16 @@ const CartPage = () => {
                   :
 
                   
-                  <div className={loading===false?'flex justify-center items-center h-fit flex-col relative top-10':'hidden'}>
+                  <div className={loading===false && !networkErr? 'flex justify-center items-center h-fit flex-col relative top-10':'hidden'}>
                   <div className='h-72'><img className='h-full' src="/src/images/undraw_undraw_undraw_undraw_undraw_undraw_shopping_bags_2ude_-1-_mnw3_-2-_q7y0_muk6_-2-_l1mh_(2)_m4xj.png" alt="" /></div>
                   <div className='text-2xl font-bold'>Hey, it feels so light!</div>
                   {
-                      err === true ? <p className='font-semibold text-md mt-4 text-slate-600'>Please login to add product <button className='h-auto p-1 bg-red-200 rounded-md text-red-500 uppercase ml-3'>Login</button></p> :
+                      loginerr === true ? <p className='font-semibold text-md mt-4 text-slate-600'>Please login to add product <button className='h-auto p-1 bg-red-200 rounded-md text-red-500 uppercase ml-3' onClick={()=>navigate('/login')}>Login</button></p> :
                           <p className='font-semibold text-md mt-4 text-slate-600'>There is nothing in your cart. Let's add some items</p>
                       
                   }
                   {
-                      err!==true &&  <button className='h-auto py-1 px-4 outline uppercase font-thin mt-5 outline-red-700 text-red-700 outline-2' onClick={()=>navigate('/wishlist')}>Add items from wishlist</button>
+                      loginerr!==true &&  <button className='h-auto py-1 px-4 outline uppercase font-thin mt-5 outline-red-700 text-red-700 outline-2' onClick={()=>navigate('/wishlist')}>Add items from wishlist</button>
                   }
                  
               </div>
