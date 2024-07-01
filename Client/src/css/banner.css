@@ -6,7 +6,7 @@
 
 .wrapper{
   
-    max-width: 1536px;
+    max-width: 100%;
     margin-inline: auto;
     position: relative;
     overflow: hidden;
@@ -38,14 +38,35 @@
    
 }
 
-  
+@media (min-width: 768px) {
+    .item1 { animation-delay: -26.25s; }
+    .item2 { animation-delay: -22.5s; }
+    .item3 { animation-delay: -18.75s; }
+    .item4 { animation-delay: -15s; }
+    .item5 { animation-delay: -11.25s; }
+    .item6 { animation-delay: -7.5s; }
+    .item7 { animation-delay: -3.75s; }
+    .item8 { animation-delay: 0s; }
+} 
 
+@media (max-width: 768px) {
+    .item1 { animation-delay: -32s; } 
+    .item2 { animation-delay: -24s; } 
+    .item3 { animation-delay: -16s; } 
+    .item4 { animation-delay: -8s; }  
+    .item5 { animation-delay: 0s; }   
+    .item6 { animation-delay: 8s; }   
 
-.item1 { animation-delay: -26.25s; }
-.item2 { animation-delay: -22.5s; }
-.item3 { animation-delay: -18.75s; }
-.item4 { animation-delay: -15s; }
-.item5 { animation-delay: -11.25s; }
-.item6 { animation-delay: -7.5s; }
-.item7 { animation-delay: -3.75s; }
-.item8 { animation-delay: 0s; }
+    
+
+    .wrapper{
+        
+        mask-image: none;
+        border:none;
+        
+    }
+
+   .item{
+    animation-duration: 40s;
+   }
+} 
