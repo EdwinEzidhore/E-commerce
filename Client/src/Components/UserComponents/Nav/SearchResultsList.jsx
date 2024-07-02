@@ -10,7 +10,6 @@ const SearchResultsList = ({ results }) => {
     const navigate = useNavigate();
 
     const getProduct = (product) => {
-        console.log(product);
         dispatch(add(product));
         navigate('/p');
     }    

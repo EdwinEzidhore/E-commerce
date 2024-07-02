@@ -17,6 +17,7 @@ import '../../css/loadingbutton.css'
 import { decrement, setCartLength } from '../../Redux/Cart/CartSlice';
 import Coupon from '../../Components/UserComponents/Modal/Coupon';
 
+
 const CartPage = () => {
 
     const dispatch = useDispatch();
@@ -49,7 +50,7 @@ const CartPage = () => {
     const getCartItems = () => {
         axios.get(`http://localhost:3333/api/v2/getCartItems`, { withCredentials: true })
             .then((res) => {
-                console.log(res.data.message);
+                
                 if (res.status === 200) {
                     setLoading(false);
                     setCartItems(res.data.cart);
@@ -206,19 +207,19 @@ const CartPage = () => {
 
   return (
       <section>
-          <div className='sticky top-0 backdrop-blur-xl z-10'><Nav /></div>
+          <div className='lg:sticky lg:top-0 lg:backdrop-blur-xl lg:z-10'><Nav /></div>
           {
-              loading && networkErr===false? <div className='h-96 flex items-center justify-center'><Loading /></div> :
+              loading && networkErr===false? <div className=' h-96 flex items-center justify-center'><Loading /></div> :
               <div className={networkErr===true?'flex flex-col items-center justify-center h-96':'hidden'}>
-              <img className='h-20 object-contain' src="/src/images/delete.png" alt="" />
+              <img className='sm:h-16 md:h-20 object-contain' src="/src/images/delete.png" alt="" />
               <span className='text-slate-500 cursor-default'>Check your Network connection</span>
           </div>
           }
           {
-              cartItems.products.length >0?
-                <div className='container'>
+              cartItems.products.length > 0?
+                <div className='md:container'>
               
-                <div className='grid grid-cols-12 bg-slate-50 font-robo'>
+                <div className='lg:grid lg:grid-cols-12 bg-slate-50 font-robo'>
                   <div className='grid col-start-2 col-end-8 p-3'>
                       <div className=' items-center justify-between p-4 border bg-white shadow-md h-fit'>
                               {activeAddress!=null &&  <div className='text-sm font-semibold mb-3'>Deliver to:</div>}
@@ -228,13 +229,13 @@ const CartPage = () => {
                                       {
                                           activeAddress!=null?
                                               
-                                            <div className='w-18 ml-2 flex items-center'>
-                                                <div className='h-3 w-3 border rounded-full outline outline-1 outline-slate-400 bg-[#15b315]'></div>
+                                            <div className='w-18 md:ml-2 flex items-center'>
+                                                <div className='hidden md:block h-3 w-3 border rounded-full outline outline-1 outline-slate-400 bg-[#15b315]'></div>
                                                 <div className='flex flex-col ml-2' >
-                                                    <div className='text-sm'>{activeAddress.Name }</div>
-                                                  <span className='font-medium text-slate-600 text-sm font-poppins tracking-wide' >{activeAddress.main_address}</span>
+                                                    <div className='text-sm w-full sm:w-fit'>{activeAddress.Name }</div>
+                                                  <span className=' font-medium text-slate-600 text-sm  md:tracking-wide' >{activeAddress.main_address}</span>
                                                   <div><span className='text-sm tracking-wide text-gray-400 mr-2 font-semibold'>landmark:</span><span className='text-sm'>{activeAddress.landmark }</span></div>
-                                                  <span className=' text-slate-600 text-sm font-poppins tracking-wide'>ph: {activeAddress.phoneNumber }</span>
+                                                  <span className=' text-slate-600 text-sm  md:tracking-wide'><span className='text-slate-800'>ph:</span> {activeAddress.phoneNumber }</span>
                                                 
                                                 </div>
   
@@ -248,15 +249,16 @@ const CartPage = () => {
                                       
                                      
                                     
-                                      <div className='text-sm border   rounded-md  bg-[#1c7293] text-white'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
+                                      <div className=' sm:text-xs md:text-sm border   rounded-md  bg-[#1c7293] text-white'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
                                   </div>
 
                       </div>
 
                       <div className=' p-1'>
                           {
-                              cartItems.products.map((item,index) => (
-                                <div className={availability===false && item.productID.status==='Unavailable'?'card flex border p-3 gap-3 mb-1 h-fit relative bg-gray-300 shadow-md   ' :'card flex border p-3 gap-3 mb-1 h-fit relative bg-white shadow-md'} key={index}>
+                                      cartItems.products.map((item, index) => (
+                                  <div className='sm:border sm:mt-1'>
+                                          <div className={availability===false && item.productID.status==='Unavailable'?'card flex md:border p-3 gap-3 mb-1 h-fit relative bg-gray-300 md:shadow-md   ' :'card flex md:border p-3 gap-3 mb-1 h-fit relative bg-white md:shadow-md'} key={index}>
                                 <div className='   object-cover flex gap-1'>
   
                                     <div className={availability===false && item.productID.status==='Unavailable'?'grayscale h-f w-32 flex justify-center item-center':' h-f w-32 flex justify-center item-center '}>
@@ -265,15 +267,15 @@ const CartPage = () => {
                                     
                                 </div>
                                     <div className='w-full'>
-                                          <h1 className='text-sm font-semibold'>{item.productID.brand }</h1>
-                                      <h4 className='mt-1 w-80'>{item.productID.description }</h4>
-                                    <h5 className='text-sm text-slate-500 '>sold by ethinic fashion</h5>
+                                          <h1 className='sm:text-xs md:text-sm font-semibold text-slate-500'>{item.productID.brand }</h1>
+                                      <div className='sm:w-52 md:w-80 '><h4 className='mt-1 sm:text-sm md:text-base  truncate  '>{item.productID.description }</h4></div>
+                                    <h5 className='sm:text-xs md:text-sm text-slate-500 '>sold by ethinic fashion</h5>
                                     
-                                    <div className='flex items-center  space-x-5 mt-3 gap-5 mb-2 '>
-                                              <button className='h-auto bg-gray-200  px-2'>size: <span className='font-semibold text-sm me'>{ item.productID.Details.size}</span></button>
+                                    <div className='flex items-center  md:space-x-5 mt-3 md:gap-5 sm:gap-3 mb-2 '>
+                                              <button className='h-auto bg-gray-200  px-2'>size: <span className='font-semibold md:text-sm sm:text-xs me'>{ item.productID.Details.size}</span></button>
                                         <div className='flex items-center gap-3'>
                                                   
-                                                      <button className=' p-1.5 flex  outline rounded-full outline-1 outline-slate-500' disabled={selectedCoupon?true:false}  onClick={(e)=>{
+                                                      <button className='sm:p-1 md:p-1.5 flex  outline rounded-full outline-1 outline-slate-500' disabled={selectedCoupon?true:false}  onClick={(e)=>{
                                                             incrementorDecrement('minus',item)
                                                       }
                                                      
@@ -282,14 +284,14 @@ const CartPage = () => {
                                             <input type="number"
                                                 className='bg-slate-200 spinner w-8 text-sm text-center   outline outline-1 outline-slate-500' readOnly value={item.quantity}/>
                                                   
-                                                      <button className='flex outline rounded-full outline-1 outline-slate-500 p-1.5' onClick={() => incrementorDecrement('plus', item)}><HiOutlinePlusSm /></button></div>
+                                                      <button className='flex outline rounded-full outline-1 outline-slate-500 sm:p-1 md:p-1.5' onClick={() => incrementorDecrement('plus', item)}><HiOutlinePlusSm /></button></div>
                                       
                                     </div>
   
                                     <div className='flex gap-2 space-x-1 items-center p-2'>
-                                              <h1 className='font-semibold'>₹{  item.productID.sellingPrice}</h1>
+                                              <h1 className='font-semibold text-base '>₹{  item.productID.sellingPrice}</h1>
                                         <h4 className='text-sm line-through text-slate-500'>₹{  item.productID.originalPrice}</h4>
-                                        <h1 className='text-[#25858e]'>70% off</h1>
+                                        <h1 className='text-[#25858e] text-xs'>70% off</h1>
                                     </div>
   
                                           <div className='flex items-center text-xs justify-between'>
@@ -301,9 +303,15 @@ const CartPage = () => {
                                               <div><p className={availability===false?'tracking-wide text-red-500 font-semibold scale-105':'tracking-wide text-red-500 font-semibold '}>{item.productID.status==='Unavailable'?'Currently Unavailable!':''}</p></div>
                                           </div>
                                     </div>
-                                    <div className='absolute top-5 text-2xl right-5'><button onClick={()=>removeItem(item)}><RxCross1  /></button></div>
+                                    <div className='sm:hidden md:block absolute sm:top-0 md:top-5 text-2xl right-5'><button onClick={()=>removeItem(item)}><RxCross1  /></button></div>
                                     
-                            </div>
+                                              </div>
+                                              <div className='sm:flex sm:justify-between md:hidden bg-slate-100'>
+                                                  <div className='text-center w-full border '><button className=' py-2 w-full h-full' onClick={()=>removeItem(item)}>Remove</button></div>
+                                                  <div className='text-center w-full border'><button className='py-2 w-full h-full' >Save to wishlist</button></div>
+                                              </div>                  
+                                  </div>
+                               
                               ))
                           }
                               
@@ -333,7 +341,7 @@ const CartPage = () => {
                                       }
                           </div>
 
-                          <div className="box-2 ">
+                          <div className="box-2 hidden lg:block">
                               
                               <div className='h-20 my-4 shadow-md'><img className='h-full w-full object-cover' src="/src/images/happy-valentine-s-day-sale-banner-or-promotion-on-blue-background-online-shopping-store-with-mobile-credit-cards-and-shop-elements-illustration-free-vector.jpg" alt="" /></div>
                           </div>
@@ -448,11 +456,11 @@ const CartPage = () => {
 
                   
                   <div className={loading===false && !networkErr? 'flex justify-center items-center h-fit flex-col relative top-10':'hidden'}>
-                  <div className='h-72'><img className='h-full' src="/src/images/undraw_undraw_undraw_undraw_undraw_undraw_shopping_bags_2ude_-1-_mnw3_-2-_q7y0_muk6_-2-_l1mh_(2)_m4xj.png" alt="" /></div>
-                  <div className='text-2xl font-bold'>Hey, it feels so light!</div>
+                  <div className='sm:h-48 md:h-72'><img className='h-full' src="/src/images/undraw_undraw_undraw_undraw_undraw_undraw_shopping_bags_2ude_-1-_mnw3_-2-_q7y0_muk6_-2-_l1mh_(2)_m4xj.png" alt="" /></div>
+                  <div className='sm:text-lg md:text-2xl font-bold'>Hey, it feels so light!</div>
                   {
                       loginerr === true ? <p className='font-semibold text-md mt-4 text-slate-600'>Please login to add product <button className='h-auto p-1 bg-red-200 rounded-md text-red-500 uppercase ml-3' onClick={()=>navigate('/login')}>Login</button></p> :
-                          <p className='font-semibold text-md mt-4 text-slate-600'>There is nothing in your cart. Let's add some items</p>
+                          <p className='font-semibold text-base mt-4 text-slate-600'>There is nothing in your cart. Let's add some items</p>
                       
                   }
                   {
