@@ -257,7 +257,7 @@ const CartPage = () => {
                       <div className=' p-1'>
                           {
                                       cartItems.products.map((item, index) => (
-                                  <div className='sm:border sm:mt-1'>
+                                  <div className='sm:border sm:mt-1' key={index}>
                                           <div className={availability===false && item.productID.status==='Unavailable'?'card flex md:border p-3 gap-3 mb-1 h-fit relative bg-gray-300 md:shadow-md   ' :'card flex md:border p-3 gap-3 mb-1 h-fit relative bg-white md:shadow-md'} key={index}>
                                 <div className='   object-cover flex gap-1'>
   

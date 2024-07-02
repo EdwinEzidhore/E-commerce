@@ -66,11 +66,12 @@
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
   }
   
-.content:hover{
-  transform: translateY();
-  animation: showcontent 0.3s linear 1 forwards;
-
-}
+  @media (min-width: 976px) {
+    .content:hover {
+      transform: translateY(0);
+      animation: showcontent 0.3s linear 1 forwards;
+    }
+  }
 @keyframes showcontent{
   to{
   
