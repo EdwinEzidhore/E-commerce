@@ -29,6 +29,8 @@ import Maintenance from './Components/UserComponents/Loading/Maintenance';
 import Wishlist from './Pages/User/Wishlist';
 import AdminCoupon from './Pages/Admin/AdminCoupon';
 import AddCouponForm from './Components/AdminComponents/AddCouponForm';
+import UserInformation from './Components/UserComponents/Profile/UserInformation';
+import Orders from './Components/UserComponents/Profile/Orders';
 function App() {
 
   
@@ -57,6 +59,13 @@ function App() {
               <Route path='/men' element={<Men />}></Route>
               <Route path='/cat' element={<CategoryPage />}></Route>
               <Route path='/wishlist' element={<Wishlist />}></Route>
+              <Route path='/orders' element={<Orders />}></Route>
+
+
+              <Route path='/user-information' element={<UserInformation />}></Route>
+             
+
+              
 
 
 

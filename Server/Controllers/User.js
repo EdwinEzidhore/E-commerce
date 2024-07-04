@@ -404,7 +404,7 @@ router.get('/getUserInfo', isAuthenticated, async (req, res) => {
     const user_id = user._id;
     
     if (user_status == true) {
-        const user_details = await UserModel.findOne({ _id: user_id });
+        const user_details = await UserModel.findOne({ _id: user_id }).populate("address");
         return res.status(200).json({ user_details })
     }
 });

@@ -4,6 +4,8 @@ import states from '../../../States';
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import {addAddress,set_active_address,setAddresses,removeAddress} from '../../../Redux/Address/AddressSlice'
+import Nav from '../Nav/Nav';
+import Footer from '../Footer/Footer';
 const Address = () => {
 
   const [address, setAddress] = useState({
@@ -127,33 +129,36 @@ const Address = () => {
  
 
   return (
-    <div className='p-6 '>
+    <div>
+       <div className='sm:block md:hidden sm:py-0'><Nav/></div>
+        <div className='sm:p-3 md:p-6'>
       <div className='mb-4'><span className='text-xl font-semibold'>Manage Addresses</span></div>
 <hr />
       <div><button onClick={() => {
         setToggleForm(!toggleForm)
-      }} className='h-8 bg-sky-300 px-2 rounded-md my-4 text-slate-600 tracking-wider'>{toggleForm===false?'Add New Address':'Cancel'}</button></div>
-      <div className={toggleForm===true?'mt-5 p-5 border w-fit pr-52 bg-[#E3FEF7]':'mt-5 p-5 border w-fit pr-52 bg-[#E3FEF7] hidden'}>
+        }} className='h-8 bg-[#1c7293] px-2 rounded-md my-4 text-white tracking-wider'>{toggleForm === false ? 'Add New Address' : 'Cancel'}</button></div>
+        <div className=' flex items-center justify-center md:justify-start'>
+        <div className={toggleForm===true?' mt-5 sm:p-3 md:p-5  w-11/12 lg:w-fit lg:pr-52 bg-slate-100 shadow-lg  flex-wrap':'mt-5 p-5 border w-fit pr-52 bg-[#E3FEF7] hidden'}>
         <form action="" onSubmit={handleSubmit}>
-          <div className='flex justify-between space-x-4 gap-4'>
+          <div className='md:flex justify-between md:space-x-2 lg:space-x-4 lg:gap-4'>
 
-          <input type="text" name='name' value={address.name} className='p-2 outline outline-1 outline-slate-300 spinner ' maxLength='20'  placeholder='Name' onChange={handleChange} />
+          <input type="text" name='name' value={address.name} className='sm:w-full  p-2  outline-1 outline-slate-300 spinner sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' maxLength='20'  placeholder='Name' onChange={handleChange} />
          
-            <input type="text" name='phone' value={address.phone} className='p-2 outline outline-1 outline-slate-300 spinner ' maxLength='10'  placeholder='10-digit mobile number' onChange={handleChange} />
+            <input type="text" name='phone' value={address.phone} className='sm:w-full  p-2   spinner rounded-md shadow-md focus:outline-none' maxLength='10'  placeholder='10-digit mobile number' onChange={handleChange} />
           </div>
 
-          <div className='flex justify-between my-5'>
-            <input type="text" name='pincode' value={address.pincode} className='p-2 outline outline-1 outline-slate-300  ' placeholder='pincode' onChange={handleChange}/>
-            <input type="text" name='locality' value={address.locality} className='p-2 outline outline-1 outline-slate-300  ' placeholder='Locality' onChange={handleChange}/>
+          <div className='md:flex justify-between md:space-x-2 lg:space-x-4 lg:gap-4 my-5'>
+            <input type="text" name='pincode' value={address.pincode} className='p-2   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' placeholder='pincode' onChange={handleChange}/>
+            <input type="text" name='locality' value={address.locality} className='p-2   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' placeholder='Locality' onChange={handleChange}/>
 
           </div>
           <div className='mb-5'>
-            <input type="text" name='address' value={address.address} className='p-2 outline outline-1 outline-slate-300  w-full h-24 ' onChange={handleChange}/>
+            <textarea type="text" name='address' value={address.address} className='p-2    w-full h-24 rounded-md shadow-md focus:outline-none' onChange={handleChange}/>
           </div>
 
-          <div className='flex justify-between my-5 gap-4 space-x-4'>
+          <div className='md:flex md:justify-evenly lg:justify-between my-5 gap-1 lg:gap-4 lg:space-x-4'>
 
-            <select name="state" value={address.state} id="" placeholder='Select state' className='p-2 outline outline-1 outline-slate-300  w-full  ' onChange={handleChange}>
+            <select name="state" value={address.state} id="" placeholder='Select state' className='p-2 focus:outline-none    w-full rounded-md shadow-md  ' onChange={handleChange}>
             <option  value="">select State</option>
               {
                     states.map((state) => {
@@ -162,13 +167,13 @@ const Address = () => {
               }
             </select>
             
-            <input type="text" name='city' value={address.city} className='p-2 outline outline-1 outline-slate-300  ' placeholder='city/district/town' onChange={handleChange} />
+            <input type="text" name='city' value={address.city} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md ' placeholder='city/district/town' onChange={handleChange} />
             
           </div>
 
-          <div className='mb-5 flex gap-4 space-x-4'>
-            <input type="text" name='landmark' value={address.landmark} className='p-2 outline outline-1 outline-slate-300  ' placeholder='Landmark(optional)' onChange={handleChange}/>
-            <input type="text" name='alternate_phone' value={address.alternate_phone}  className='p-2 outline outline-1 outline-slate-300  ' placeholder='Alternate Phone(optional)' onChange={handleChange}/>
+          <div className='mb-5 md:flex justify-between  lg:gap-4 lg:space-x-4'>
+            <input type="text" name='landmark' value={address.landmark} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Landmark(optional)' onChange={handleChange}/>
+            <input type="text" name='alternate_phone' value={address.alternate_phone}  className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Alternate Phone(optional)' onChange={handleChange}/>
           </div>
           <div>
             <span className='text-sm text-slate-500 '>Address Type</span>
@@ -184,17 +189,19 @@ const Address = () => {
             
             </div>
           </div>
-          <div className='h-fit bg-[#135D66] w-24 text-white flex justify-center  font-semibold my-4'>
+          <div className='h-fit bg-[#1c7293] w-24 text-white flex justify-center  font-semibold my-4'>
             <button className='w-full p-2'>Save</button>
             
           </div>
         </form>      
       </div>
+        </div>
+ 
 
 
         {
           userAddress && activeAddress && userAddress.map((user,index) => (
-            <div className={activeAddress._id===user._id?'border mt-5 p-5 max-w-full pr-40 relative bg-gray-200 shadow-xl':'border mt-5 p-5 max-w-full pr-40 relative'} key={index}>
+            <div className={activeAddress._id===user._id?'border mt-5 p-5 w-full xl:w-1/2 pr-40 relative bg-gray-200 shadow-xl':'border mt-5 p-5 sm:w-full xl:w-1/2 pr-40 relative'} key={index}>
             <div className='absolute right-5 flex items-center space-x-2 gap-2'>
                 <button className='outline outline-1 px-1 text-sky-700 tracking-wide'  onClick={() => setActiveaddress(user)}>
                   {
@@ -205,13 +212,13 @@ const Address = () => {
             </div>
 
               <span className='h-fit bg-slate-100 p-1 text-slate-500 text-sm '>{ user.addressType}</span>
-              <div className='flex gap-3 space-x-4 font-semibold my-3'>
+              <div className='flex gap-3  md:space-x-4 font-semibold my-3'>
                 <span>{user.Name }</span>
                 <span>{user.phoneNumber }</span>
                
               </div>
 
-              <div>{user.main_address}</div>
+              <div className='leading-5'>{user.main_address}</div>
               <div> {user.state} - <span className='font-semibold'>{ user.zipcode}</span></div>
               <div>
                 
@@ -223,11 +230,14 @@ const Address = () => {
 
       }
       {
-        userAddress.length ==0 && < div className='flex justify-center items-center text-lg tracking-wider text-slate-600'>No saved Address!</div>
+        userAddress.length ==0 && < div className='flex justify-center items-center text-lg tracking-wider text-slate-600 mt-4'>No saved Address!</div>
       }
 
      
+      </div>
+      <div className='sm:block md:hidden'><Footer/></div>
     </div>
+    
   )
 }
 

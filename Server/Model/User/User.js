@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Please enter your Password'],
-        minLength: [8, "Password must contain atleast 8 characters"],
+        minLength: [5, "Password must contain atleast 5 characters"],
         select: false //to avoid retreiving password when using on client side
     },
     role: {
@@ -38,6 +38,10 @@ const UserSchema = new mongoose.Schema({
     status:{
         type: Boolean,
         default:false,
+    },
+    address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'addres'
     },
     resetPasswordToken: String,
     resetPasswordTime: Date

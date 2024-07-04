@@ -5,10 +5,12 @@ import UserInformation from '../../Components/UserComponents/Profile/UserInforma
 import Address from '../../Components/UserComponents/Profile/Address';
 import axios from 'axios';
 import Orders from '../../Components/UserComponents/Profile/Orders';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
     const [active, setActive] = useState('profile');
     const [user, setUser] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
@@ -26,13 +28,13 @@ const ProfilePage = () => {
     return (
            
         <section>
-            <div className='sticky top-0 backdrop-blur-xl z-10'><Nav /></div>
+            <div className='sm:hidden md:block sm:bg-white lg:sticky top-0   lg:bg-transparent lg:backdrop-blur-xl z-10'><Nav /></div>
           
-          <div className='mx-auto container   bg-slate-100 p-1'>
-                <div className='grid grid-cols-12 '>
+          <div className=' mx-auto lg:container   bg-slate-100 p-1'>
+                <div className='grid  md:grid-cols-12 '>
                    
-                  <div className='grid col-span-2 h-fit'> 
-                      <div className="user flex items-center p-3 mb-4 shadow-lg bg-white">
+                  <div className='sm:hidden md:block md:col-span-3 xl:col-span-2 h-fit'> 
+                      <div className="sm:hidden  user md:flex items-center p-3 mb-4 shadow-lg bg-white">
                           <div><img className='max-h-10 rounded-full' src={user && `http://localhost:3333/${user.avatar.url}`} alt="" /></div>
                             <span className='ml-2'>{user.name }</span>
                       </div>
@@ -109,7 +111,7 @@ const ProfilePage = () => {
                       
                   </div>
 
-                  <div className='ml-4 grid col-span-10 bg-white shadow-lg '>
+                  <div className=' sm:block md:ml-2 lg:ml-3 grid md:col-span-9 xl:col-span-10 bg-white shadow-lg '>
                         {active === 'profile' && <UserInformation />}
                         {active === 'Address' && <Address />}
                         {active==='orders' && <Orders/>}
@@ -118,8 +120,10 @@ const ProfilePage = () => {
                   </div>
 
               </div>
-          </div>
-          <Footer/>
+            </div>
+            
+            
+          <div className='sm:hidden md:block'><Footer/></div>
       </section>
      
      

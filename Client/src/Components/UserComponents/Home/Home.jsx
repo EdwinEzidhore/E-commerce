@@ -94,7 +94,7 @@ const Home = () => {
      
         <div className=' Hero h-screen '>
 
-        <div className="h-56 sm:h-64 xl:h-3/4  2xl:h-96 md:container  ">
+        <div className="h-56 md:h-96 xl:h-3/4  2xl:h-3/4 md:container  ">
             <Carousel>
                             <div className='w-full h-full flex '>
                                 {/* <div className=' max-h-full w-2/5 bg-red-300'>heading</div> */}
@@ -219,10 +219,10 @@ const Home = () => {
             </div>
 
           
-            <div className='side-carosel md:container sm:mx-5  '>
+            <div className='side-carosel  sm:mx-5  '>
                 <div className=' sm:container md:p-5 tracking-widest text-xl text-slate-600 text-center font-semibold mt-12 mb-5'><span className='font-serif'>GRAB THE BEST BRAND FOR YOU</span></div>
               
-                <div className='side-carosel-items flex  space-x-4 overflow-x-scroll overflow-y-hidden scrollbar-hide mb-5 md:p-5 sm:py-3 '>
+                <div className='md:container  side-carosel-items flex  space-x-4 overflow-x-scroll overflow-y-hidden scrollbar-hide mb-5 md:p-5 sm:py-3 '>
                     
                     {
                         brands.length > 0 ? brands.map((item,index) => (

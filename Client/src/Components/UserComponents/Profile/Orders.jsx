@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { FaStar } from "react-icons/fa";
 import Loading from '../Loading/Loading';
 import { IoChevronBack } from "react-icons/io5";
-
+import Nav from '../Nav/Nav';
+import Footer from '../Footer/Footer';
+import { LuListFilter } from "react-icons/lu";
 
 const Orders = () => {
 
@@ -17,6 +19,7 @@ const Orders = () => {
         inReturn: ''
     });
     const [selectedStatus, setSelectedStatus] = useState('');
+    const [toggleFilterbar, setToggleFilterbar] = useState(false);
 
     
  
@@ -113,16 +116,22 @@ const Orders = () => {
     }, [selectedStatus]);
 
     if (loading) {
-        return <div className='grid place-content-center '><Loading/></div>
+        return <div className='h-screen flex justify-center items-center '><Loading/></div>
     };
 
-  return (
-      <div className='p-5 '>
-          <div className='filter border flex p-5 mb-4'>
-              <div className='mr-5 font-semibold uppercase border-slate-400 border-r-2 pr-4'>
-                  FilterBy
-              </div>
-              <div className='flex space-x-5 gap-2 text-slate-800'>
+    return (
+        <div>
+             <div className='sm:block md:hidden sm:py-0'><Nav/></div>
+            <div className='sm:mx-2 xl:p-5 '>
+                
+                <div className='filter lg:border lg:flex p-5 mb-4 w-full'>
+                    <div className='sm:flex justify-between  items-center lg:hidden gap-2 w-full '>
+                        <div className=' sm:w-4/5'><input className='w-full bg-slate-300 py-2 pl-2 rounded-md sm:block lg:hidden' type="search" placeholder='search your orders here'/></div>
+                        <div className='lg:mr-5 font-semibold uppercase border-slate-400 lg:border-r-2 pr-4 '><button className='flex items-center' onClick={()=>setToggleFilterbar(prev=>!prev)}>FilterBy<LuListFilter /></button></div>
+                
+                    </div>
+               <div className='hidden  font-semibold uppercase border-slate-400 lg:border-r-2 pr-4 mr-5 lg:flex items-center'>FilterBy<LuListFilter /></div>
+              <div className={`${toggleFilterbar?'sm:grid sm:grid-cols-2 sm:place-items-center sm:gap-4 ':'sm:hidden'}  md:flex justify-evenly pt-5 lg:pt-0 md:space-x-5 md:gap-2 text-slate-800`}>
               <div>
                   <input type="checkbox" id='way' value='Order Placed' onChange={(e)=>handleStatusChange(e)}/>
                   <label className='ml-1' htmlFor="way">On the way</label>
@@ -141,16 +150,19 @@ const Orders = () => {
               </div>
               </div>
 
-          </div>
-          {
+                </div>
+                
+                <div className=''>
+
+                {
               orders.length > 0 ? orders.map((item,index) => (
           
                   item.orderStatus!==''?
-                <div className='card border p-5 flex justify-between space-x-4 shadow-lg mb-2 relative' key={index} >
-                <div className='h-32  flex  items-center justify-center' >
+                <div className='card  border p-5 flex justify-between xl:space-x-4 shadow-lg mb-2 relative' key={index} >
+                <div className='h-28  flex  items-center justify-center' >
                     <img className='h-full w-28 object-contain' src={`http://localhost:3333/${item.image_url}`} alt="" />
                 </div>
-                <div className='w-30'>
+                <div className='hidden xl:block w-30'>
                           <div><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
                           <div className='max-w-40 font-semibold font-sans leading-5'>{item.description }</div>
                           <div className='flex items-center' >
@@ -158,16 +170,20 @@ const Orders = () => {
                           
                           </div>
                 </div>
-                <div>
+                <div className='hidden xl:block'>
                         <span className='font-semibold text-emerald-600'>₹{ item.price}</span>
                 </div>
-                      <div className='w-40'>
-                    <div className='font-semibold uppercase text-sm tracking-wide text-slate-800'>{item.orderStatus==='Order Placed' || 'Shipped' || 'Cancelled'? 'Deliver to:':'Delivered to:'}</div>
-                          <div className='text-sm font-sans font-semibold text-slate-600'>{item.address.main_address }</div>
+                      <div className='  xl:w-40'>
+                              <div className='font-semibold uppercase text-sm tracking-wide text-slate-800'>{item.orderStatus === 'Delivered' || item.orderStatus === 'Returned'? 'Delivered to:':'Deliver to'}</div>
+                              <div className='text-sm font-sans font-semibold text-slate-600 w-48 leading-4'>{item.address.main_address}</div>
+                              <div className='block xl:hidden mt-2'>
+                              <div className='leading-3'><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
+                              <div className='w-36  text-sm font-semibold font-sans truncate'>{item.description }</div>
+                              </div>
                       </div>
                       {
                           item.orderStatus === 'Delivered' ||item.orderStatus === 'Returned' ?
-                              <div className='w-48'>
+                              <div className='w-48 hidden xl:block'>
                                   
                                   <div className='text-sm font-semibold tracking-wide flex'>
                                   <box-icon name='check-circle' type='solid' color='#0ac107' ></box-icon>
@@ -181,7 +197,7 @@ const Orders = () => {
                                   
                               </div>
                                   :
-                                  <div className='w-fit'>
+                                  <div className='hidden xl:block w-fit'>
  
                                       {
                                           item.orderStatus !== 'Cancelled' ? <>
@@ -203,8 +219,8 @@ const Orders = () => {
                                       <>
                                           <div className='h-auto'>
                                               {
-                                                  item.orderStatus === 'Returned' ? <div className='text-slate-600'>< span className=''>The item is scheduled for Return</span></div> :
-                                                  <button className='bg-red-200 px-5 py-3 rounded-md text-xs font-semibold uppercase' onClick={() => toggleModal(item)}>Return</button>
+                                                  item.orderStatus === 'Returned' ? <div className='text-slate-600'>< span className=''>Returned</span></div> :
+                                                  <button className='bg-red-200 sm:px-2 md:px-5 py-3 rounded-md text-xs font-semibold uppercase' onClick={() => toggleModal(item)}>Return</button>
                                               }
                                              
                                              </div>
@@ -232,14 +248,14 @@ const Orders = () => {
                     
                                                                   </div>
                                                                   <hr  className='mt-5 border border-3 border-gray-300'/>
-                                                                  <div className='mt-5'>
+                                                                  <div className='mt-5 w-full'>
                                                                       <label className='block text-sm text-slate-600 font-semibold' htmlFor="option">Reason for return</label>
                                                                       <input onChange={(e)=>ReturnFormChange(e)} className='block w-full mt-2 px-3 pb-5 pt-1 focus:outline-sky-300 bg-gray-300' type="text" name="reason" id="" htmlFor='option'  value={returnForm.reason}/>
 
                                                                       <label className='block text-slate-600 font-semibold text-sm mt-3' htmlFor="option2">What do you want in return</label>
-                                                                      <select onChange={(e)=>ReturnFormChange(e)} className='block w-full focus:outline-sky-300 mt-2 bg-gray-300 py-2 ' name='inReturn' value={returnForm.inReturn}>
+                                                                      <select onChange={(e)=>ReturnFormChange(e)} className='block w-3/4 focus:outline-sky-300 mt-2 bg-gray-300 py-2 ' name='inReturn' value={returnForm.inReturn}>
                                                                           <option value=''></option>
-                                                                          <option value="Refund"> Refund</option>
+                                                                          <option  value="Refund"> Refund</option>
                                                                           <option value="Replace">Replace Item</option>
 
                                                                       </select>
@@ -266,7 +282,7 @@ const Orders = () => {
                                           {
                                               item.orderStatus === 'Cancelled' ? <div className='h-auto p-1 bg-red-600 text-white font-semibold rounded-md text-sm cursor-default'>Cancelled!</div>
                                                   :
-                                              <button onClick={() => handleOrderCancel(item)} className='bg-red-200 px-5 py-3 rounded-md text-xs font-semibold uppercase'>Cancel Order</button>
+                                              <button onClick={() => handleOrderCancel(item)} className='bg-red-200 sm:px-2 md:px-5 py-3 rounded-md text-xs font-semibold uppercase'>Cancel</button>
                                           }
                                           </div>
                                     
@@ -290,9 +306,14 @@ const Orders = () => {
                   </div>
                       
           }
+                </div> 
+
       
 
-    </div>
+            </div> 
+            <div className='sm:block md:hidden'><Footer/></div>        
+      </div>
+     
   )
 }
 
