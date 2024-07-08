@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import SideBar from '../../Components/UserComponents/SideBarFilter/SideBar'
 import ProductCard from '../../Components/UserComponents/ProductCard/ProductCard'
 import Nav from '../../Components/UserComponents/Nav/Nav'
@@ -11,8 +11,10 @@ import { useDispatch } from 'react-redux';
 import { setCartLength } from '../../Redux/Cart/CartSlice';
 import { add } from '../../Redux/SingleProduct/SingleProductSlice';
 import { useNavigate } from 'react-router-dom';
+import { LuListFilter } from "react-icons/lu";
+import { HiSortDescending } from "react-icons/hi";
 
-const CategoryPage = ({category}) => {
+const CategoryPage = ({ category }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,6 +30,8 @@ const CategoryPage = ({category}) => {
     const [selectedColor, setSelectedColor] = useState([]);
     const [selectedSort, setSelectedSort] = useState(null);
 
+    const [toggleFilter, setToggleFilter] = useState(false);
+
     useEffect(() => {
         getAllItem();
     }, [curntPage]);
@@ -37,7 +41,7 @@ const CategoryPage = ({category}) => {
 
         await axios.get(`http://localhost:3333/api/v2/category/?${url}`)
             .then((res) => {
-                console.log(res.data);
+               
                 setOriginalProduct(res.data.item)
                 setProduct(res.data.item);
                 setTotalItems(res.data.count)
@@ -52,7 +56,7 @@ const CategoryPage = ({category}) => {
     const handlebrandChange = (e) => {
         const { value, checked } = e.target;
         if (checked) {
-            setSelectedBrand([...selectedBrand,value])
+            setSelectedBrand([...selectedBrand, value])
         } else {
             setSelectedBrand(selectedBrand.filter(brand => brand !== value));
         }
@@ -62,7 +66,7 @@ const CategoryPage = ({category}) => {
         const { value, checked } = e.target;
         console.log(value);
         if (checked) {
-            setSelectedColor([...selectedColor,value])
+            setSelectedColor([...selectedColor, value])
         } else {
             setSelectedColor(selectedColor.filter(color => color !== value));
         }
@@ -85,37 +89,37 @@ const CategoryPage = ({category}) => {
         
     }
 
-    const applyFilter = () => {
+    const applyFilter = useCallback(() => {
         let updatedList = [...originalProduct];
 
        
         if (selectedBrand.length > 0) {
             updatedList = updatedList.filter((item) => {
-               return selectedBrand.includes(item.brand)
+                return selectedBrand.includes(item.brand)
             })
         }
-        if (selectedColor.length >0) {
+        if (selectedColor.length > 0) {
             updatedList = updatedList.filter((item) => {
-                return  selectedColor.includes(item.Details.colour)
+                return selectedColor.includes(item.Details.colour)
             
-             })
+            })
         }
         if (selectedSort) {
             if (selectedSort === 'LTH') {
-                updatedList=updatedList.sort((a,b)=>{return a.sellingPrice-b.sellingPrice})
+                updatedList = updatedList.sort((a, b) => { return a.sellingPrice - b.sellingPrice })
             } else if (selectedSort === 'HTL') {
-                updatedList=updatedList.sort((a,b)=>{return b.sellingPrice-a.sellingPrice})
+                updatedList = updatedList.sort((a, b) => { return b.sellingPrice - a.sellingPrice })
             }
             
         }
 
         setProduct(updatedList)
        
-    };
+    },[selectedBrand,selectedColor,selectedSort]);
 
     useEffect(() => {
         applyFilter();
-    }, [selectedBrand, selectedColor, selectedSort]);
+    }, [applyFilter]);
 
 
     const cart = (product) => {  
@@ -134,7 +138,6 @@ const CategoryPage = ({category}) => {
     };
 
     const getSingleProduct = (product) => {
-        console.log('from category page', product);
         dispatch(add(product));
         navigate('/p');
       
@@ -142,9 +145,9 @@ const CategoryPage = ({category}) => {
 
     const setWishList = (product) => {
         const item_id = product._id;
-        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {},{withCredentials:true})
+        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {}, { withCredentials: true })
             .then((res) => {
-                if (res.status === 200 && res.data.success===true) {
+                if (res.status === 200 && res.data.success === true) {
                     navigate('/wishlist');
                     toast.success('Added to Wishlist')
                 }
@@ -154,22 +157,32 @@ const CategoryPage = ({category}) => {
                 
             })
             .catch((err) => {
-            console.log(err);
-        })
+                console.log(err);
+            })
 
-    }
+    };
+
+
 
   return (
       <div>
           <ScrollToTop dependency={product}/>
-          <div className='sticky top-0 backdrop-blur-xl z-10 '><Nav length /></div>
-          <div className='container '>
-            <div className='grid grid-cols-12 '>
-                  <SideBar brands={brands} colors={colors} handlebrandChange={handlebrandChange} handleColorChange={handleColorChange} handleSortChange={handleSortChange} handleClearBtn={ handleClearBtn} />
+          <div className='lg:sticky top-0 backdrop-blur-xl z-10 '><Nav length /></div>
+          <div className='xl:container '>
+              <div className=' relative w-full  flex  items-center lg:hidden'>
+                  {/* <div className='w-1/2 flex items-center  justify-center font-semibold border'><button className='flex items-center justify-center w-full p-3'>Sort<HiSortDescending /></button></div> */}
+                  <div className='w-full flex items-center justify-center font-semibold border'><button className='flex items-center justify-center w-full p-3 focus:outline-none' onClick={()=>setToggleFilter(prev=>!prev)}>Filter<LuListFilter /></button></div>
+                  <div>
+                      
+                  </div>
+              </div>
+              <div className='grid grid-cols-12 '>
 
-            <div className='grid col-span-10 border  ml-3 p-5 overflow-y-auto h-screen scroll-smooth scrollbar-default'>
-                      <ProductCard product={product} AddtoCart={cart} singleProduct={getSingleProduct} setWishList={ setWishList} />
-                <Pagination totalItems={totalItems} ItemsPerPage={8} CurntPage={curntPage} setCurntPage={setCurntPage} />
+                  <SideBar brands={brands} colors={colors} handlebrandChange={handlebrandChange} handleColorChange={handleColorChange} handleSortChange={handleSortChange} handleClearBtn={handleClearBtn} toggleFilter={toggleFilter}  />
+
+            <div className='grid  lg:mx-0 sm:col-span-12 lg:col-span-10 border   xl:ml-3 lg:p-5 lg:overflow-y-auto h-full scroll-smooth scrollbar-default'>
+                      <ProductCard product={product} AddtoCart={cart} singleProduct={getSingleProduct} setWishList={ setWishList} toggleFilter={toggleFilter} />
+                {/* <Pagination totalItems={totalItems} ItemsPerPage={8} CurntPage={curntPage} setCurntPage={setCurntPage} /> */}
             </div>
         </div>
           </div>

@@ -1,19 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-const SideBar = ({ brands, colors,handlebrandChange,handleColorChange,handleSortChange ,handleClearBtn}) => {
+const SideBar = React.memo(({ brands,
+  colors,
+  handlebrandChange,
+  handleColorChange,
+  handleSortChange,
+  handleClearBtn,
+  toggleFilter,
+  ChangeToggle,
+}) => {
     
-
+ 
 
   
   return (
-    <div className='grid col-span-2 border p-5 h-fit shadow-md'>
+    <div className={`${toggleFilter? 'sm:col-span-12 w-full  ':'sm:hidden'} lg:static lg:z-0 lg:grid lg:col-span-2 border pl-5 lg:pt-5 h-fit shadow-md`}>
           <form action="">
-          <div className='flex justify-between my-5'>
-
-            <div className='h-auto border bg-emerald-500 text-white font-semibold rounded-md
-            '>
-                <button className='p-1 px-2' onClick={()=>handleClearBtn()}>Clear Filters</button>
-            </div>
+          <div className='flex justify-evenly my-5'>
+            <div className=' h-auto bg-[#1c7293] text-white font-semibold rounded-md'><button className='py-2 px-3' onClick={() => handleClearBtn()}>Clear Filters</button></div>
             
         </div>
         <div className='uppercase font-semibold mb-4 text-slate-800'>Filter by price</div>
@@ -61,6 +65,6 @@ const SideBar = ({ brands, colors,handlebrandChange,handleColorChange,handleSort
 
 </div>
   )
-}
+})
 
 export default SideBar
