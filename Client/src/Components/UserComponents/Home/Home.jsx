@@ -94,7 +94,7 @@ const Home = () => {
      
         <div className=' Hero h-screen '>
 
-        <div className="h-56 md:h-96 xl:h-3/4  2xl:h-3/4 md:container  ">
+        <div className="h-56 md:h-96 xl:h-3/4  2xl:h-3/4 md:container ">
             <Carousel>
                             <div className='w-full h-full flex '>
                                 {/* <div className=' max-h-full w-2/5 bg-red-300'>heading</div> */}

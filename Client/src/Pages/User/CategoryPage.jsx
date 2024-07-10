@@ -165,11 +165,11 @@ const CategoryPage = ({ category }) => {
 
 
   return (
-      <div>
+      <div className=''>
           <ScrollToTop dependency={product}/>
-          <div className='lg:sticky top-0 backdrop-blur-xl z-10 '><Nav length /></div>
+        <Nav  />
           <div className='xl:container '>
-              <div className=' relative w-full  flex  items-center lg:hidden'>
+              <div className='w-full  flex  items-center lg:hidden'>
                   {/* <div className='w-1/2 flex items-center  justify-center font-semibold border'><button className='flex items-center justify-center w-full p-3'>Sort<HiSortDescending /></button></div> */}
                   <div className='w-full flex items-center justify-center font-semibold border'><button className='flex items-center justify-center w-full p-3 focus:outline-none' onClick={()=>setToggleFilter(prev=>!prev)}>Filter<LuListFilter /></button></div>
                   <div>

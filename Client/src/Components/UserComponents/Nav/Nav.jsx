@@ -75,7 +75,7 @@ const Nav = () => {
 
       return (
             <>
-                  <nav className=' mx-auto  lg:flex   flex-nowrap md:items-center py-4 md:px-2 xl:px-12 md:justify-evenly font-poppins '>
+                  <nav className=' mx-auto z-50  lg:flex lg:sticky lg:top-0 lg:backdrop-blur-xl    flex-nowrap md:items-center py-4 md:px-2 xl:px-12  md:justify-evenly  font-poppins '>
                    
               <div className=' h-fit lg:mb-0 mb-2'>  
                   <div className='text-center tracking-wider '>
@@ -88,10 +88,19 @@ const Nav = () => {
               </div>
             <div className='md:flex   lg:justify-center md:justify-between  items-center   md:bg-[#03071e] lg:px-12 md:px-6  md:rounded-full py-2 '>
                   <div className='md:flex lg:space-x-7 md:space-x-3 lg:gap-4 md:gap-3 items-center  tracking-wide'>
-                        <div className=' flex items-center  bg-white rounded-full py-1 px-2 input-container relative '>
-                              <input className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none text-md expandable-input ' type="search" placeholder='Search' name="search" id="search" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/> 
-                                          <div className='absolute  right-4 search text-xl'><a href="#" className='text-slate-700'><BsSearch /></a></div>
-                                          {searchInput.length > 0 && <SearchResultsList results={ searchResults} />}
+                        <div className='relative flex items-center  bg-white rounded-full py-1 px-2 input-container  '>
+                              <input className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none expandable-input ' type="search" placeholder='Search' name="search" id="search" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/> 
+                                          {/* <div className='absolute  right-4 search text-xl'><a href="#" className='text-slate-700'><BsSearch /></a></div> */}
+                                          <div>{searchInput.length > 0 && <SearchResultsList results={ searchResults} />}</div>
+                                          {/* <div className='p-5 absolute top-10  left-0 right-0  flex flex-col bg-slate-100 sm:w-full md:w-96   rounded-md shadow-md  overflow-y-scroll '>
+                                                {
+                                                      searchResults.map((item,index) => (
+                                                            <div className='mb-4 ' key={index}><button className='text-left text-sm' onClick={()=>getProduct(item)}>{item.description}</button></div>
+                                                      ))
+            
+                                                }
+        
+                                          </div> */}
                         </div>
                               <div className='flex sm:justify-between  md:p-0 sm:p-2  ease-out md:text-[white]  uppercase tracking-wider font-light md:bg-transparent sm:bg-[#333333]'>
                                     <div className=' lg:gap-4 md:space-x-6  md:gap-2 hidden md:block'>
@@ -103,7 +112,7 @@ const Nav = () => {
                                     <div className=' md:hidden flex items-center space-x-5'>
                                           <div className='relative px-4 py-2'>
                                           {
-                                                cartLength >0 && <button onClick={() => navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6    text-center '><span className=' text-xs bg-red-500 py-1 px-2  font-bold  rounded-full'>{ cartLength}</span></div></button> 
+                                                cartLength >0 && <button onClick={() => navigate('/cart')}><div className='   absolute  right-0 top-0 text-white  rounded-full w-6    text-center '><span className=' text-xs bg-red-500 py-1 px-2  font-bold  rounded-full'>{ cartLength}</span></div></button> 
                                           }
                                                 <button><a className='' href="/cart"><box-icon name='shopping-bags' type='solid' color='#ffffff' ></box-icon></a></button>
                                           </div>

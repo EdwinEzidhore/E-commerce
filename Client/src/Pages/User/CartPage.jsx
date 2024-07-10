@@ -207,7 +207,7 @@ const CartPage = () => {
 
   return (
       <section>
-          <div className='lg:sticky lg:top-0 lg:backdrop-blur-xl lg:z-10'><Nav /></div>
+         <Nav />
           {
               loading && networkErr===false? <div className=' h-96 flex items-center justify-center'><Loading /></div> :
               <div className={networkErr===true?'flex flex-col items-center justify-center h-96':'hidden'}>
@@ -258,7 +258,7 @@ const CartPage = () => {
                           {
                                       cartItems.products.map((item, index) => (
                                   <div className='sm:border sm:mt-1' key={index}>
-                                          <div className={availability===false && item.productID.status==='Unavailable'?'card flex md:border p-3 gap-3 mb-1 h-fit relative bg-gray-300 md:shadow-md   ' :'card flex md:border p-3 gap-3 mb-1 h-fit relative bg-white md:shadow-md'} key={index}>
+                                          <div className={availability===false && item.productID.status==='Unavailable'?'relative card flex md:border p-3 gap-3 mb-1 h-fit  bg-gray-300 md:shadow-md   ' :'relative card flex md:border p-3 gap-3 mb-1 h-fit  bg-white md:shadow-md'} key={index}>
                                 <div className='   object-cover flex gap-1'>
   
                                     <div className={availability===false && item.productID.status==='Unavailable'?'grayscale h-f w-32 flex justify-center item-center':' h-f w-32 flex justify-center item-center '}>
@@ -303,7 +303,7 @@ const CartPage = () => {
                                               <div><p className={availability===false?'tracking-wide text-red-500 font-semibold scale-105':'tracking-wide text-red-500 font-semibold '}>{item.productID.status==='Unavailable'?'Currently Unavailable!':''}</p></div>
                                           </div>
                                     </div>
-                                    <div className='sm:hidden md:block absolute sm:top-0 md:top-5 text-2xl right-5'><button onClick={()=>removeItem(item)}><RxCross1  /></button></div>
+                                    <div className='hidden md:block absolute  sm:top-0 md:top-5 text-2xl right-5'><button onClick={()=>removeItem(item)}><RxCross1  /></button></div>
                                     
                                               </div>
                                               <div className='sm:flex sm:justify-between md:hidden bg-slate-100'>

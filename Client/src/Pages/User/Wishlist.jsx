@@ -11,6 +11,7 @@ import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop';
 import { GiShoppingBag } from "react-icons/gi";
+import '../../css/Wishlist.css'
 
 
 const Wishlist = () => {
@@ -92,7 +93,7 @@ const Wishlist = () => {
 
   return (
       <div className=''>
-          <ScrollToTop dependency={wishlist}/>
+          {/* <ScrollToTop  dependency={wishlist}/> */}
           <Nav />
           <div className='h-screen'>
               
@@ -100,14 +101,15 @@ const Wishlist = () => {
               {
                   !loading ?  <div>
                   {
-                    wishlist.length > 0? <div className='card-wrapper h-fit sm:flex sm:flex-col sm:items-center   md:container md:grid md:grid-cols-3  xl:grid-cols-4 gap-2 md:w-fit mb-5 mt-5 '>
+                    wishlist.length > 0? <div className='card-wrapper h-fit sm:flex sm:flex-col sm:items-center   md:container md:grid md:grid-cols-3  xl:grid-cols-4 gap-2 md:w-fit mb-5 mt-5 ' >
                                 {
                                   wishlist.length > 0 && wishlist.map((product, index) => (
                                         <div className='shadow-none sm:shadow-md' key={index}>
-                                          <div className=' card sm:flex sm:items-center sm:w-96  md:flex-col  h-fit relative  p-4 sm:pb-0 w-full md:w-fit md:rounded-lg flex-none sm:border sm:border-b-0    md:shadow-lg bg-slate-50'  key={index} >
-                                            <div className=' hidden md:block absolute right-0 top-5 outline outline-1 rounded-full text-red-500 z-10'><button className='p-2' onClick={()=>removeItem(product)}><MdDelete /></button></div>
-                                           <div className='relative group sm:h-32 md:h-56   flex items-center justify-center lg:hover:scale-105 lg:transition lg:duration-500 ' onClick={()=>singleProduct(product)}>
-                                                <img className='h-full md:w-48 object-contain rounded-lg' src={`http://localhost:3333/${product.productImage[0]}`}  alt="img"  ></img>
+                                          <div className=' card relative sm:flex sm:items-center sm:w-96  md:flex-col  h-fit   p-4 sm:pb-0 w-full md:w-fit md:rounded-lg flex-none sm:border sm:border-b-0    md:shadow-lg bg-slate-50 '  key={index} >
+                                            <div className=' hidden md:block absolute   right-0 top-5 outline outline-1 rounded-full text-red-500'><button className='p-2' onClick={()=>removeItem(product)}><MdDelete /></button></div>
+                                           <div className=' group sm:h-32 md:h-56   flex items-center justify-center lg:hover:scale-105 lg:transition lg:duration-500 ' onClick={()=>singleProduct(product)}>
+                                                  <img className='h-full md:w-48 object-contain rounded-lg' src={`http://localhost:3333/${product.productImage[0]}`} alt="img"  ></img>
+                                                  
                                            </div>
                                            
                                            <div className=' md:w-56 p-1 content bg-white ml-0 sm:ml-3'>

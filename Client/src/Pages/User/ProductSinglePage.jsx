@@ -11,6 +11,7 @@ import { setCartLength } from '../../Redux/Cart/CartSlice'
 import { add } from '../../Redux/SingleProduct/SingleProductSlice';
 import { useNavigate } from 'react-router-dom';
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop'
+import { Carousel } from 'flowbite-react';
 
 
 const ProductSinglePage = () => {
@@ -91,34 +92,58 @@ const ProductSinglePage = () => {
      
         <section >
             <ScrollToTop/>
-          <div className='  backdrop-blur-2xl'>
+          
               <Nav />
-          </div>
+       
 
           <div className=' bg-red-30 bg-slate-100 font-poppins'>
               
           
                   
-                        <div className=' grid grid-cols-12  '>
+                <div className='md:flex justify-evenly w-full'>
+                    
+                    <div className='sm:flex  sm:flex-nowrap sm:space-x-2  sm:overflow-x-scroll md:hidden'>
+                        {
+                            SingleProduct.productImage.map((img, index) => (
+                                <div className='flex-shrink-0 h-96  ' key={index}>
+                                    <img className='max-h-full  object-contain' src={`http://localhost:3333/${img}`} />
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div className='w-full sm:flex fixed bottom-0 md:hidden'>
+                        <div className='w-1/2'>
+                            <button className='py-3 w-full h-full bg-white text-[#1c7293] font-semibold flex items-center justify-center text-lg' onClick={() => cart()}><HiOutlineShoppingCart /><span className='tracking-wide ml-2 text-sm'>Add to Bag</span></button>
+                        </div>
+                        <div className='w-1/2'>
+                            <button className='py-3 w-full h-full bg-[#1c7293] text-white font-thin flex items-center justify-center' onClick={() => setWishList()}>
+                            <svg className='' width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" fill="#f4eeff"/>
+                                </svg>
+                                <span className='tracking-wide ml-2'>Save to Wishlist</span></button>
+                        </div>
+                    </div>
                   
-                
-                              <div className='col-span-2 flex justify-center'>
-                                  <div className='w-fit   px-1 pb-5 '>
+                    <div className='hidden md:flex md:justify-end  lg:justify-between   md:flex-col-reverse lg:flex-row'>
+                    <div className='xl:w-1/12 '>
+                                  <div className=' lg:px-1 pb-5 flex   lg:w-fit sm:flex-row sm:overflow-x-scroll lg:flex-col'>
                                       {
                                           SingleProduct.productImage.map((img,index) => (
-                                            <div className={index===Index?'w-20 h-20 mt-5 border-[#1c7293] border-2 p-1':'w-20 h-20 mt-5'} onClick={()=>setIndex(index)} key={index}>
+                                            <div className={index===Index?'w-20 h-20 mt-5 border-[#1c7293] border-2 p-1 ml-5':'w-20 h-20 mt-5 ml-5'} onClick={()=>setIndex(index)} key={index}>
                                             <img className='h-full w-full object-cover' src={`http://localhost:3333/${img}`} alt="" />
                                         </div>
                                         ))  
                                       }
                                  </div>
                               </div>
-                              <div className='col-span-6 p-5'>
-                                  <div className='flex items-center justify-center'>
+                              <div className=' lg:w-4/5   p-5'>
+                                  <div className='flex items-center justify-center '>
                                       <img className='max-h-full  object-contain' src={`http://localhost:3333/${SingleProduct.productImage[Index]}`} alt="img" />
                                   </div>
                               </div>
-                              <div className='col-span-4 p-4'>
+                    </div>
+                              <div className='md:w- lg:w-1/2  p-4'>
                                   <div className='flex flex-col items-center justify-center font-sans'>
                                       <div className='uppercase text-xs font-semibold text-slate-400'>{SingleProduct.category }</div>
                                       <div className='font-semibold text-slate-600 mt-1'>{SingleProduct.brand}</div>
@@ -137,7 +162,7 @@ const ProductSinglePage = () => {
                                           <span className='font-light text-slate-900'>(20% OFF)</span>
                                       </div> 
                                       
-                                      <div className='flex space-x-4 gap-3 mt-5'>
+                                      <div className='hidden md:flex space-x-4 gap-3 mt-5'>
                                             <div className=' h-auto text-[#1c7293] outline outline-2 outline-[#1c7293]  flex items-center gap-3 justify-center my-2 font-semibold rounded-lg w-32'>
                                               <button className={loading !== true ? 'flex items-center justify-center w-full p-2' : 'hidden '} onClick={() => cart()}><HiOutlineShoppingCart /><span className='ml-2'>Add to Bag</span></button>
                                               <div className={loading?"dot-spinner":'hidden'}>
@@ -197,7 +222,7 @@ const ProductSinglePage = () => {
                                             </div>
                                     </div>
                                   
-                                    <div className='mt-5'>
+                                    <div className='mt-5 '>
                                         <h1 className='font-sans font-semibold mb-3 uppercase text-sm tracking-wide text-slate-800'>Available offers</h1>
                                         <div className='flex mt-2'>
                                             <box-icon name='purchase-tag' type='solid' color='#118a7e'></box-icon>
@@ -223,33 +248,38 @@ const ProductSinglePage = () => {
                               </div>
 
                           </div>
-                          <div className='container' >
+                          <div className='xl:container' >
                                 <h1 className=' font-semibold mb-7 text-center mt-5 '>product Details</h1>
                                       <hr />
                                       {
                                                                          
-                                    <div className='grid grid-row-2 grid-cols-10 gap-6 mt-5 pl-5 mb-8' >
-                                      <div className=''>Type</div>
-                                      <div className='font-semibold text-slate-800'>Fit</div>
-                                      <div className='font-semibold text-slate-800'>Fabric</div>
-                                      <div className='font-semibold text-slate-800'>colour</div>
-                                      <div className='font-semibold text-slate-800'>Ideal for</div>
-                                      <div className='font-semibold text-slate-800'>Size</div>
-                                      <div className='font-semibold text-slate-800'>Suitable for</div>
-                                      <div className='font-semibold text-slate-800'>Reversible</div>
-                                      <div className='font-semibold text-slate-800'>Fabric care</div>
-                                      <div className='font-semibold text-slate-800'>Net Quantity</div>
-                                  
-                                      <div className='text-sm text-slate-700 tracking-wide'>{SingleProduct.name}</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>Regular</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>{SingleProduct.Details.fabric}</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>{SingleProduct.Details.colour }</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>{SingleProduct.category}</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>{SingleProduct.Details.size}</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>Western wear</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>No</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>Machine wash</div>
-                                      <div className='text-sm text-slate-700 tracking-wide'>1</div>
+                        <div className='grid  gap-3 sm:place-items-center   sm:grid-cols-2 lg:place-items-stretch lg:grid-rows-2 lg:grid-cols-1 mt-5 pl-5 mb-8' >
+                            <div className='lg:grid  lg:grid-cols-10 '>
+                            <div className='mb-3 font-semibold text-slate-800'>Type</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Fit</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Fabric</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>colour</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Ideal for</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Size</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Suitable for</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Reversible</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Fabric care</div>
+                                      <div className='mb-3 font-semibold text-slate-800'>Net Quantity</div>
+                            </div>
+
+                            <div className='lg:grid lg:grid-cols-10 '>
+                            <div className='lg:text-sm text-slate-700 tracking-wide'>{SingleProduct.name}</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>Regular</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>{SingleProduct.Details.fabric}</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>{SingleProduct.Details.colour }</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>{SingleProduct.category}</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>{SingleProduct.Details.size}</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>Western wear</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>No</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>Machine wash</div>
+                                      <div className='mb-3 lg:text-sm text-slate-700 tracking-wide'>1</div>
+                            </div>    
+
                                     </div>
                                              
                                           }
@@ -259,9 +289,9 @@ const ProductSinglePage = () => {
                           
               {/* map end */}
 
-              <div className='container h-48  mt-5 border bg-white shadow-lg'>
+              <div className='md:container md:h-48  mt-5 border bg-white shadow-lg'>
                   
-                  <img className='h-full w-full object-cover border shadow-lg' src="/src/images/online-shopping-on-phone-buy-sell-business-digital-web-banner-application-money-advertising-payment-ecommerce-illustration-search-vector.jpg" alt="" />
+                  <img className='h-full w-full object-contain md:object-cover border shadow-lg' src="/src/images/online-shopping-on-phone-buy-sell-business-digital-web-banner-application-money-advertising-payment-ecommerce-illustration-search-vector.jpg" alt="" />
                 
               </div>
 
@@ -269,17 +299,17 @@ const ProductSinglePage = () => {
                   //Product carosesl starting
               }
 
-              <div className='container carosel-main mt-5 border pt-8  shadow-xl bg-white '>
+              <div className='lg:container carosel-main mt-5 border pt-8  shadow-xl bg-white '>
                   <div className='pl-8  font-semibold  tracking-wider text-slate-600 text-xl font-frank-lukh'><span>Similar Products</span></div>
-                    <div className='carsel-slidr p-8  flex overflow-scroll gap-5'>
+                    <div className='carsel-slidr pt-3 lg:pt-0 md:p-8  flex overflow-scroll md:gap-5'>
                         {
                             similarProducts.map((item,index) => (
-                                <div className='carosel-card bg-white max-w-64  flex-none p-2' key={index}>
+                                <div className='carosel-card bg-white w-48  md:max-w-64  flex-none p-2' key={index}>
                           
-                                <div className='h-64'><img src={`http://localhost:3333/${item.productImage[0]}`} alt="img" className='  max-h-full object-contain mx-auto'/></div>
+                                <div className='h md:h-64'><img src={`http://localhost:3333/${item.productImage[0]}`} alt="img" className='  max-h-full object-contain mx-auto'/></div>
                                 <div>
                                         <div className='text-center'><span className='text-slate-500 p-1 text-sm font-semibold font-sans uppercase'>{ item.brand}</span></div>
-                                        <div className=' h-auto p-1 text-center leading-5 font-sans font-semibold text-slate-800 text-md px-2'><a href="/p" onClick={()=>getSingleProduct(item)}>{ item.description}</a></div>
+                                        <div className=' h-auto p-1 text-center leading-5 font-sans font-semibold text-slate-800 text-md px-2 line-clamp-2'><a href="/p" onClick={()=>getSingleProduct(item)}>{ item.description}</a></div>
                                     <div className='flex items-center space-x-4  p-1 justify-center'>
                                         <div className=''>
                                           
