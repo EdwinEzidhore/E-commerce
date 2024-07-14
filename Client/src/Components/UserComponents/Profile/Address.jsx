@@ -53,7 +53,7 @@ const Address = () => {
         if (res.status === 200) {
           setUserAddress(res.data.Address)
           dispatch(addAddress(res.data.Address));
-          console.log('log',res.data.Address);
+        
           setAddress({
             name:'',
             phone: '',
@@ -97,7 +97,7 @@ const Address = () => {
         .then((res) => {
         
           setUserAddress(res.data.Address);
-          console.log(res.data);
+         
         dispatch(setAddresses(res.data.Address));
         
      

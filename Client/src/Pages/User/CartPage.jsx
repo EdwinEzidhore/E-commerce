@@ -205,6 +205,26 @@ const CartPage = () => {
         setSelectedCoupon(Coupon);  
     };
 
+    const setWishList = (product) => {
+       
+        const item_id = product.productID._id;
+        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {}, { withCredentials: true })
+            .then((res) => {
+                if (res.status === 200 && res.data.success === true) {
+                    navigate('/wishlist');
+                    toast.success('Added to Wishlist')
+                }
+                if (res.data.success === false) {
+                    toast.error('Item already on Wishlist')
+                }
+                
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
+    };
+
   return (
       <section>
          <Nav />
@@ -262,7 +282,7 @@ const CartPage = () => {
                                 <div className='   object-cover flex gap-1'>
   
                                     <div className={availability===false && item.productID.status==='Unavailable'?'grayscale h-f w-32 flex justify-center item-center':' h-f w-32 flex justify-center item-center '}>
-                                    <img className='h-full object-cover' src={`http://localhost:3333/${item.productID.productImage[0]}`} alt="" />
+                                    <img className='h-full object-cover' src={`http://localhost:3333/${item.productID.productImage[0]}`} alt="img" />
                                     </div>
                                     
                                 </div>
@@ -303,12 +323,12 @@ const CartPage = () => {
                                               <div><p className={availability===false?'tracking-wide text-red-500 font-semibold scale-105':'tracking-wide text-red-500 font-semibold '}>{item.productID.status==='Unavailable'?'Currently Unavailable!':''}</p></div>
                                           </div>
                                     </div>
-                                    <div className='hidden md:block absolute  sm:top-0 md:top-5 text-2xl right-5'><button onClick={()=>removeItem(item)}><RxCross1  /></button></div>
+                                    <div className='hidden md:block absolute  sm:top-0 md:top-5 text-2xl right-5'>{selectedCoupon?'':<button  onClick={()=>removeItem(item)}><RxCross1  /></button>} </div>
                                     
                                               </div>
-                                              <div className='sm:flex sm:justify-between md:hidden bg-slate-100'>
-                                                  <div className='text-center w-full border '><button className=' py-2 w-full h-full' onClick={()=>removeItem(item)}>Remove</button></div>
-                                                  <div className='text-center w-full border'><button className='py-2 w-full h-full' >Save to wishlist</button></div>
+                                              <div className='sm:flex sm:justify-between md:hidden bg-slate-100 text-slate-600'>
+                                                  <div className='text-center w-full border '><button disabled={selectedCoupon} className=' py-2 w-full h-full' onClick={() => removeItem(item)}  >{selectedCoupon ? 'Coupon Selected' : 'Remove'}</button></div>
+                                                  <div className='text-center w-full border'><button className='py-2 w-full h-full' onClick={()=>setWishList(item)} >Save to wishlist</button></div>
                                               </div>                  
                                   </div>
                                

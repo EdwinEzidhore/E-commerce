@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+
 
 const ActivationPage = () => {
 
@@ -35,10 +36,11 @@ const ActivationPage = () => {
     }}>
       
       {!error ? (
-         <p>Your Account has created successfully</p> 
+         <h1 className='font-semibold tracking-wide'>Your Account has been created successfully</h1> 
+      
        
       ): (
-        <p>Your token is expired</p>
+        <p>Your token has expired</p>
       )}
     </div>
   )

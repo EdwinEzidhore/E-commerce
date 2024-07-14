@@ -50,7 +50,7 @@ const ProductCard = React.memo(({ product, AddtoCart, singleProduct, setWishList
                                        before:transition-all before:text-xs
     
                                           after:absolute after:left-1/2 after:top-0 after:h-0 after:w- after:-translate-x-1/2 after:border-8 after:border-[#5555ca] after:border-l-transparent after:border-b-transparent after:border-r-transparent after:opacity-0
-                                       after:transition-all hover:before:opacity-100 hover:after:opacity-100 
+                                       after:transition-all lg:hover:before:opacity-100 lg:hover:after:opacity-100 
     
     
                                           text-xl  ' data-tip='Add to Bag'>

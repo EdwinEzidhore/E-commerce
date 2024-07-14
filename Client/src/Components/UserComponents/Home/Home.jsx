@@ -160,10 +160,10 @@ const Home = () => {
                             <div className='card h-fit relative  p-4 w-fit  sm:w-auto rounded-lg flex-none   shadow-lg bg-slate-50' key={product._id} >
                             <img className=' h-12 z-10 absolute left-0 top-0 drop-shadow-md' src="/src/images/new (1).png" alt="products" />
                               
-                              <div className='relative group h-56   flex items-center justify-center hover:scale-105 transition duration-500 '>
+                              <div className='relative group h-56   flex items-center justify-center md:hover:scale-105 transition duration-500 '>
                                   <div className='absolute hidden group-hover:flex rounded-full   bg-red-100 hover:bg-red-200 heart '>
                                  
-                                      <button className='hidden md:block group/button
+                                      <button className='hidden lg:block group/button
                                           rounded-full p-1 backdrop-blur 
                                           font-semibold
                                           relative before:content-[attr(data-tip)] before:absolute before:px-3 before:py-2 before:left-1/2 before:top-0 before:w-max before:max-w-xs before:-translate-x-1/2 before:-translate-y-full  before:bg-red-500 before:text-white before:rounded-md before:opacity-0

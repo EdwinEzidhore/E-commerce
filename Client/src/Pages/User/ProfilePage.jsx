@@ -6,11 +6,21 @@ import Address from '../../Components/UserComponents/Profile/Address';
 import axios from 'axios';
 import Orders from '../../Components/UserComponents/Profile/Orders';
 import { useNavigate } from 'react-router-dom';
+import Wishlist from '../../Pages/User/Wishlist';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOutUser } from '../../Redux/Auth/Auth';
+import { logout } from '../../Redux/Address/AddressSlice';
+import { cartlogout } from '../../Redux/Cart/CartSlice';
+import { FaUserCircle } from "react-icons/fa";
 
 const ProfilePage = () => {
     const [active, setActive] = useState('profile');
     const [user, setUser] = useState('');
     const navigate = useNavigate();
+
+    const dispatch = useDispatch();
+
+    const isUser = useSelector((state) => state.auth.auth.user);
 
     useEffect(() => {
         axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
@@ -24,6 +34,20 @@ const ProfilePage = () => {
             .catch(err => console.log(err)) 
     }, []);
 
+    const handleLogOut = () => {
+        axios.get('http://localhost:3333/api/v2/logout',{withCredentials:true})
+            .then((res) => {
+               
+                if (res.status === 200 && res.data.success === true) {
+                    dispatch(logOutUser());
+                    dispatch(logout());
+                    dispatch(cartlogout());
+                }
+            })
+            .catch((err) => {
+            console.log(err);
+        })
+    }
 
     return (
            
@@ -33,11 +57,16 @@ const ProfilePage = () => {
           <div className=' mx-auto lg:container   bg-slate-100 p-1'>
                 <div className='grid  md:grid-cols-12 '>
                    
-                  <div className='sm:hidden md:block md:col-span-3 xl:col-span-2 h-fit'> 
-                      <div className="sm:hidden  user md:flex items-center p-3 mb-4 shadow-lg bg-white">
-                          <div><img className='max-h-10 rounded-full' src={user && `http://localhost:3333/${user.avatar.url}`} alt="" /></div>
-                            <span className='ml-2'>{user.name }</span>
-                      </div>
+                    <div className='sm:hidden md:block md:col-span-3 xl:col-span-2 h-fit'>
+                        {
+                            isUser  && (
+                                <div className="sm:hidden  user md:flex items-center p-3 mb-4 shadow-lg bg-white">
+                                    { isUser.avatar? <div><img className='max-h-10 rounded-full' src={user && `http://localhost:3333/${user.avatar.url}`} alt="" /></div>:<FaUserCircle  className='text-xl'/> }
+                                  <span className='ml-2'>{user.name }</span>
+                            </div>
+                            ) 
+                    }    
+
 
                         <div className=' shadow-lg bg-white p-2'>
                         <div className='flex my-4 '>
@@ -94,18 +123,25 @@ const ProfilePage = () => {
                                 <li className='my-3'><a href="/maintenance">My Coupons</a></li>
                                 <li className='my-3'><a href="/maintenance">My Reviews and Rating</a></li>
                                 <li className='my-3'><a href="/maintenance">All Notification</a></li>
-                                <li className='my-3'><a href="/maintenance">My Whishlist</a></li>
+                               
                                   
                               
                           </ul>
                                 </div>
                                 <hr />
                           
-                      </div > 
-                            <div className='p-4 text-slate-500 flex'>
-                            <box-icon name='power-off' color='#135D66' ></box-icon>
-                          <button className='ml-2'>LogOut</button>
-                      </div>
+                            </div > 
+                            {
+                                isUser ? (
+                                    <div className='p-4 text-slate-500 '>
+                           
+                                    <button className='flex items-center ml-2' onClick={handleLogOut}> <box-icon name='power-off' color='#135D66' ></box-icon>LogOut</button>
+                                </div>
+                                ) : (
+                                        ''
+                                )
+                            }
+                         
 
                         </div>
                       
@@ -114,7 +150,9 @@ const ProfilePage = () => {
                   <div className=' sm:block md:ml-2 lg:ml-3 grid md:col-span-9 xl:col-span-10 bg-white shadow-lg '>
                         {active === 'profile' && <UserInformation />}
                         {active === 'Address' && <Address />}
-                        {active==='orders' && <Orders/>}
+                        {active === 'orders' && <Orders />}
+                        {active==='wishlist' && <Wishlist/>}
+                        
 
 
                   </div>

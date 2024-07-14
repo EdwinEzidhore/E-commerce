@@ -10,15 +10,15 @@ const UserInformation = () => {
     const [per_button, setper_Button] = useState(false);
     const [email_btn, setEmail_btn] = useState(false);
     const [mobile_btn, setMobile_btn] = useState(false);
-    const [name, setName] = useState('');
+    const [Name, setName] = useState('');
     const [email, setEmail] = useState('');
 
-    
+    const[updatedname,setUpdatedName]=useState('')
 
     useEffect(() => {
         axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
             .then(res => {
-                console.log(res.data.user_details);
+            
                 setUser(res.data.user_details)
                 setName(res.data.user_details.name);
                 setEmail(res.data.user_details.email)
@@ -28,7 +28,27 @@ const UserInformation = () => {
     }, []);
 
 
-
+    const edituser = (e) => {
+        e.preventDefault();
+        const { name } = e.target;
+        let url = `${name}=`
+        if (name === 'name') {
+            url = `${name}=${Name}`
+        }
+        if (name === 'email') {
+            url=`${name}=${email}`
+        }
+        console.log(url);
+        axios.post(`http://localhost:3333/api/v2/edit/?${url}`,)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    };
+    
+    
 
     return (
         <div>
@@ -54,10 +74,12 @@ const UserInformation = () => {
                       
                             </div>
                             <div className='flex gap-2'>
-                      <input className='p-2 outline outline-1 outline-slate-300 mx-2 text-slate-600 font-poppins tracking-wide' type="text" disabled={per_button === false} value={name} />
+                            <input className='p-2 outline outline-1 outline-slate-300 mx-2 text-slate-600 font-poppins tracking-wide' id='name' type="text" disabled={per_button === false} value={Name} onChange={(e) => {
+                                setName(e.target.value);
+                      }}/>
 
                       {
-                          per_button===true? <div className='md:ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>:''
+                          per_button===true? <div className='md:ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button id='name' name='name'  onClick={(e)=>edituser(e)}>Save</button></div>:''
                       }
                            
                             </div>
@@ -81,7 +103,7 @@ const UserInformation = () => {
                           <div className='mb-7'>
                               <div className='flex py-4 items-center my-2'>
                       <div><span className='md:text-xl font-medium'>Email Address</span></div>
-                      {/* {
+                      {
                           email_btn === false ? <button className='ml-7 text-sky-500' onClick={(e) => {
                               e.preventDefault();
                               setEmail_btn(!per_button);
@@ -91,14 +113,16 @@ const UserInformation = () => {
                                   setEmail_btn(false);
                                   setEmail(user.email)
                            }}><span>cancel</span></button>
-                      } */}
+                      }
 
                               </div>
                               <div>
                                   <div className='flex'>
-                          <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 w-72 text-slate-600' disabled={!email_btn} value={email}/></div>
+                                <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 w-72 text-slate-600' disabled={!email_btn} value={email} onChange={(e) => {
+                                    setEmail(e.target.value)
+                          }}/></div>
                           {
-                          email_btn===true? <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button>Save</button></div>:''
+                          email_btn===true? <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button name='email' onClick={(e)=>edituser(e)}>Save</button></div>:''
                       }
 
                                   </div>                               

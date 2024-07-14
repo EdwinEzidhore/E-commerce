@@ -10,7 +10,7 @@ const sendMail = require('../Utils/sendMail');
 const CatchAsyncErrors = require('../Middleware/CatchAsyncErrors');
 const sendToken = require('../Utils/jwtToken');
 const ProductModel = require('../Model/Admin/AdminAddProduct');
-const isAuthenticated = require('../Middleware/auth')
+const {isAuthenticated,localvariables} = require('../Middleware/auth')
 const CartModel = require('../Model/User/Cart');
 const mongoose = require('mongoose')
 const { ObjectId } = require('mongoose').Types;
@@ -25,9 +25,8 @@ require('dotenv').config(
 );
 const Razorpay = require('razorpay');
 const Wishlist = require('../Model/User/Wishlist');
-// const { default: products } = require('razorpay/dist/types/products');
-
-
+const otpGenerator = require('otp-generator')
+const bcrypt = require('bcrypt');
 
 
 
@@ -40,36 +39,53 @@ const razorpayInstance = new Razorpay({
 
 router.post('/create-user', upload.single('file'), async (req, res, next) => {
 
+
     try {
         const { name, email, password } = req.body;
 
         const userEmail = await UserModel.findOne({ email });
         if (userEmail) {
-            const filename = req.file.filename;
-            const filePath = `uploads/${filename}`;
-            
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ message: "Error Deleting File" });
-                } 
-            });
-            
+            if (req.file && req.file.filename) {
+                const filename = req.file.filename;
+                const filePath = `uploads/${filename}`;
+                
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).json({ message: "Error Deleting File" });
+                    } 
+                });
+            }
             res.status(400).json({message:'Account already exists'})
             // return next(new ErrorHandler("Account already exists", 400));
         }
         if (!userEmail) {
-            const Filename = req.file.filename;
-            const fileurl = path.join(Filename);
-          
+
+            /* *******Logic to capitalize the first letter of name ******* */
+            let Name = name;
+            let words=Name.trim().split(' ')
+
+            Name = words.map((word) => {
+                
+                let letters=word.split('');
+                let capitalized=letters[0].toUpperCase(); 
+                letters[0]=capitalized
+                let new_word=letters.join('')
+                return new_word
+            })
+
+            let new_name=Name.join(' ')
+            
             const user = {
-                name: name,
+                name: new_name,
                 email: email,
                 password: password,
-                avatar: {
-                    public_id: fileurl,
-                    url: fileurl
-                }
+                ...(req.file ? {
+                    avatar: {
+                        public_id: req.file.filename,
+                        url: path.join(req.file.filename)
+                    }
+                } :{avatar:null})
                 
             };
             const activationToken = createActivationToken(user);
@@ -79,7 +95,11 @@ router.post('/create-user', upload.single('file'), async (req, res, next) => {
                 await sendMail({
                     email: user.email,
                     subject: 'Activate Your Account',
-                    message: `Hello ${user.name} please Click on the link to activate your account: ${activationurl}`
+                    message: `Hello ${user.name} please Click on the link to activate your account: ${activationurl}
+                    
+warm regards,
+EZIRE Fashion store
+                    `
                 });
                 
                 res.status(201).json({ success:true,message:`Please check your email: ${user.email} to activate your account`})
@@ -98,7 +118,7 @@ router.post('/create-user', upload.single('file'), async (req, res, next) => {
 //function to create activation token
 const createActivationToken = (user) => {
     return jwt.sign(user, process.env.ACTIVATION_SECRET, {
-        expiresIn: '10m'
+        expiresIn: '5m'
     });
 };
 
@@ -151,19 +171,162 @@ router.post('/login', CatchAsyncErrors(async (req, res, next) => {
             { status: true },
             {new:true},
         );
-        if (usermodel) {
-            return res.status(200).json({ success: true, msg: 'User Login Success', usermodel });
-        }
+        // if (usermodel) {
+        //     return res.status(200).json({ success: true, msg: 'User Login Success', usermodel });
+        // }
 
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
 }));
 
+router.get('/logout',isAuthenticated, async (req, res, next) => {
+    try {
+        const user = req.user;
+        if (user) {
+            const { token } = req.cookies;
+            if (token) {
+                res.clearCookie('token');
+
+                await UserModel.updateOne(
+                    { _id: user._id },
+                    {
+                        $set: {
+                            status:false,
+                        }
+                    }
+                )
+                return res.status(200).json({ success: true, msg: 'logged out!' });
+
+            } else {
+                return res.status(400).json({success:false,msg:'No user found'})
+            } 
+            
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
+router.get('/generate-otp', localvariables, async (req, res, next) => {
+    const { email } = req.query;
+  
+    try {
+        
+        req.app.locals.OTP = otpGenerator.generate(4, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+
+        const user = await UserModel.findOne({ email: email });
+        try {
+            await sendMail({
+                email,
+                subject: 'Reset password',
+                message: `A password reset for your account was requested. Please enter the OTP to change your password: 
+                
+        ${req.app.locals.OTP}
+                
+Warm regards,
+EZIRE Fashion store
+                `
+              });
+                
+                res.status(201).json({ success:true,message:`Please check your email:${email} to reset your account password`,code: req.app.locals.OTP  })
+        } catch (error) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+
+
+      
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.get('/verify-otp', async (req, res, next) => {
+    const { OTP } = req.query;
+    
+    try {
+        if (parseInt(req.app.locals.OTP) === parseInt(OTP)) {
+            req.app.locals.OTP = null;
+            req.app.locals.resetSession = true;
+            return res.status(201).json({success:true, msg: 'Verification Successfull!' })
+        }
+        return res.status(400).json({ msg: 'Invalid OTP!' })
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.get('/createResetSession', async (req, res, next) => {
+    try {
+        if (req.app.locals.resetSession) {
+            return res.status(201).json({msg:'Access granted',flag:req.app.locals.resetSession})
+        }
+        return res.status(400).json({ msg: 'Session expired' });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+
+});
+
+router.post('/resetpassword', async (req, res,next) => {
+    const { user, pass } = req.body;
+    try {
+        if (!req.app.locals.resetSession) {
+            return res.status(400).json({ msg: 'Session expired' });
+        }
+        let isUser =await UserModel.findOne({ email: user });
+
+        if (isUser) {
+            const hashedPassword = await bcrypt.hash(pass, 10);
+
+            isUser = await UserModel.updateOne(
+                { email: user },
+                {
+                    $set: {
+                        password: hashedPassword
+                    }
+                },  
+            );
+            if (isUser.acknowledged === true && isUser.modifiedCount === 1) {
+                req.app.locals.resetSession = false;
+                return res.status(201).json({success:true,msg:'Password updated successfully'})
+            } else {
+                return res.status(404).json({success:false,mg:'Error updating password'})
+            }
+            
+            
+        }
+        return res.status(400).json({ success: false, msg: 'User not found' });
+
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.get('/getUser', async (req, res, next) => {
+    const { email } = req.query;
+
+    try {
+        const isUser = await UserModel.findOne({ email: email });
+        if (!isUser) {
+            return res.status(400).json({
+                success: false,
+                msg:'User not found'
+            })
+        }
+        return res.status(200).json({success:true,msg:'User found'})
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
 router.get('/isLoggedIn', isAuthenticated, async (req, res,next) => {
     const user_id = req.user._id;
     try {
-        const isUser = await UserModel.findOne({ _id: user_id });
+        const isUser = await UserModel.findById({ _id: user_id })
+
+       
         const userStatus = isUser.status;
        
         let cart = await CartModel.findOne({userId: user_id});
@@ -1033,6 +1196,16 @@ router.get('/search', async (req, res) => {
     try {
         const products = await ProductModel.find({});
         return res.status(200).json({ msg: 'products', products });
+    } catch (error) {
+        return new ErrorHandler(error.message, 500);
+    }
+});
+
+router.post('/edit', async (req, res) => {
+   
+    console.log(req.query);
+    try {
+        
     } catch (error) {
         return new ErrorHandler(error.message, 500);
     }

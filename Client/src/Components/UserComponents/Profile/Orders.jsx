@@ -50,7 +50,7 @@ const Orders = () => {
                 setOrders(res.data.orders);
                 setAllOrders(res.data.orders);
                 setLoading(false);
-                console.log(res.data.orders);
+               
             })
             .catch(err => console.log(err));
     };
@@ -71,7 +71,7 @@ const Orders = () => {
     const handleReturn = async (e, item) => {
         e.preventDefault();
         const orderID = modalItem.order_ID;
-        console.log(orderID);
+       
         await axios.patch(`http://localhost:3333/api/v2/return_order/?orderID=${orderID}`, { returnForm })
             .then((res) => {
                 if (res.status === 200) {
@@ -105,7 +105,7 @@ const Orders = () => {
             updatedList = updatedList.filter((order) => {
                 return order.orderStatus === selectedStatus;
             });
-            console.log(updatedList);
+           
         }
 
         setOrders(updatedList)
@@ -124,9 +124,9 @@ const Orders = () => {
              <div className='sm:block md:hidden sm:py-0'><Nav/></div>
             <div className='sm:mx-2 xl:p-5 '>
                 
-                <div className='filter lg:border lg:flex p-5 mb-4 w-full'>
-                    <div className='sm:flex justify-between  items-center lg:hidden gap-2 w-full '>
-                        <div className=' sm:w-4/5'><input className='w-full bg-slate-300 py-2 pl-2 rounded-md sm:block lg:hidden' type="search" placeholder='search your orders here'/></div>
+                <div className='filter lg:border lg:flex pb-3 md:p-5 md:mb-4 w-full'>
+                    <div className='sm:flex justify-center  items-center lg:hidden gap-2 w-full '>
+                        {/* <div className=' sm:w-4/5'><input className='w-full bg-slate-300 py-2 pl-2 rounded-md sm:block lg:hidden' type="search" placeholder='search your orders here'/></div> */}
                         <div className='lg:mr-5 font-semibold uppercase border-slate-400 lg:border-r-2 pr-4 '><button className='flex items-center' onClick={()=>setToggleFilterbar(prev=>!prev)}>FilterBy<LuListFilter /></button></div>
                 
                     </div>

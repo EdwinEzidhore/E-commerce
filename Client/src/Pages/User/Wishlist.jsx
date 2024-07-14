@@ -101,21 +101,22 @@ const Wishlist = () => {
               {
                   !loading ?  <div>
                   {
-                    wishlist.length > 0? <div className='card-wrapper h-fit sm:flex sm:flex-col sm:items-center   md:container md:grid md:grid-cols-3  xl:grid-cols-4 gap-2 md:w-fit mb-5 mt-5 ' >
+                    wishlist.length > 0? <div className='card-wrapper h-fit sm:flex sm:flex-col sm:items-center   md:container md:grid md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-2 md:w-fit mb-5 mt-5 ' >
                                 {
                                   wishlist.length > 0 && wishlist.map((product, index) => (
+                                 
                                         <div className='shadow-none sm:shadow-md' key={index}>
                                           <div className=' card relative sm:flex sm:items-center sm:w-96  md:flex-col  h-fit   p-4 sm:pb-0 w-full md:w-fit md:rounded-lg flex-none sm:border sm:border-b-0    md:shadow-lg bg-slate-50 '  key={index} >
-                                            <div className=' hidden md:block absolute   right-0 top-5 outline outline-1 rounded-full text-red-500'><button className='p-2' onClick={()=>removeItem(product)}><MdDelete /></button></div>
+                                            <div className=' hidden md:block absolute   right-3 top-5 outline outline-1 rounded-full text-red-500'><button className='p-2' onClick={()=>removeItem(product)}><MdDelete /></button></div>
                                            <div className=' group sm:h-32 md:h-56   flex items-center justify-center lg:hover:scale-105 lg:transition lg:duration-500 ' onClick={()=>singleProduct(product)}>
                                                   <img className='h-full md:w-48 object-contain rounded-lg' src={`http://localhost:3333/${product.productImage[0]}`} alt="img"  ></img>
                                                   
                                            </div>
                                            
-                                           <div className=' md:w-56 p-1 content bg-white ml-0 sm:ml-3'>
+                                           <div className=' md:w-56 p-1 content bg-white ml-0 sm:ml-3 md:mb-1'>
                                                   <div className='text-xs text-slate-400 uppercase font-semibold mb-1 md:text-center sm:text-start '>{ product.category}</div>
                                                   <div className='sm:text-xs md:text-sm uppercase font-semibold text-slate-600 md:text-center sm:text-start'>{product.brand }</div>
-                                                  <div className='font-semibold sm:text- md:text-lg text-[#1e1616] md:leading-5 mb-1  md:h-16 md:text-center sm:text-start md:w-fit sm:w-64 sm:line-clamp-2'><a href='' className='hover:text-gray-700 ' onClick={(e) => singleProduct(product)}>{product.description }</a></div> 
+                                                  <div className='font-semibold line-clamp-2  md:text-lg text-[#1e1616] md:leading-5 mb-1   sm:text-start md:text-center  md:w-fit sm:w-64 '><a href='' className='hover:text-gray-700' onClick={(e) => singleProduct(product)}>{product.description }</a></div> 
                                                    <div className='flex space-x-2 items-center md:justify-evenly sm:justify-between'>
                                                        <div className='space-x-3 flex items-center   lg:mt-3'>
                                                           <span className='font-semibold text-lg text-emerald-700'>₹{product.sellingPrice }</span>
@@ -123,12 +124,12 @@ const Wishlist = () => {
                                                       </div>
                                                       
                                                        <div className='hidden md:block outline rounded-full mt-2 bg-gray-200 outline-stone-200 hover:bg-[#b5b5ff] w-fit'>
-                                                           <button onClick={()=>AddtoCart(product)} className='rounded-full  p-1 
+                                                           <button onClick={()=>AddtoCart(product)} className=' rounded-full  p-1 
                                                            relative before:content-[attr(data-tip)] before:absolute before:px-3 before:py-2 before:left-1/2 before:top-0 before:w-max before:max-w-xs before:-translate-x-1/2 before:-translate-y-full  before:bg-[#5555ca] before:text-white before:rounded-md before:opacity-0
                                                     before:transition-all before:text-xs
                  
                                                        after:absolute after:left-1/2 after:top-0 after:h-0 after:w- after:-translate-x-1/2 after:border-8 after:border-[#5555ca] after:border-l-transparent after:border-b-transparent after:border-r-transparent after:opacity-0
-                                                    after:transition-all hover:before:opacity-100 hover:after:opacity-100 
+                                                    after:transition-all lg:hover:before:opacity-100 lg:hover:after:opacity-100 
                  
                  
                                                        text-xl  ' data-tip='Add to Bag'>

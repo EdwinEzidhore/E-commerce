@@ -32,6 +32,11 @@ import AddCouponForm from './Components/AdminComponents/AddCouponForm';
 import UserInformation from './Components/UserComponents/Profile/UserInformation';
 import Orders from './Components/UserComponents/Profile/Orders';
 import SideBar from './Components/UserComponents/SideBarFilter/SideBar';
+import ForgotPassword from './Components/UserComponents/Login/ForgotPassword';
+import ResetPassword from './Components/UserComponents/Login/ResetPassword';
+import OTP from './Components/UserComponents/Login/OTP';
+import Protected from './Protected/Protected';
+
 function App() {
 
   
@@ -48,6 +53,14 @@ function App() {
          
           <Route path='/' element={<HomePage/>}></Route>
               <Route path='/login' element={<Loginpage />}></Route>
+              <Route path='/forgot-password' element={< ForgotPassword />}></Route>
+              <Route path='/verify-otp' element={< OTP />}></Route>
+              <Route element={<Protected />}>
+              <Route path='/reset-password' element={< ResetPassword/>}></Route>
+              </Route>
+             
+              
+
               <Route path='/signup' element={<Signuppage />}></Route>
               <Route path='/activation/:activation_token' element={<ActivationPage />}></Route>
               <Route path='/profile' element={<ProfilePage />}></Route>

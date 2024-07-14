@@ -20,4 +20,13 @@ const isAuthenticated = CatchAsyncErrors(async (req, res, next) => {
 
 });
 
-module.exports= isAuthenticated;
+
+const localvariables = async (req,res,next) => {
+    req.app.locals = {
+        OTP: null,
+        resetSession:false
+    }
+    next()
+}
+
+module.exports= {isAuthenticated,localvariables};

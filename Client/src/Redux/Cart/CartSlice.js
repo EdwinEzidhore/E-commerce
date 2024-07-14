@@ -11,16 +11,19 @@ const CartSlice = createSlice({
         setCartLength(state, action) {
             // console.log('from payload',action.payload);
             state.length = action.payload;
-            console.log(state.length );
+           
         },
         decrement(state, action) {
             if (state.length > 0) {
                 state.length  -= 1;
             }
             
+        },
+        cartlogout(state, action) {
+            state.length = 0;
         }
     }
 });
 
-export const { setCartLength ,decrement} = CartSlice.actions;
+export const { setCartLength ,decrement,cartlogout} = CartSlice.actions;
 export default CartSlice.reducer;

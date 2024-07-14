@@ -11,7 +11,7 @@ const AddressSlice = createSlice({
     initialState,
     reducers: {
       setAddresses(state, action) {
-        console.log('Slice',action.payload);
+       
             state.addresses = action.payload;
             if (state.addresses.length > 1) {
               state.activeAddress = state.addresses[0];
@@ -32,10 +32,14 @@ const AddressSlice = createSlice({
             if (state.activeAddress && state.activeAddress._id === action.payload) {
                 state.activeAddress = state.addresses[0] || null;
               }
-        }
+      },
+      logout(state, action) {
+        state.addresses = [];
+        state.activeAddress = null;
+      }
  
     }
 });
 
-export const { addAddress,set_active_address,setAddresses ,removeAddress} = AddressSlice.actions;
+export const { addAddress,set_active_address,setAddresses ,removeAddress,logout} = AddressSlice.actions;
 export default AddressSlice.reducer;
