@@ -60,8 +60,8 @@ function ResetPassword() {
                           
                           <label htmlFor="otp" className='block text-sm font-medium text-slate-500'>Enter new password</label>
                           <div className='mt-1'>
-                              <input {...formik.getFieldProps('password')} className='appearence-none  block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm font-semibold' type="text"
-                              name='password' autoComplete='password' required placeholder='password' />
+                              <input autoComplete="off" {...formik.getFieldProps('password')} className='appearence-none  block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm font-semibold' type="text"
+                                  name='password'  required placeholder='password' />
                       </div>
                       </div>
 
@@ -69,8 +69,8 @@ function ResetPassword() {
                           
                           <label htmlFor="otp" className='block text-sm font-medium text-slate-500'>Confirm password</label>
                           <div className='mt-1'>
-                          <input {...formik.getFieldProps('confirm_password')} className='appearence-none  block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm font-semibold' type="text"
-                              name='confirm_password' autoComplete='confirm password'   placeholder='confirm password'/>
+                          <input autoComplete='off' {...formik.getFieldProps('confirm_password')} className='appearence-none  block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm font-semibold' type="text"
+                              name='confirm_password'   placeholder='confirm password'/>
                       </div>
                       </div>
 

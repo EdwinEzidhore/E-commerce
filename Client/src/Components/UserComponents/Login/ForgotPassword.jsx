@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import OTPPage from './OTP';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRecoveryMail } from '../../../Redux/Auth/Auth';
+import ButtonLoading from '../Loading/ButtonLoading';
 
 function ForgotPassword() {
 
@@ -13,6 +14,8 @@ function ForgotPassword() {
     const [recoveryMail, setRecoverymail] = useState('');
     const [ShowOtpInput, setShowOtpInput] = useState(false);
     const [OTP, setOTP] = useState();
+
+    const [btnLoading, setBtnLoading] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -28,19 +31,21 @@ function ForgotPassword() {
 
     const checkEmail = (e) => {
         e.preventDefault();
-      
+        setBtnLoading(true)
         axios.get(`http://localhost:3333/api/v2/getUser/?email=${recoveryMail}`)
             .then((res) => {
                 if (res.status === 200 & res.data.success === true) {
                    
                     dispatch(setRecoveryMail(recoveryMail));
                     setShowOtpInput(true);
+                    setBtnLoading(false)
                 }
                 
             })
             .catch((err) => {
                 if (err.response.status === 400) {
-                    toast.error(err.response.data.msg)
+                    toast.error(err.response.data.msg);
+                    setBtnLoading(false);
                 }
             })
     };
@@ -99,7 +104,7 @@ function ForgotPassword() {
   
   
                         <div>
-                            <button type='submit' className='group  w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700' onClick={(e)=>checkEmail(e)}>Submit</button>
+                            { btnLoading? <div className='  w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 '><ButtonLoading/></div>:<button type='submit' className='group  w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700' onClick={(e)=>checkEmail(e)}>Submit</button> }
                         </div>      
                     </form>
                         </div> 

@@ -12,6 +12,7 @@ import { logOutUser } from '../../Redux/Auth/Auth';
 import { logout } from '../../Redux/Address/AddressSlice';
 import { cartlogout } from '../../Redux/Cart/CartSlice';
 import { FaUserCircle } from "react-icons/fa";
+import ScrollToTop from '../../Components/UserComponents/ScrollToTop';
 
 const ProfilePage = () => {
     const [active, setActive] = useState('profile');
@@ -52,6 +53,7 @@ const ProfilePage = () => {
     return (
            
         <section>
+            <ScrollToTop dependency={isUser}/>
             <div className='sm:hidden md:block sm:bg-white lg:sticky top-0   lg:bg-transparent lg:backdrop-blur-xl z-10'><Nav /></div>
           
           <div className=' mx-auto lg:container   bg-slate-100 p-1'>

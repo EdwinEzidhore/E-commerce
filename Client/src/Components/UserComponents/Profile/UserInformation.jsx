@@ -3,6 +3,10 @@ import axios from 'axios';
 import { IoArrowBackSharp } from "react-icons/io5";
 import Footer from '../Footer/Footer';
 import Nav from '../Nav/Nav';
+import {toast, Toaster } from 'react-hot-toast';
+import UpdateMail from '../Modal/UpdateMail';
+import ButtonLoading from '../Loading/ButtonLoading';
+
 
 const UserInformation = () => {
 
@@ -12,25 +16,58 @@ const UserInformation = () => {
     const [mobile_btn, setMobile_btn] = useState(false);
     const [Name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [userBtnloading, setuserBtnloading] = useState(false);
+    const [emailBtnloading, setemailBtnloading] = useState(false);
 
-    const[updatedname,setUpdatedName]=useState('')
 
+    const [modalOpen, setModalOpen] = useState(false)
+    
     useEffect(() => {
-        axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
-            .then(res => {
-            
-                setUser(res.data.user_details)
-                setName(res.data.user_details.name);
-                setEmail(res.data.user_details.email)
-                
-            })
-            .catch(err => console.log(err)) 
-    }, []);
+        getUserInfo()
+    },[])
 
+
+    const getUserInfo = () => {
+        axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
+        .then(res => {
+        
+            setUser(res.data.user_details)
+            setName(res.data.user_details.name);
+            setEmail(res.data.user_details.email)
+            
+        })
+        .catch(err => console.log(err))
+    }
+ 
+    const validateInput = () => {
+    
+        if (!Name || Name.length < 3) {
+            toast.error("Username must be at least 3 characters long.");
+            return false;
+        }
+        
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            toast.error("Please enter a valid email address.");
+            return false;
+        }
+        return true;
+
+    };
 
     const edituser = (e) => {
         e.preventDefault();
+        setuserBtnloading(true)
+        setemailBtnloading(true)
+
+        if (!validateInput()) {
+            setuserBtnloading(false);
+            setemailBtnloading(false)
+            return;
+        } 
+
         const { name } = e.target;
+
+
         let url = `${name}=`
         if (name === 'name') {
             url = `${name}=${Name}`
@@ -38,20 +75,74 @@ const UserInformation = () => {
         if (name === 'email') {
             url=`${name}=${email}`
         }
-        console.log(url);
-        axios.post(`http://localhost:3333/api/v2/edit/?${url}`,)
+       
+        axios.post(`http://localhost:3333/api/v2/edit/?${url}`, {},{withCredentials:true})
             .then((res) => {
-                console.log(res);
+                if (res.status === 201 && res.data.success === true) {
+                    getUserInfo();
+                    setper_Button(false);
+                    setuserBtnloading(false);
+                    setemailBtnloading(false)
+                }
+                if (res.status === 200) {
+                    setModalOpen(true);
+                    setemailBtnloading(false);
+                    setuserBtnloading(false);
+                }
+                
             })
             .catch((err) => {
                 console.log(err)
+                if (err.response.status === 400) {
+                    toast.error(err.response.data.msg)
+                }
             })
     };
     
-    
+    const closeModal = () => {
+        setEmail_btn(false);
+        setModalOpen(false);
+        setemailBtnloading(false)
+    }
 
+
+    const verifyOTP = (code) => {
+        if (code) {
+                axios.get(`http://localhost:3333/api/v2/verify-otp/?OTP=${code}`)
+                    .then((res) => {
+                       
+                        if (res.status === 201 && res.data.success === true) {    
+                            updateEmail();
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        if (err.response.status === 400) {
+                            toast.error(err.response.data.msg)
+                        }
+                    });
+            }    
+    };
+
+    const updateEmail = () => {
+        axios.post('http://localhost:3333/api/v2/update-email',  {email} , { withCredentials: true })
+            .then((res) => {
+                if (res.status === 201 && res.data.success === true) {
+                    toast.success('Email address updated..');
+                    setModalOpen(false);
+                    getUserInfo();
+                    setEmail_btn(false);
+            }
+            })
+            .catch((err) => {
+                if (err.response.status === 400) {
+                    toast.error('unexpected error!');
+                }
+        })
+    }
     return (
         <div>
+            <Toaster reverseOrder={false } />
            <div className='sm:block md:hidden sm:py-0'><Nav/></div>
            <div className='sm:px-4 md:p-4 sm:py-2 '>
            <form action="">
@@ -79,7 +170,7 @@ const UserInformation = () => {
                       }}/>
 
                       {
-                          per_button===true? <div className='md:ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button id='name' name='name'  onClick={(e)=>edituser(e)}>Save</button></div>:''
+                                per_button === true ? <div className='md:ml-7 h-auto bg-[#135D66] text-white flex  w-20 items-center justify-center'>{userBtnloading?<ButtonLoading/>: <button className='p-2 w-full' id='name' name='name'  onClick={(e)=>edituser(e)}>Save</button>}</div>:''
                       }
                            
                             </div>
@@ -122,17 +213,18 @@ const UserInformation = () => {
                                     setEmail(e.target.value)
                           }}/></div>
                           {
-                          email_btn===true? <div className='ml-7 h-auto bg-[#135D66] text-white flex p-2 w-20 justify-center'><button name='email' onClick={(e)=>edituser(e)}>Save</button></div>:''
+                                    email_btn === true ? <div className='md:ml-7 h-auto bg-[#135D66] text-white flex  w-20 items-center justify-center'>{ emailBtnloading?<ButtonLoading/>:<button className='p-2 w-full' name='email' onClick={(e)=>edituser(e)}>Save</button>}</div>:''
                       }
 
+                                {modalOpen && <UpdateMail closeModal={closeModal} verifyOTP={verifyOTP} />}
                                   </div>                               
                               </div>
                           </div>
 
-                          <div className='mb-5'>
+                          {/* <div className='mb-5'>
                               <div className='flex items-center py-4 my-2'>
                       <div><span className='md:text-xl font-medium'>Mobile Number</span></div>
-                      {/* {
+                      {
                           mobile_btn === false ? <button className='ml-7 text-sky-500' onClick={(e) => {
                               e.preventDefault();
                               setMobile_btn(!per_button);
@@ -140,7 +232,7 @@ const UserInformation = () => {
                               e.preventDefault();
                               setMobile_btn(false);
                            }}><span>cancel</span></button>
-                      } */}
+                      }
 
                               </div>
                               <div>
@@ -151,7 +243,7 @@ const UserInformation = () => {
                       }
                                   </div>                               
                               </div>
-                          </div>
+                          </div> */}
 
                       </form>
 
@@ -166,7 +258,7 @@ const UserInformation = () => {
                           <h4 className='font-semibold my-3 md:text-base sm:text-sm'>Does my Seller account get affected when I update my email address?</h4>
                           <p className='md:mt-4 text-slate-700 md:text-base sm:text-xs'>Flipkart has a 'single sign-on' policy. Any changes will reflect in your Seller account also.</p>
 
-                          <button>Deactivate Account</button>
+                          
                       </div>
             </div> 
             <div className='sm:block md:hidden'><Footer/></div>

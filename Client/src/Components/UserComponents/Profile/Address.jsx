@@ -113,9 +113,9 @@ const Address = () => {
     // console.log(id);
 
    
-    axios.delete(`http://localhost:3333/api/v2/remove-address/?id=${id}`)
+    axios.delete(`http://localhost:3333/api/v2/remove-address/?id=${id}`,{withCredentials:true})
       .then((res) => {
-        setUserAddress(res.data.Address);
+        // setUserAddress(res.data.Address);
         dispatch(removeAddress(id));
         getAddress();
         

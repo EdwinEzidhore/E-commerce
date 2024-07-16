@@ -35,7 +35,7 @@ import SideBar from './Components/UserComponents/SideBarFilter/SideBar';
 import ForgotPassword from './Components/UserComponents/Login/ForgotPassword';
 import ResetPassword from './Components/UserComponents/Login/ResetPassword';
 import OTP from './Components/UserComponents/Login/OTP';
-import Protected from './Protected/Protected';
+import {Protected,LoginProtectedRoute} from './Protected/Protected';
 
 function App() {
 
@@ -51,17 +51,21 @@ function App() {
         
           {/*User routes */}
          
-          <Route path='/' element={<HomePage/>}></Route>
-              <Route path='/login' element={<Loginpage />}></Route>
+              <Route path='/' element={<HomePage />}></Route>
+
+              <Route element={<LoginProtectedRoute />}>
+                <Route path='/login' element={<Loginpage />}></Route>
+                <Route path='/signup' element={<Signuppage />}></Route>
+              </Route>
+
+             
               <Route path='/forgot-password' element={< ForgotPassword />}></Route>
-              <Route path='/verify-otp' element={< OTP />}></Route>
+              {/* <Route path='/verify-otp' element={< OTP />}></Route> */}
+
               <Route element={<Protected />}>
               <Route path='/reset-password' element={< ResetPassword/>}></Route>
               </Route>
-             
               
-
-              <Route path='/signup' element={<Signuppage />}></Route>
               <Route path='/activation/:activation_token' element={<ActivationPage />}></Route>
               <Route path='/profile' element={<ProfilePage />}></Route>
               <Route path='/p' element={<ProductSinglePage />}></Route>

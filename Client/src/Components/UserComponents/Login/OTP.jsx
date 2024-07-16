@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { isNaN } from 'formik';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import ButtonLoading from '../Loading/ButtonLoading';
 
 
 function OTPPage({generateOTP}) {
@@ -11,6 +12,8 @@ function OTPPage({generateOTP}) {
     
     const [OTP, setOTP] = useState(['', '', '', '']);
     const [combinedOTP, setCombinedOTP] = useState('');
+
+    const [btnLoading, setBtnLoading] = useState(false);
 
     const inputref = useRef([]);
     const navigate = useNavigate();
@@ -53,18 +56,22 @@ function OTPPage({generateOTP}) {
     };
 
     const verifyOtp = () => {
+        setBtnLoading(true);
         axios.get(`http://localhost:3333/api/v2/verify-otp/?OTP=${combinedOTP}`)
             .then((res) => {
                
                 if (res.status === 201 && res.data.success === true) {
-                   navigate('/reset-password')
+                    navigate('/reset-password');
+                    setBtnLoading(false)
                 }
             })
             .catch((err) => {
                 console.log(err);
                 if (err.response.status === 400) {
-                    toast.error(err.response.data.msg)
+                    toast.error(err.response.data.msg);
+                    
                 }
+                setBtnLoading(false);
             });
     }
 
@@ -106,14 +113,15 @@ function OTPPage({generateOTP}) {
             </div>
 
             <div className="flex flex-col space-y-5">
-              <div>
-                                  <button className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm" onClick={(e) => {
+                              <div>
+                                  {btnLoading? <div className='flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm'><ButtonLoading/></div>:<button className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm" onClick={(e) => {
                                       e.preventDefault()
                                       verifyOtp()
                                   }
                                   }>
                   Verify Account
-                </button>
+                </button> }
+                                  
               </div>
 
               

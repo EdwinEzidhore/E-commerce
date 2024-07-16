@@ -5,13 +5,17 @@ import { RxAvatar } from "react-icons/rx";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast,Toaster } from 'react-hot-toast';
+import ButtonLoading from '../Loading/ButtonLoading';
 
 function Signup() {
     const [userinfo, setUserinfo] = useState({
         name: '',
         email: '',
-        password:''
-    })
+        password: ''
+    });
+
+    const [btnLoading, setBtnloading] = useState(false);
+
     const [avatar, setAvatar] = useState(null);
     const navigate = useNavigate();
 
@@ -73,12 +77,14 @@ function Signup() {
         formData.append('email', userinfo.email);
         formData.append('password', userinfo.password);
         if (avatar) {
-            console.log('nu');
+           
             formData.append('file',avatar)   
         }
      
         const loadingToastId = toast.loading('Sending activation mail...');
         
+        setBtnloading(true);
+
         axios.post('http://localhost:3333/api/v2/create-user', formData,config)
             .then(res => {
                 console.log(res);
@@ -87,6 +93,7 @@ function Signup() {
                     toast.success('success', {
                         id: loadingToastId,
                     });
+                    setBtnloading(false)
                 }
                 
                 setUserinfo({
@@ -102,11 +109,13 @@ function Signup() {
                     toast.error(err.response.data.message, {
                         id: loadingToastId,
                     });
+                    setBtnloading(false)
                 }
                 if (err.response.status === 500) {
                     toast.error('Something went wrong!', {
                         id: loadingToastId,
                     });
+                    setBtnloading(false)
                 }                     
             });
 
@@ -180,7 +189,7 @@ function Signup() {
                       </div>
                       
                 <div>
-                          <button type='submit' className=' group  w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700' >Submit</button>
+                        {btnLoading? <div className=' w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700'><ButtonLoading/></div>: <button type='submit' className=' group  w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700' >Submit</button> } 
                 </div>
                 <div className={`${styles.normalFlex} w-full`}>
                     <h4 className='text-slate-400'>Already a customer?</h4>

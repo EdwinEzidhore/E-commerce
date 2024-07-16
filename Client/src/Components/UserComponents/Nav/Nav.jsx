@@ -162,7 +162,7 @@ const Nav = () => {
                         {
                               cartLength >0 && <button onClick={() => navigate('/cart')}><div className='   absolute right-0 top-0 text-white  rounded-full w-6    text-center '><span className=' text-xs bg-red-500 py-1 px-2  font-bold  rounded-full'>{ cartLength}</span></div></button> 
                         }
-                              <button><a  href="/cart"><BiSolidShoppingBags  className='text-white text-xl'/></a></button>
+                              <button><a  href="/cart"><BiSolidShoppingBags  className='text-white text-2xl'/></a></button>
                         </div>
                         <div>
                         
@@ -234,7 +234,7 @@ const Nav = () => {
                                     </button>
                                     {
                                           profieInfoOpen && 
-                                          <div className='bg-[#] mx-1 shadow-[black] h-fit w-full text-base rounded-md shadow-md'>
+                                          <div className='bg-[#]  shadow-[black] h-fit w-full text-base rounded-md shadow-md'>
                                                       <ul className='pl-4 py-2 text-slate-300'>
                                                             <li  className='mb-3'><a href="/user-information">Profile Information</a></li>
                                                             <li className='mb-3'><a href="/Address">Manage Address</a></li>
@@ -255,7 +255,7 @@ const Nav = () => {
                                     </button>
                                     {
                                           paymentdropdown && 
-                                          <div className='bg-[#383b3d] h-fit w-full text-base rounded-md shadow-md'>
+                                          <div className=' shadow-[black] h-fit w-full text-base rounded-md shadow-md'>
                                                       <ul className='pl-6 py-2 text-slate-300'>
                                                             <li className='mb-3'><a href="/maintenance">Gift Cards</a></li>
                                                             <li className='mb-3'><a href="/maintenance">Saved UPI</a></li>

@@ -857,14 +857,21 @@ router.get('/get-address', isAuthenticated, async (req, res) => {
     }
 });
 
-router.delete('/remove-address', async (req, res, next) => {
+router.delete('/remove-address',isAuthenticated, async (req, res, next) => {
     const { id } = req.query;
+    const userId = req.user._id;
     // 
     try {
-        await AddressModel.updateOne({
-            $pull: { address: { _id: id } }
-        });
-        const address = await AddressModel.find({});
+        const isupdated = await AddressModel.updateOne(
+            { userID: userId },
+            {
+                $pull: { address: { _id: id } }
+            }
+           
+        );
+
+        const address = await AddressModel.findOne({userID:userId});
+        
         
         if (address) {
             return res.status(200).json({ msg: 'Address removed', Address: address })
@@ -1201,13 +1208,111 @@ router.get('/search', async (req, res) => {
     }
 });
 
-router.post('/edit', async (req, res) => {
+router.post('/edit', isAuthenticated, localvariables, async (req, res) => {
    
-    console.log(req.query);
+    const query = req.query;
+    const userID = req.user._id;
+   
+
     try {
+        let key = '';
+        let value = '';
+        for (let k in query) {
+            key = k;
+            value = query[k];
+        }
+
+        if (key === 'name') {
+            let Name = value;
+            let words = Name.trim().split(' ')
+
+            Name = words.map((word) => {
+                
+                let letters = word.split('');
+                let capitalized = letters[0].toUpperCase();
+                letters[0] = capitalized
+                let new_word = letters.join('')
+                return new_word
+            })
+
+            let new_name = Name.join(' ');
+
+            const isUserfound = await UserModel.findOneAndUpdate(
+                { _id: userID },
+                {
+                    $set: {
+                        name: new_name
+                    }
+                },
+                { new: true }
+            )
+
+            if (isUserfound) {
+                return res.status(201).json({ success: true, msg: 'Username updated successfully' })
+            } else {
+                return res.status(404).json({ success: false, msg: 'User not found' });
+            }
+        }
+        if (key === 'email') {
+            const user = await UserModel.findOne({ email: value });
+            if (!user) {
+
+                req.app.locals.OTP = otpGenerator.generate(4, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+
+                try {
+                  
+                    await sendMail({
+                        email: value,
+                        subject: 'Update email address',
+                        message: `Your are just one step away from updating your email address. Please enter the OTP to change your email address: 
+                        
+                ${req.app.locals.OTP}
+                        
+Warm regards,
+EZIRE Fashion store
+                        `
+                    });
+                        
+                    return res.status(200).json({ success: true, message: `Please check your email:${value} to reset your account password` });
+
+                } catch (error) {
+                    return next(new ErrorHandler(error.message, 500));
+                }
+                
+            }
+            return res.status(400).json({ success: false, msg: 'This username already exists!' })
+        }
         
     } catch (error) {
         return new ErrorHandler(error.message, 500);
+    }
+});
+
+router.post('/update-email',isAuthenticated, async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const userID = req.user._id;
+        const updatedUser = await UserModel.updateOne(
+            { _id: userID },
+            {
+                $set: {
+                    email: email
+                }
+            }
+        );
+        if (updatedUser.modifiedCount === 1 && updatedUser.matchedCount === 1) {
+
+            req.app.locals.resetSession = false;
+            return res.status(201).json({ success: true, msg: 'email address updated successfully' });
+
+        } else {
+            return res.status(400).json({ success: false, msg: 'error updating email address!' });
+        }
+
+       
+        
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
     }
 })
 

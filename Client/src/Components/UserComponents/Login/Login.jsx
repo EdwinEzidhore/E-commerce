@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../Redux/Auth/Auth';
+import ButtonLoading from '../Loading/ButtonLoading';
 
 
 
@@ -13,6 +14,9 @@ function Login() {
         email: '',
         password: ''
     });
+
+    const [btnLoading, setBtnLoading] = useState(false);
+
     const navigate = useNavigate()
     const dispatch = useDispatch();
     
@@ -29,6 +33,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setBtnLoading(true)
         await axios.post('http://localhost:3333/api/v2/login', logininfo, { withCredentials: true })
             .then((res) => {
                 if (res.data.success == true) {
@@ -39,7 +44,8 @@ function Login() {
                     setLoginInfo({
                         email: '',
                         password: '',
-                    })
+                    });
+                    setBtnLoading(false)
                 }
             })
             .catch(err => {
@@ -78,10 +84,10 @@ function Login() {
                       </div>
                       <div>
                           
-                          <label htmlFor="password" className='block text-sm font-medium text-slate-500 font-sans'>Password</label>
+                          <label  htmlFor="password" className='block text-sm font-medium text-slate-500 font-sans'>Password</label>
                           <div className='mt-1'>
-                          <input className='appearence-none  block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm font-semibold font-sans tracking-wide' type="password"
-                              name='password' autoComplete='current-password' required placeholder='password' value={logininfo.password} onChange={handleChange}/>
+                          <input autoComplete='off' className='appearence-none  block w-full px-3 py-2 border-[#ae1b1b] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 sm:text-sm font-semibold font-sans tracking-wide' type="password"
+                              name='password'  required placeholder='password' value={logininfo.password} onChange={handleChange}/>
                               
                               
                       </div>
@@ -98,7 +104,7 @@ function Login() {
 
                       </div>
                       <div>
-                          <button type='submit' className='group  w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700'>Submit</button>
+                          <button type='submit' className='group  w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700'>{btnLoading?<ButtonLoading/>:'Submit' }</button>
                       </div>
                       <div className={`${styles.normalFlex} w-full`}>
                           <h4 className='text-slate-400'>Don't have an account?</h4>
