@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addAddress,set_active_address,setAddresses,removeAddress} from '../../../Redux/Address/AddressSlice'
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
+import { base_url } from '../../../Config';
+
 const Address = () => {
 
   const [address, setAddress] = useState({
@@ -48,7 +50,7 @@ const Address = () => {
     address.address_type = checked;
  
 
-    axios.patch('http://localhost:3333/api/v2/set-address', address, { withCredentials: true })
+    axios.patch(`${base_url}/api/v2/set-address`, address, { withCredentials: true })
       .then(res => {
         if (res.status === 200) {
           setUserAddress(res.data.Address)
@@ -93,9 +95,9 @@ const Address = () => {
   
 
     const getAddress = () => {
-      axios.get('http://localhost:3333/api/v2/get-address', { withCredentials: true })
+      axios.get(`${base_url}/api/v2/get-address`, { withCredentials: true })
         .then((res) => {
-        
+        console.log(res.data.Address);
           setUserAddress(res.data.Address);
          
         dispatch(setAddresses(res.data.Address));
@@ -113,7 +115,7 @@ const Address = () => {
     // console.log(id);
 
    
-    axios.delete(`http://localhost:3333/api/v2/remove-address/?id=${id}`,{withCredentials:true})
+    axios.delete(`${base_url}/api/v2/remove-address/?id=${id}`,{withCredentials:true})
       .then((res) => {
         // setUserAddress(res.data.Address);
         dispatch(removeAddress(id));
@@ -127,6 +129,7 @@ const Address = () => {
     dispatch(set_active_address(address))
   };
  
+  console.log(userAddress);
 
   return (
     <div>
@@ -200,7 +203,8 @@ const Address = () => {
 
 
         {
-          userAddress && activeAddress && userAddress.map((user,index) => (
+          userAddress.length > 0 && userAddress.map((user, index) => (
+            
             <div className={activeAddress._id===user._id?'border mt-5 p-5 w-full xl:w-1/2 pr-40 relative bg-gray-200 shadow-xl':'border mt-5 p-5 sm:w-full xl:w-1/2 pr-40 relative'} key={index}>
             <div className='absolute right-5 flex items-center space-x-2 gap-2'>
                 <button className='outline outline-1 px-1 text-sky-700 tracking-wide'  onClick={() => setActiveaddress(user)}>

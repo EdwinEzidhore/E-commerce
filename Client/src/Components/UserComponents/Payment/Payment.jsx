@@ -3,7 +3,7 @@ import React from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
-
+import {base_url} from '../../../Config'
 
 const Payment = () => {
 
@@ -12,9 +12,9 @@ const Payment = () => {
 
  
   const handlecheckout = () => {
-    axios.post('http://localhost:3333/api/v2/cart/checkout', { withCredentials: true })
+    axios.post(`${base_url}/api/v2/cart/checkout`, { withCredentials: true })
       .then((res) => {
-        console.log(res.data);
+        
         handlePaymentVerify(res.data.data,res.data.cart)
       })
       .catch((err) => console.log(err))
@@ -29,9 +29,9 @@ const Payment = () => {
         description: "Test Mode",
         order_id: data.id,
         handler: async (response) => {
-            console.log("response", response)
+           
             try {
-              const res = await axios.post('http://localhost:3333/api/v2/verify', {
+              const res = await axios.post(`${base_url}/api/v2/verify`, {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,

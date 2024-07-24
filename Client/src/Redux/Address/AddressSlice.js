@@ -13,7 +13,7 @@ const AddressSlice = createSlice({
       setAddresses(state, action) {
        
             state.addresses = action.payload;
-            if (state.addresses.length > 1) {
+            if (state.addresses.length >= 1) {
               state.activeAddress = state.addresses[0];
             }
           },

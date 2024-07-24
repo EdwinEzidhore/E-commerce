@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import AdminHeader from './AdminHeader'
-import { toast } from 'react-toastify';
+import { toast ,Toaster} from 'react-hot-toast';
 import axios from 'axios';
+import {base_url} from '../../Config'
 
 const AddCouponForm = () => {
 
@@ -29,7 +30,7 @@ const AddCouponForm = () => {
   const handlesubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:3333/addCoupon',coupon)
+    axios.post(`${base_url}/addCoupon`,coupon)
     .then((res) => {
       if (res.data.success == true) {
         toast.success("Coupon Added Successfully");
@@ -46,14 +47,15 @@ const AddCouponForm = () => {
        
        
       }
-      console.log(res);
+     
     })
     .catch(err => console.log(err))
     
   };
 
   return (
-      <section>
+    <section>
+      <Toaster reverseOrder={ false} />
           <AdminHeader />
           <div className='ml-64 h-screen'>
         <div className=' flex items-center flex-col h-full'>

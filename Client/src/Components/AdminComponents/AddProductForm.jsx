@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import AdminHeader from './AdminHeader';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast,Toaster } from 'react-hot-toast';
+import { base_url } from '../../Config';
 
-const AddProductForm = () => {
+const AddProductForm = ({}) => {
 
   const [product, setProduct] = useState({
     name: '',
@@ -20,6 +21,7 @@ const AddProductForm = () => {
   
     
   });
+  
   const [productImage, setproductImage] = useState([])
   const [error, setError] = useState({
     name: '',
@@ -117,7 +119,7 @@ const AddProductForm = () => {
     });
 
  
-    axios.post('http://localhost:3333/addProduct',formData,config)
+    axios.post(`${base_url}/addProduct`,formData,config)
       .then((res) => {
         if (res.data.success == true) {
           toast.success("Product Added Successfully");
@@ -187,6 +189,7 @@ const AddProductForm = () => {
 
   return (
     <section>
+      <Toaster reverseOrder={ false} />
       <AdminHeader/>
 
       <div className='mt-2 ml-64  flex items-center justify-center p-4 '>

@@ -13,6 +13,7 @@ import { logout } from '../../Redux/Address/AddressSlice';
 import { cartlogout } from '../../Redux/Cart/CartSlice';
 import { FaUserCircle } from "react-icons/fa";
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop';
+import { base_url } from '../../Config';
 
 const ProfilePage = () => {
     const [active, setActive] = useState('profile');
@@ -24,7 +25,7 @@ const ProfilePage = () => {
     const isUser = useSelector((state) => state.auth.auth.user);
 
     useEffect(() => {
-        axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
+        axios.get(`${base_url}/api/v2/getUserInfo`, { withCredentials: true })
             .then(res => {
                 
                 setUser(res.data.user_details);
@@ -36,7 +37,7 @@ const ProfilePage = () => {
     }, []);
 
     const handleLogOut = () => {
-        axios.get('http://localhost:3333/api/v2/logout',{withCredentials:true})
+        axios.get(`${base_url}/api/v2/logout`,{withCredentials:true})
             .then((res) => {
                
                 if (res.status === 200 && res.data.success === true) {
@@ -63,8 +64,8 @@ const ProfilePage = () => {
                         {
                             isUser  && (
                                 <div className="sm:hidden  user md:flex items-center p-3 mb-4 shadow-lg bg-white">
-                                    { isUser.avatar? <div><img className='max-h-10 rounded-full' src={user && `http://localhost:3333/${user.avatar.url}`} alt="" /></div>:<FaUserCircle  className='text-xl'/> }
-                                  <span className='ml-2'>{user.name }</span>
+                                    { isUser.avatar? <div><img className='max-h-10 rounded-full' src={user && `${base_url}/${user.avatar.url}`} alt="" /></div>:<FaUserCircle  className='text-xl'/> }
+                                  <span className='ml-2 cursor-default'>{user.name }</span>
                             </div>
                             ) 
                     }    
@@ -83,7 +84,7 @@ const ProfilePage = () => {
                       <div className=''>
                                 <div className='flex uppercase text-slate-500 font-semibold my-4'>
                                 <box-icon name='user' type='solid' color='#135D66' ></box-icon>
-                                    <span className='ml-2'>Account Setting</span>
+                                    <span className='ml-2 cursor-default'>Account Setting</span>
                                 </div>
                           <div className='ml-7 '>
                              
@@ -100,7 +101,7 @@ const ProfilePage = () => {
                       <div className=''>
                                 <div className='flex uppercase text-slate-500 font-semibold my-4'>
                                 <box-icon name='wallet-alt' type='solid' color='#135D66' ></box-icon>
-                                    <span className='ml-2'><a href="/maintenance">Payments</a></span>
+                                    <span className='ml-2 cursor-default'>Payments</span>
                                 </div>
                           <div className='ml-7'>
                              
@@ -117,7 +118,7 @@ const ProfilePage = () => {
                       <div className=''>
                                 <div className='flex text-slate-500 font-semibold uppercase my-4'>
                                 <box-icon name='folder' type='solid' color='#135D66' ></box-icon>
-                                    <span className='ml-2'><a href="/maintenace">My Stuff</a></span>
+                                    <span className='ml-2 cursor-default'>My Stuff</span>
                                 </div>
                           <div className='ml-7'>
                               

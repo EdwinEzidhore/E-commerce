@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import AdminHeader from '../../Components/AdminComponents/AdminHeader';
 import axios from 'axios';
+import { base_url } from '../../Config';
 
 function AdminUsers() {
     const [users, setUsers] = useState([]);
@@ -14,7 +15,7 @@ function AdminUsers() {
   
 
   const getUsers = () => {
-    axios.get('http://localhost:3333/users')
+    axios.get(`${base_url}/users`)
       .then(res => {
       
         setUsers(res.data.users)
@@ -26,7 +27,7 @@ function AdminUsers() {
 
   const toggleUserBlock = (user) => {
     const user_id = user._id;
-    axios.patch(`http://localhost:3333/user_status/?user_id=${user_id}`)
+    axios.patch(`${base_url}/user_status/?user_id=${user_id}`)
       .then((res) => {
         getUsers();
         

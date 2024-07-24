@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../Components/UserComponents/Loading/Loading";
+import { base_url } from "../Config";
 
 export const Protected = () => {
    
@@ -12,7 +13,7 @@ export const Protected = () => {
     useEffect(() => {
         const verifySession = async () => {
             
-            await axios.get('http://localhost:3333/api/v2/createResetSession')
+            await axios.get(`${base_url}/api/v2/createResetSession`)
                 .then((res) => {
                     if (res.data.flag === true) {
                         setIsVerified(true);
@@ -45,4 +46,6 @@ export const LoginProtectedRoute = () => {
    
 
     return !user ? <Outlet /> : <Navigate to={'/'}></Navigate>
-}
+};
+
+

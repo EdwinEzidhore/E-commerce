@@ -1,9 +1,21 @@
-import React, { useState } from 'react'
-import AdminAddProductpage from '../../Pages/Admin/AdminAddProductpage';
+import React, { useContext } from 'react'
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setstatus } from '../../Redux/Auth/AdminAuth';
+import { TbLogout2 } from "react-icons/tb";
 
 
 const AdminHeader = () => {
-    const [sideBarToggle, setsideBarToggle] = useState(false);
+    
+  
+    const dispatch=useDispatch()
+
+    const navigate = useNavigate();
+
+    const handleLogOut = () => {
+        navigate('/');
+        dispatch(setstatus(false));
+    }
 
   return (
       <div className='overflow'>
@@ -36,18 +48,18 @@ const AdminHeader = () => {
               <div className='py-3 px-6 bg-slate-100 flex items-center shadow-md justify-between'>
                   <div className='flex items-center '>
                   
-                      <div  className=''><box-icon name='menu'></box-icon></div>
+                      {/* <div  className=''><box-icon name='menu'></box-icon></div> */}
                    
 
                   </div>
                  
                 
-                  <div className='flex space-x-3 gap-4'>
+                  {/* <div className='flex space-x-3 gap-4'>
                       <input type="search" placeholder='search' className=' bg-gray-300 rounded-md py-1 px-4 ' />   
-                  </div>
+                  </div> */}
                  
                   <div>
-                      <button>logout</button>
+                      <button className='font-semibold outline outline-1 p-1 rounded-md flex items-center' onClick={handleLogOut}><TbLogout2/>logout</button>
                   </div>
 
               </div>

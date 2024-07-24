@@ -10,12 +10,13 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast,Toaster } from 'react-hot-toast';
 import Loading from '../../Components/UserComponents/Loading/Loading';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import '../../css/loadingbutton.css'
 import { decrement, setCartLength } from '../../Redux/Cart/CartSlice';
 import Coupon from '../../Components/UserComponents/Modal/Coupon';
+import { base_url } from '../../Config';
 
 
 const CartPage = () => {
@@ -41,6 +42,7 @@ const CartPage = () => {
     const activeAddress = useSelector((state) => state.address.activeAddress);
 
 
+   
 
     useEffect(() => {
         getCartItems();
@@ -48,7 +50,7 @@ const CartPage = () => {
     }, [selectedCoupon]);
     
     const getCartItems = () => {
-        axios.get(`http://localhost:3333/api/v2/getCartItems`, { withCredentials: true })
+        axios.get(`${base_url}/api/v2/getCartItems`, { withCredentials: true })
             .then((res) => {
                 
                 if (res.status === 200) {
@@ -83,7 +85,7 @@ const CartPage = () => {
         const user_id = cartItems.userId;
         const item_id = item.productID._id;
        
-        axios.delete(`http://localhost:3333/api/v2/?user_id=${user_id}&item_id=${item_id}`, { withCredentials: true })
+        axios.delete(`${base_url}/api/v2/?user_id=${user_id}&item_id=${item_id}`, { withCredentials: true })
             .then((res) => {
                 if (res.status === 200) {
                     dispatch(decrement());
@@ -98,7 +100,7 @@ const CartPage = () => {
     const incrementorDecrement = (ope, product) => {
         const item_id = product.productID._id;
         const qty = product.quantity;
-        axios.patch(`http://localhost:3333/api/v2/qty/?user_id=${cartItems.userId}&item_id=${item_id}&qty=${qty}&ope=${ope}`)
+        axios.patch(`${base_url}/api/v2/qty/?user_id=${cartItems.userId}&item_id=${item_id}&qty=${qty}&ope=${ope}`)
             .then(res => {
                 if (res.status === 200) {
                     getCartItems();
@@ -113,7 +115,7 @@ const CartPage = () => {
         e.preventDefault();
         if (paymentMethod) {
             if (paymentMethod === 'online') {
-                axios.post('http://localhost:3333/api/v2/cart/checkout', {selectedCoupon},{ withCredentials: true })
+                axios.post(`${base_url}/api/v2/cart/checkout`, {selectedCoupon},{ withCredentials: true })
                     .then((res) => {
                         console.log(res.data);
                         const { data, cart, amount, coupon } = res.data;
@@ -124,7 +126,7 @@ const CartPage = () => {
                     .catch((err) => console.log(err))
             } else if (paymentMethod === 'home') {
                 setBtnloading(true)
-                axios.post('http://localhost:3333/api/v2/cart/checkout/cod', {activeAddress,selectedCoupon},{withCredentials:true})
+                axios.post(`${base_url}/api/v2/cart/checkout/cod`, {activeAddress,selectedCoupon},{withCredentials:true})
                     .then(res => {
                         if (res.status === 200) {
                             navigate('/payment-sucess');
@@ -153,7 +155,7 @@ const CartPage = () => {
             handler: async (response) => {
                 console.log("response", response)
                 try {
-                  const res = await axios.post('http://localhost:3333/api/v2/verify', {
+                  const res = await axios.post(`${base_url}/api/v2/verify`, {
                     razorpay_order_id: response.razorpay_order_id,
                     razorpay_payment_id: response.razorpay_payment_id,
                     razorpay_signature: response.razorpay_signature,
@@ -187,15 +189,21 @@ const CartPage = () => {
     }
 
     const handlePlaceorderBtn = () => {
-        const check_availability = cartItems.products.findIndex((item) => {
-            return item.productID.status === 'Unavailable'
-        })
-
-        if (check_availability === -1) {
-            setIsflipped(!isflipped);
+        if (activeAddress) {
+            const check_availability = cartItems.products.findIndex((item) => {
+                return item.productID.status === 'Unavailable'
+            })
+            
+    
+            if (check_availability === -1) {
+                setIsflipped(!isflipped);
+            } else {
+                setAvailability(false)
+            }
         } else {
-            setAvailability(false)
+            toast.error('Add address'); 
         }
+        
        
     };
 
@@ -208,7 +216,7 @@ const CartPage = () => {
     const setWishList = (product) => {
        
         const item_id = product.productID._id;
-        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {}, { withCredentials: true })
+        axios.post(`${base_url}/api/v2/wishlist/?id=${item_id}`, {}, { withCredentials: true })
             .then((res) => {
                 if (res.status === 200 && res.data.success === true) {
                     navigate('/wishlist');
@@ -227,6 +235,7 @@ const CartPage = () => {
 
   return (
       <section>
+          <Toaster reverseOrder={ false} />
          <Nav />
           {
               loading && networkErr===false? <div className=' h-96 flex items-center justify-center'><Loading /></div> :
@@ -239,9 +248,9 @@ const CartPage = () => {
               cartItems.products.length > 0?
                 <div className='md:container'>
               
-                <div className='lg:grid lg:grid-cols-12 bg-slate-50 font-robo'>
-                  <div className='grid col-start-2 col-end-8 p-3'>
-                      <div className=' items-center justify-between p-4 border bg-white shadow-md h-fit'>
+                <div className='lg:grid lg:grid-cols-12 bg-slate-50 font-robo '>
+                  <div className='grid lg:col-start-1   xl:col-start-2   col-end-8 p-3'>
+                      <div className=' items-center justify-between p-4  bg-white shadow-md h-fit rounded-md'>
                               {activeAddress!=null &&  <div className='text-sm font-semibold mb-3'>Deliver to:</div>}
                                   <div className='flex justify-between items-center'>
                                       
@@ -277,12 +286,12 @@ const CartPage = () => {
                       <div className=' p-1'>
                           {
                                       cartItems.products.map((item, index) => (
-                                  <div className='sm:border sm:mt-1' key={index}>
-                                          <div className={availability===false && item.productID.status==='Unavailable'?'relative card flex md:border p-3 gap-3 mb-1 h-fit  bg-gray-300 md:shadow-md   ' :'relative card flex md:border p-3 gap-3 mb-1 h-fit  bg-white md:shadow-md'} key={index}>
+                                  <div className='sm:border md:border-none sm:mt-1' key={index}>
+                                          <div className={availability===false && item.productID.status==='Unavailable'?'relative card flex  p-3 gap-3 mb-1 h-fit  bg-gray-300 md:shadow-md   rounded-md' :'relative card flex rounded-md p-3 gap-3  h-fit  bg-white md:shadow-md'} key={index}>
                                 <div className='   object-cover flex gap-1'>
   
                                     <div className={availability===false && item.productID.status==='Unavailable'?'grayscale h-f w-32 flex justify-center item-center':' h-f w-32 flex justify-center item-center '}>
-                                    <img className='h-full object-cover' src={`http://localhost:3333/${item.productID.productImage[0]}`} alt="img" />
+                                    <img className='h-full object-cover' src={`${base_url}/${item.productID.productImage[0]}`} alt="img" />
                                     </div>
                                     
                                 </div>
@@ -341,9 +350,9 @@ const CartPage = () => {
                       </div>
                   </div>
 
-                  <div className='grid col-start-8 col-end-12  p-3'>
+                  <div className='grid col-start-8 lg:col-end-13 xl:col-end-12  p-3'>
                       <div>
-                          <div className='box-1 border bg-white p-3 shadow-md'>
+                          <div className='box-1 rounded-md bg-white p-3 shadow-md'>
                               <div className='mb-3'><span className='text-slate-600 font-semibold text-sm '>Coupons</span></div>
                               <div className='flex justify-between'>
                                   <div className='flex items-center space-x-3'>
@@ -366,7 +375,7 @@ const CartPage = () => {
                               <div className='h-20 my-4 shadow-md'><img className='h-full w-full object-cover' src="/src/images/happy-valentine-s-day-sale-banner-or-promotion-on-blue-background-online-shopping-store-with-mobile-credit-cards-and-shop-elements-illustration-free-vector.jpg" alt="" /></div>
                           </div>
 
-                                  <div className="box-3 border p-4 bg-[#f0f3ff] shadow-lg sticky top-20 h-80">
+                                  <div className="box-3  p-4 bg-[white] shadow-lg sticky top-20 h-80 rounded-md">
                                       <div className={isflipped?'hidden':'front h-full'}>
                                       <div className='mb'>
                               <p><span className='uppercase text-sm font-semibold text-slate-800 '>Price details</span><span>({cartItems.products.length} item)</span></p>

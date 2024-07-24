@@ -13,6 +13,7 @@ import { add } from '../../Redux/SingleProduct/SingleProductSlice';
 import { useNavigate } from 'react-router-dom';
 import { LuListFilter } from "react-icons/lu";
 import { HiSortDescending } from "react-icons/hi";
+import { base_url } from '../../Config';
 
 const CategoryPage = ({ category }) => {
 
@@ -39,7 +40,7 @@ const CategoryPage = ({ category }) => {
     const getAllItem = async () => {
         let url = `category=${category}&page=${curntPage}`
 
-        await axios.get(`http://localhost:3333/api/v2/category/?${url}`)
+        await axios.get(`${base_url}/api/v2/category/?${url}`)
             .then((res) => {
                
                 setOriginalProduct(res.data.item)
@@ -89,7 +90,7 @@ const CategoryPage = ({ category }) => {
         
     }
 
-    const applyFilter = useCallback(() => {
+    const applyFilter =() => {
         let updatedList = [...originalProduct];
 
        
@@ -115,15 +116,15 @@ const CategoryPage = ({ category }) => {
 
         setProduct(updatedList)
        
-    },[selectedBrand,selectedColor,selectedSort]);
+    };
 
     useEffect(() => {
         applyFilter();
-    }, [applyFilter]);
+    }, [selectedBrand,selectedColor,selectedSort]);
 
 
     const cart = (product) => {  
-        axios.get(`http://localhost:3333/api/v2/cart/?id=${product._id}`, { withCredentials: true })
+        axios.get(`${base_url}/api/v2/cart/?id=${product._id}`, { withCredentials: true })
             .then(res => {
                 if (res.data.success == false) {
                     toast.error(res.data.msg);
@@ -145,7 +146,7 @@ const CategoryPage = ({ category }) => {
 
     const setWishList = (product) => {
         const item_id = product._id;
-        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {}, { withCredentials: true })
+        axios.post(`${base_url}/api/v2/wishlist/?id=${item_id}`, {}, { withCredentials: true })
             .then((res) => {
                 if (res.status === 200 && res.data.success === true) {
                     navigate('/wishlist');

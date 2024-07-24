@@ -11,7 +11,7 @@ import { setCartLength } from '../../Redux/Cart/CartSlice'
 import { add } from '../../Redux/SingleProduct/SingleProductSlice';
 import { useNavigate } from 'react-router-dom';
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop'
-import { Carousel } from 'flowbite-react';
+import { base_url } from '../../Config';
 
 
 const ProductSinglePage = () => {
@@ -32,7 +32,7 @@ const ProductSinglePage = () => {
 
     const getSimilarProducts = () => {
        
-        axios.post('http://localhost:3333/api/v2/similar', { SingleProduct })
+        axios.post(`${base_url}/api/v2/similar`, { SingleProduct })
             .then(res => {
                
                 setSimilarProducts(res.data.products);
@@ -44,7 +44,7 @@ const ProductSinglePage = () => {
 
     const setWishList = () => {
         const item_id = SingleProduct._id;
-        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {},{withCredentials:true})
+        axios.post(`${base_url}/api/v2/wishlist/?id=${item_id}`, {},{withCredentials:true})
             .then((res) => {
                 if (res.status === 200 && res.data.success===true) {
                     navigate('/wishlist');
@@ -65,7 +65,7 @@ const ProductSinglePage = () => {
     const cart = () => {
         setLoading(true)
         const user_id = SingleProduct._id;
-        axios.get(`http://localhost:3333/api/v2/cart/?id=${user_id}`, { withCredentials: true })
+        axios.get(`${base_url}/api/v2/cart/?id=${user_id}`, { withCredentials: true })
             .then(res => {
                 if (res.data.success == false) {
                     toast.error(res.data.msg);
@@ -106,7 +106,7 @@ const ProductSinglePage = () => {
                         {
                             SingleProduct.productImage.map((img, index) => (
                                 <div className='flex-shrink-0 h-96  ' key={index}>
-                                    <img className='max-h-full  object-contain' src={`http://localhost:3333/${img}`} />
+                                    <img className='max-h-full  object-contain' src={`${base_url}/${img}`} />
                                 </div>
                             ))
                         }
@@ -131,7 +131,7 @@ const ProductSinglePage = () => {
                                       {
                                           SingleProduct.productImage.map((img,index) => (
                                             <div className={index===Index?'w-20 h-20 mt-5 border-[#1c7293] border-2 p-1 ml-5':'w-20 h-20 mt-5 ml-5'} onClick={()=>setIndex(index)} key={index}>
-                                            <img className='h-full w-full object-cover' src={`http://localhost:3333/${img}`} alt="" />
+                                            <img className='h-full w-full object-cover' src={`${base_url}/${img}`} alt="" />
                                         </div>
                                         ))  
                                       }
@@ -139,7 +139,7 @@ const ProductSinglePage = () => {
                               </div>
                               <div className=' lg:w-4/5   p-5'>
                                   <div className='flex items-center justify-center '>
-                                      <img className='max-h-full  object-contain' src={`http://localhost:3333/${SingleProduct.productImage[Index]}`} alt="img" />
+                                      <img className='max-h-full  object-contain' src={`${base_url}/${SingleProduct.productImage[Index]}`} alt="img" />
                                   </div>
                               </div>
                     </div>
@@ -306,7 +306,7 @@ const ProductSinglePage = () => {
                             similarProducts.map((item,index) => (
                                 <div className='carosel-card bg-white w-48  md:max-w-64  flex-none p-2' key={index}>
                           
-                                <div className='h md:h-64'><img src={`http://localhost:3333/${item.productImage[0]}`} alt="img" className='  max-h-full object-contain mx-auto'/></div>
+                                <div className='h md:h-64'><img src={`${base_url}/${item.productImage[0]}`} alt="img" className='  max-h-full object-contain mx-auto'/></div>
                                 <div>
                                         <div className='text-center'><span className='text-slate-500 p-1 text-sm font-semibold font-sans uppercase'>{ item.brand}</span></div>
                                         <div className=' h-auto p-1 text-center leading-5 font-sans font-semibold text-slate-800 text-md px-2 line-clamp-2'><a href="/p" onClick={()=>getSingleProduct(item)}>{ item.description}</a></div>

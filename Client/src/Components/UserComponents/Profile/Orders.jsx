@@ -6,6 +6,8 @@ import { IoChevronBack } from "react-icons/io5";
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import { LuListFilter } from "react-icons/lu";
+import { base_url } from '../../../Config';
+
 
 const Orders = () => {
 
@@ -27,7 +29,7 @@ const Orders = () => {
     const ReturnFormChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
-        console.log(value);
+       
         setReturnForm((prev) => {
             return {
                 ...prev, [name]: value
@@ -45,9 +47,10 @@ const Orders = () => {
     },[])
 
     const getOrders = () => {
-        axios.get('http://localhost:3333/api/v2/getOrders', { withCredentials: true })
+        axios.get(`${base_url}/api/v2/getOrders`, { withCredentials: true })
             .then(res => {
                 setOrders(res.data.orders);
+            
                 setAllOrders(res.data.orders);
                 setLoading(false);
                
@@ -57,7 +60,7 @@ const Orders = () => {
 
     const handleOrderCancel = async (item) => {
         const orderID = item.order_ID;
-        await axios.patch(`http://localhost:3333/api/v2/cancel_order/?orderID=${orderID}`)
+        await axios.patch(`${base_url}/api/v2/cancel_order/?orderID=${orderID}`)
             .then(res => {
                 if (res.status === 200) {
                     getOrders();
@@ -72,7 +75,7 @@ const Orders = () => {
         e.preventDefault();
         const orderID = modalItem.order_ID;
        
-        await axios.patch(`http://localhost:3333/api/v2/return_order/?orderID=${orderID}`, { returnForm })
+        await axios.patch(`${base_url}/api/v2/return_order/?orderID=${orderID}`, { returnForm })
             .then((res) => {
                 if (res.status === 200) {
                     setReturnForm({
@@ -160,7 +163,7 @@ const Orders = () => {
                   item.orderStatus!==''?
                 <div className='card  border p-5 flex justify-between xl:space-x-4 shadow-lg mb-2 relative' key={index} >
                 <div className='h-28  flex  items-center justify-center' >
-                    <img className='h-full w-28 object-contain' src={`http://localhost:3333/${item.image_url}`} alt="" />
+                    <img className='h-full w-28 object-contain' src={`${base_url}/${item.image_url}`} alt="img" />
                 </div>
                 <div className='hidden xl:block w-30'>
                           <div><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
@@ -187,7 +190,7 @@ const Orders = () => {
                                   
                                   <div className='text-sm font-semibold tracking-wide flex'>
                                   <box-icon name='check-circle' type='solid' color='#0ac107' ></box-icon>
-                                      Delivered on May 23</div>
+                                          Delivered on { item.DeliveredOn}</div>
                                   <div className='text-sm font-semibold text-slate-600 mt-2'>
                                       Your item has beed delivered</div>
                                   <div className='flex items-center  space-x-2 mt-2'>
@@ -242,7 +245,7 @@ const Orders = () => {
                                                                 <div className='font-semibold text-emerald-600'>₹{ modalItem.price}</div>
                                                             </div>
                                                             <div className='h-12'>
-                                                                <img className='h-full' src={`http://localhost:3333/${modalItem.image_url}`} alt="" />      
+                                                                <img className='h-full' src={`${base_url}/${modalItem.image_url}`} alt="" />      
                                                                       </div>
                                                                       
                     
@@ -253,7 +256,7 @@ const Orders = () => {
                                                                       <input onChange={(e)=>ReturnFormChange(e)} className='block w-full mt-2 px-3 pb-5 pt-1 focus:outline-sky-300 bg-gray-300' type="text" name="reason" id="" htmlFor='option'  value={returnForm.reason}/>
 
                                                                       <label className='block text-slate-600 font-semibold text-sm mt-3' htmlFor="option2">What do you want in return</label>
-                                                                      <select onChange={(e)=>ReturnFormChange(e)} className='block w-3/4 focus:outline-sky-300 mt-2 bg-gray-300 py-2 ' name='inReturn' value={returnForm.inReturn}>
+                                                                      <select onChange={(e)=>ReturnFormChange(e)} className='block w-3/4 focus:outline-sky-300 mt-2  bg-gray-200 py-2 ' name='inReturn' value={returnForm.inReturn}>
                                                                           <option value=''></option>
                                                                           <option  value="Refund"> Refund</option>
                                                                           <option value="Replace">Replace Item</option>
@@ -307,8 +310,6 @@ const Orders = () => {
                       
           }
                 </div> 
-
-      
 
             </div> 
             <div className='sm:block md:hidden'><Footer/></div>        

@@ -2,6 +2,8 @@ import React, { Fragment, useState } from 'react'
 import { useEffect } from 'react';
 import AdminHeader from '../../Components/AdminComponents/AdminHeader';
 import axios from 'axios';
+import { base_url } from '../../Config';
+
 
 const AdminOrders = () => {
 
@@ -15,10 +17,10 @@ const AdminOrders = () => {
   
 
     const getOrders = () => {
-        axios.get('http://localhost:3333/order')
+        axios.get(`${base_url}/order`)
             .then((res) => {
                 setOrders(res.data);
-                // console.log(res.data);
+               
             })
             .catch((err) => {
             console.log(err);
@@ -29,7 +31,7 @@ const AdminOrders = () => {
     const handleOrderstatus = (order, e) => {
         const order_id = order._id;
         const status = e.target.value;
-        axios.patch(`http://localhost:3333/order_status/?order_id=${order_id}`, { status })
+        axios.patch(`${base_url}/order_status/?order_id=${order_id}`, { status })
             .then((res) => {
                 console.log(res);
             })
@@ -40,7 +42,7 @@ const AdminOrders = () => {
     const handlePaymentStatus = (order, e) => {
         const order_id = order._id;
         const status = e.target.value;
-        axios.patch(`http://localhost:3333/payment_status/?order_id=${order_id}`, { status })
+        axios.patch(`${base_url}/payment_status/?order_id=${order_id}`, { status })
             .then((res) => {
                 console.log(res);
             })
@@ -76,12 +78,16 @@ const AdminOrders = () => {
                                       id="order" 
                                       onChange={(e) => {
                                   handleOrderstatus(item,e)
-                                  }}>
+                                      }}
+                                      defaultValue={item.OrderStatus}
+                                      disabled={item.OrderStatus==="Cancelled"||item.OrderStatus==="Returned"?true:false}
+                                      
+                                  >
                                         <option value="Order Placed">Order Placed</option>
                                         <option value="Shipped">Shipped</option>
                                         <option value="Delivered">Delivered</option>
-                                        <option value=" Cancelled">Cancelled </option>
-                                        <option value=" Returned">Returned </option>   
+                                        <option value="Cancelled">Cancelled </option>
+                                        <option value="Returned">Returned </option>   
                                     </select>
                                 </div>
                                 <div>
@@ -92,6 +98,8 @@ const AdminOrders = () => {
                                       onChange={(e) => {
                                           handlePaymentStatus(item,e)
                                       }}
+                                      defaultValue={item.PaymentStatus}
+                                      disabled={item.PaymentStatus==='Failed'?true:false}
                                   >
                                         
                                         <option value="Pending">Pending</option>
@@ -112,6 +120,8 @@ const AdminOrders = () => {
               
           </div>
     </section>
+     
+    
   )
 }
 

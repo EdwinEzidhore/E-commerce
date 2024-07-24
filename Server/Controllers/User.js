@@ -89,7 +89,7 @@ router.post('/create-user', upload.single('file'), async (req, res, next) => {
                 
             };
             const activationToken = createActivationToken(user);
-            const activationurl = `http://localhost:5173/activation/${activationToken}`;
+            const activationurl = `${process.env.BASE_URL}/activation/${activationToken}`;
     
             try {
                 await sendMail({
@@ -162,15 +162,21 @@ router.post('/login', CatchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler('Requested user not found', 400));
         }
         const isPasswordValid = await user.ComparePassword(password);
-        if (!isPasswordValid) {
-            return next(new ErrorHandler("Invalid Credentials", 400));
+            if (!isPasswordValid) {
+                return next(new ErrorHandler("Invalid Credentials", 400));
+            }
+        if (user.status === true) {
+            
+            sendToken(user, 201, res)
+            let usermodel = await UserModel.findByIdAndUpdate(
+                user._id,
+                { isLoggedin: true },
+                {new:true},
+            );
+        } else {
+            return res.status(400).json({success:false,message:'User is blocked'})
         }
-        sendToken(user, 201, res)
-        let usermodel = await UserModel.findByIdAndUpdate(
-            user._id,
-            { status: true },
-            {new:true},
-        );
+
         // if (usermodel) {
         //     return res.status(200).json({ success: true, msg: 'User Login Success', usermodel });
         // }
@@ -192,7 +198,7 @@ router.get('/logout',isAuthenticated, async (req, res, next) => {
                     { _id: user._id },
                     {
                         $set: {
-                            status:false,
+                            isLoggedin:false,
                         }
                     }
                 )
@@ -459,10 +465,11 @@ router.get('/getCartItems',isAuthenticated, async (req, res, next) => {
                     discount +=  el.productID.originalPrice -el.productID.sellingPrice ;
                 });
     
-                const coupons = await CouponModel.find({});
+                const coupons = await CouponModel.find({status:'Active'});
                 let filteredCoupons = coupons.filter((coupon) => {
-                  return !coupon.redeemed.some((el) => el.user !== userId);
+                  return !coupon.redeemed.some((el) => el.user !== userId );
                 });
+                
                 
                 
                 res.status(200).json({
@@ -474,9 +481,6 @@ router.get('/getCartItems',isAuthenticated, async (req, res, next) => {
                 });
             }
         
-
-
-       
 
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
@@ -885,12 +889,16 @@ router.delete('/remove-address',isAuthenticated, async (req, res, next) => {
 router.get('/getOrders', isAuthenticated, async (req, res, next) => {
     const user_id = req.user.id;
     const ordered_Products = [];
+    const  page  = parseInt(req.query.page);
+    const pagelimit = 4;
     try {
 
         const orders = await OrderModel.find({ userId: user_id }).populate({
             path: 'products.productId',
-            model:'product'
+            model: 'product'
         });
+
+        const totalProducts = await ProductModel.find({}).estimatedDocumentCount();
         
         if (!orders) {
             return res.status(404).json({ msg: 'User not found' });
@@ -916,13 +924,15 @@ router.get('/getOrders', isAuthenticated, async (req, res, next) => {
                     orderStatus: item.OrderStatus,
                     paymentStatus: item.PaymentStatus,
                     address: item.Address,
+                    DeliveredOn:item.DeliveredOn,
                 });
 
                 
             })
         });
+       
 
-        return res.status(200).json({ msg: 'Ordered items', orders: ordered_Products.reverse() });
+        return res.status(200).json({ msg: 'Ordered items', orders: ordered_Products,count:totalProducts });
 
  
 

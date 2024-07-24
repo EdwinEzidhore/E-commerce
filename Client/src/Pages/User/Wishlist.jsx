@@ -11,7 +11,8 @@ import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
 import ScrollToTop from '../../Components/UserComponents/ScrollToTop';
 import { GiShoppingBag } from "react-icons/gi";
-import '../../css/Wishlist.css'
+import '../../css/Wishlist.css';
+import { base_url } from '../../Config'
 
 
 const Wishlist = () => {
@@ -28,7 +29,7 @@ const Wishlist = () => {
     }, []);
 
     const getWishlistItems = () => {
-        axios.get('http://localhost:3333/api/v2/get-wishlist', { withCredentials: true })
+        axios.get(`${base_url}/api/v2/get-wishlist`, { withCredentials: true })
             .then((res) => {
                 if (res.status === 200 ) {
                     // console.log(res.data.wishlist.products)
@@ -52,7 +53,7 @@ const Wishlist = () => {
 
     const removeItem = (product) => {
         const item_id = product._id;
-        axios.delete(`http://localhost:3333/api/v2/remove-wishlist/?id=${item_id}`,{withCredentials:true})
+        axios.delete(`${base_url}/api/v2/remove-wishlist/?id=${item_id}`,{withCredentials:true})
             .then((res) => {
                 if (res.status === 200 && res.data.success === true) {
                     getWishlistItems();
@@ -72,7 +73,7 @@ const Wishlist = () => {
     const AddtoCart = (product) => {
         
         const item_id = product._id;
-        axios.get(`http://localhost:3333/api/v2/cart/?id=${item_id}`, { withCredentials: true })
+        axios.get(`${base_url}/api/v2/cart/?id=${item_id}`, { withCredentials: true })
             .then(res => {
                 if (res.data.success == false) {
                     toast.error(res.data.msg);
@@ -93,7 +94,7 @@ const Wishlist = () => {
 
   return (
       <div className=''>
-          {/* <ScrollToTop  dependency={wishlist}/> */}
+          <ScrollToTop  dependency={wishlist}/>
           <Nav />
           <div className='h-screen'>
               
@@ -109,14 +110,14 @@ const Wishlist = () => {
                                           <div className=' card relative sm:flex sm:items-center sm:w-96  md:flex-col  h-fit   p-4 sm:pb-0 w-full md:w-fit md:rounded-lg flex-none sm:border sm:border-b-0    md:shadow-lg bg-slate-50 '  key={index} >
                                             <div className=' hidden md:block absolute   right-3 top-5 outline outline-1 rounded-full text-red-500'><button className='p-2' onClick={()=>removeItem(product)}><MdDelete /></button></div>
                                            <div className=' group sm:h-32 md:h-56   flex items-center justify-center lg:hover:scale-105 lg:transition lg:duration-500 ' onClick={()=>singleProduct(product)}>
-                                                  <img className='h-full md:w-48 object-contain rounded-lg' src={`http://localhost:3333/${product.productImage[0]}`} alt="img"  ></img>
+                                                  <img className='h-full md:w-48 object-contain rounded-lg' src={`${base_url}/${product.productImage[0]}`} alt="img"  ></img>
                                                   
                                            </div>
                                            
                                            <div className=' md:w-56 p-1 content bg-white ml-0 sm:ml-3 md:mb-1'>
                                                   <div className='text-xs text-slate-400 uppercase font-semibold mb-1 md:text-center sm:text-start '>{ product.category}</div>
                                                   <div className='sm:text-xs md:text-sm uppercase font-semibold text-slate-600 md:text-center sm:text-start'>{product.brand }</div>
-                                                  <div className='font-semibold line-clamp-2  md:text-lg text-[#1e1616] md:leading-5 mb-1   sm:text-start md:text-center  md:w-fit sm:w-64 '><a href='' className='hover:text-gray-700' onClick={(e) => singleProduct(product)}>{product.description }</a></div> 
+                                                  <div className='font-semibold line-clamp-1  md:text-lg text-[#1e1616] md:leading-5 mb-1   sm:text-start md:text-center  md:w-full sm:w-64 '><a href='' className='hover:text-gray-700 w-full' onClick={(e) => singleProduct(product)}>{product.description }</a></div> 
                                                    <div className='flex space-x-2 items-center md:justify-evenly sm:justify-between'>
                                                        <div className='space-x-3 flex items-center   lg:mt-3'>
                                                           <span className='font-semibold text-lg text-emerald-700'>₹{product.sellingPrice }</span>

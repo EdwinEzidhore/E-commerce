@@ -9,7 +9,9 @@ const UserModel = require('../../Model/User/User');
 const { log, count } = require('console');
 const OrderModel=require('../../Model/User/Order');
 const User = require('../../Model/User/User');
-const CouponModel=require('../../Model/Admin/Coupon')
+const CouponModel = require('../../Model/Admin/Coupon');
+const fs = require('fs');
+const months=require('../../Data/Months.json')
 
 
 router.post('/Admin', async (req, res, next) => {
@@ -24,8 +26,10 @@ router.post('/Admin', async (req, res, next) => {
             
         if (password === isPasswordvalid) {
             res.status(200).json({ message: 'Admin Login successfully' });
+        } else {
+             res.status(404).json({ msg: 'invalid credentials' });
         }
-        // res.status(400).json({ msg: 'invalid credentials' });
+       
         
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
@@ -95,10 +99,15 @@ router.post('/addProduct', Productupload.array('file'), async (req, res, next) =
 
 router.get('/products', async (req, res,next) => {
     try {
-        const products = await ProductModel.find({});
+        const  page  = parseInt(req.query.page);
+        const pagelimit = 5;
+        const products = await ProductModel.find({}).skip((page*pagelimit)-pagelimit).limit(pagelimit)
         const sorted = products.reverse();
+      
+
         if (products) {
-            res.status(200).json({ products });
+            const totalProducts = await ProductModel.estimatedDocumentCount();
+            res.status(200).json({ products ,count:totalProducts});
         }
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
@@ -214,9 +223,24 @@ router.patch('/order_status', async (req, res, next) => {
         if (!order) {
             return res.status(404).json({ msg: 'Error finding product' })
         }
+        let updateObjects={OrderStatus:status}
+        if (status === 'Delivered') {
+            const now = new Date();
+            const day = now.getDate().toString();
+            let Month = now.getMonth() + 1;
+          
+            months.forEach((month) => {
+                if (month.id === Month) {
+                    Month=month.monthCode
+                }
+            })
+            const date = Month + '-' + day  ;
+            updateObjects={...updateObjects,DeliveredOn:date}
+        }
+       
         order = await OrderModel.findByIdAndUpdate(
             { _id: order_id },
-            { OrderStatus: status },
+            updateObjects,
             { new: true },
         )
         return res.status(200).json({ msg: 'order status updated', Order: order });
@@ -332,5 +356,131 @@ router.delete('/delete-coupon', async (req, res, next) => {
     } catch (error) {
         
     }
-})
+});
+
+router.get('/dashboard', async (req, res, next) => {
+    try {
+        let users = await UserModel.find({});
+        users = users.length;
+        let products = await ProductModel.find({});
+        products = products.length;
+
+        return res.status(200).json({ success: true, users: users, products, products })
+    } catch (error) {
+        return next(new ErrorHandler(error.message
+            , 500
+        ))
+    }
+});
+
+router.post('/editproduct',Productupload.array('file'), async (req, res, next) => {
+    const  productImage  = JSON.parse(req.body.productImage) ;
+   
+    const file = req.files;
+
+    try {
+        const { id } = req.query;
+        const changedFields = JSON.parse(req.body.changedFields);
+        
+        if (productImage) {
+            // console.log('before',productImage);
+            const product = await ProductModel.findOne({ _id: id });
+            const newImages = productImage.filter((img) => {
+                return !product.productImage.includes(img)
+            });
+            // console.log('newimages', newImages);
+            
+            if (file) {
+                const imageurl = file.map((img) => img.filename);
+                for (let i = 0; i < newImages.length; i++) {
+                    const index = productImage.indexOf(newImages[i]);
+                    if (index !== -1) {
+                        productImage[index] = imageurl[i];
+                    }
+                }
+                await ProductModel.updateOne(
+                    { _id: id },
+                    {
+                        $set: {
+                            productImage: productImage,
+                        }
+                    }
+                );
+
+            }     
+        }
+        
+        if (Object.keys(changedFields).length !== 0) {
+            let item = await ProductModel.findOne({ _id: id });
+            if (item) {
+                const updateObject = {};
+                
+                for (let key in changedFields) {
+                    if (key === 'colour' || key === 'fabric' || key === 'size') {
+                        updateObject[`Details.${key}`] = changedFields[key];
+                    } else {
+                       
+                        updateObject[key] = changedFields[key];
+                    }
+                }
+                
+
+                const result = await ProductModel.updateMany({ _id: id }, { $set: updateObject });
+                
+
+                if (result.modifiedCount === 1 && result.matchedCount === 1) {
+                    return res.status(200).json({ success: true, msg: 'Product updated successfully!' })
+                } else {
+                    return res.status(500).json({ success: false, message: 'Failed to update product!' })
+                }
+            }
+        } else {
+            return next(new ErrorHandler('error', 500));
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+router.delete('/image', async (req, res, next) => {
+    try {
+        const { url, id } = req.query;
+     
+        if (url) {
+            
+            let product = await ProductModel.findOne({ _id: id });
+            let isImage = product.productImage.includes(url);
+            if (isImage === true) {
+                product = await ProductModel.updateOne(
+                    { _id: id },
+                    {
+                        $pull: {
+                            productImage: url
+                        }
+                    }
+                );
+                if (product.modifiedCount === 1 && product.matchedCount == 1) {
+                    const filePath = `Public/ProductImageuploads/${url}`;
+
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.log(err);
+                            res.status(500).json({ message: "Error Deleting File" });
+                        }
+                    });
+                    return res.status(200).json({ success: true, message: 'Image deleted!' })
+                } else {
+                    return res.status(500).json({ success: true, message: 'Error deletig image!' })
+
+                }
+            }
+
+        } else {
+            return next(new ErrorHandler('unexpected error', 500));
+        }
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
 module.exports = router;

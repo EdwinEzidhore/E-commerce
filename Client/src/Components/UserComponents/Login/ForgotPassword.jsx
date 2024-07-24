@@ -7,6 +7,7 @@ import OTPPage from './OTP';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRecoveryMail } from '../../../Redux/Auth/Auth';
 import ButtonLoading from '../Loading/ButtonLoading';
+import { base_url } from '../../../Config';
 
 function ForgotPassword() {
 
@@ -32,7 +33,7 @@ function ForgotPassword() {
     const checkEmail = (e) => {
         e.preventDefault();
         setBtnLoading(true)
-        axios.get(`http://localhost:3333/api/v2/getUser/?email=${recoveryMail}`)
+        axios.get(`${base_url}/api/v2/getUser/?email=${recoveryMail}`)
             .then((res) => {
                 if (res.status === 200 & res.data.success === true) {
                    
@@ -53,7 +54,7 @@ function ForgotPassword() {
     const generateOTP = () => {
         const loadingToastId = toast.loading('Sending OTP...');
 
-        axios.get(`http://localhost:3333/api/v2/generate-otp/?email=${user}`)
+        axios.get(`${base_url}/api/v2/generate-otp/?email=${user}`)
             .then((res) => {
                
                 if (res.status === 201) {

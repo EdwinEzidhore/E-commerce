@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { RxCross2 } from "react-icons/rx";import { toast } from 'react-toastify';
-;
+import { RxCross2 } from "react-icons/rx";
+import { toast } from 'react-toastify';
+
 
 const Coupon = ({ closeModal, coupons,cartTotal ,activeCoupon}) => {
 
@@ -47,7 +48,7 @@ const Coupon = ({ closeModal, coupons,cartTotal ,activeCoupon}) => {
           <div className='modal-container w-96 bg-[#eeeeee]  fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
               <div className='flex items-center justify-between p-2 bg-white'>
                   <div className='text-sm font-semibold uppercase font-sans'>Apply Coupon</div>
-                  <div className='text-xl'><button onClick={()=>closeModal(null,0)}><RxCross2 /></button></div>
+                  <div className='text-xl'><button onClick={()=>closeModal(activeCoupon,savings)}><RxCross2 /></button></div>
               </div>
               <hr />
               <div className='h-64 overflow-y-scroll px-5'>
@@ -73,7 +74,7 @@ const Coupon = ({ closeModal, coupons,cartTotal ,activeCoupon}) => {
                       <div className='text-sm font-semibold mt-1'>₹{savings }</div>
                   </div>
                   <div className='w-1/2 bg-[#1c7293] text-center'>
-                      <button className='h-full w-full text-sm font-semibold text-white font-sans ' onClick={()=>ApplyCoupon()}>Apply Coupon</button>
+                      <button className='h-full w-full text-sm font-semibold text-white font-sans ' onClick={ApplyCoupon}>Apply Coupon</button>
                   </div>
               </div>
           </div>

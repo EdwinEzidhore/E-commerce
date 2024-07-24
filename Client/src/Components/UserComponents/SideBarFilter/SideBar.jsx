@@ -15,9 +15,9 @@ const SideBar = React.memo(({ brands,
   
   return (
     <div className={`${toggleFilter? 'sm:col-span-12 w-full  ':'sm:hidden'} lg:static lg:z-0 lg:grid lg:col-span-2 border pl-5 lg:pt-5 h-fit shadow-md`}>
-          <form action="">
+          <form >
           <div className='flex justify-evenly my-5'>
-            <div className=' h-auto bg-[#1c7293] text-white font-semibold rounded-md'><button className='py-2 px-3' onClick={() => handleClearBtn()}>Clear Filters</button></div>
+            <div className=' h-auto bg-[#1c7293] text-white font-semibold rounded-md'><button className='py-2 px-3' onClick={ handleClearBtn}>Clear Filters</button></div>
             
         </div>
         <div className='uppercase font-semibold mb-4 text-slate-800'>Filter by price</div>

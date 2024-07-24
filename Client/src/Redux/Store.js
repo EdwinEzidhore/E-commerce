@@ -6,6 +6,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import AddressSlice from "./Address/AddressSlice";
 import CartSlice from "./Cart/CartSlice";
 import AuthSlice from './Auth/Auth'
+import AdminAuthslice from './Auth/AdminAuth'
 
 const persistConfig = {
     key: 'root',
@@ -16,7 +17,9 @@ const reducer = combineReducers({
   auth:AuthSlice,
   singleProduct: SingleProductSlice,
   address: AddressSlice,
-  cart:CartSlice,
+  cart: CartSlice,
+  admin:AdminAuthslice,
+ 
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)

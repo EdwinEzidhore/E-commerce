@@ -5,6 +5,7 @@ import { isNaN } from 'formik';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ButtonLoading from '../Loading/ButtonLoading';
+import { base_url } from '../../../Config';
 
 
 function OTPPage({generateOTP}) {
@@ -57,7 +58,7 @@ function OTPPage({generateOTP}) {
 
     const verifyOtp = () => {
         setBtnLoading(true);
-        axios.get(`http://localhost:3333/api/v2/verify-otp/?OTP=${combinedOTP}`)
+        axios.get(`${base_url}/api/v2/verify-otp/?OTP=${combinedOTP}`)
             .then((res) => {
                
                 if (res.status === 201 && res.data.success === true) {

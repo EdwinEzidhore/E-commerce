@@ -74,6 +74,9 @@ const OrderModel = new mongoose.Schema({
     },
     InReturn: {
         type:String
+    },
+    DeliveredOn: {
+        type:String,
     }
 });
 

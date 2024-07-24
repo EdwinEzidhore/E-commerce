@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast,Toaster } from 'react-hot-toast';
 import ButtonLoading from '../Loading/ButtonLoading';
+import {base_url} from '../../../Config'
 
 function Signup() {
     const [userinfo, setUserinfo] = useState({
@@ -85,9 +86,9 @@ function Signup() {
         
         setBtnloading(true);
 
-        axios.post('http://localhost:3333/api/v2/create-user', formData,config)
+        axios.post(`${base_url}/api/v2/create-user`, formData,config)
             .then(res => {
-                console.log(res);
+                
                 if (res.data.success == true) {
                     navigate("/login");
                     toast.success('success', {

@@ -6,6 +6,7 @@ import Nav from '../Nav/Nav';
 import {toast, Toaster } from 'react-hot-toast';
 import UpdateMail from '../Modal/UpdateMail';
 import ButtonLoading from '../Loading/ButtonLoading';
+import { base_url } from '../../../Config';
 
 
 const UserInformation = () => {
@@ -28,7 +29,7 @@ const UserInformation = () => {
 
 
     const getUserInfo = () => {
-        axios.get(`http://localhost:3333/api/v2/getUserInfo`, { withCredentials: true })
+        axios.get(`${base_url}/api/v2/getUserInfo`, { withCredentials: true })
         .then(res => {
         
             setUser(res.data.user_details)
@@ -76,7 +77,7 @@ const UserInformation = () => {
             url=`${name}=${email}`
         }
        
-        axios.post(`http://localhost:3333/api/v2/edit/?${url}`, {},{withCredentials:true})
+        axios.post(`${base_url}/api/v2/edit/?${url}`, {},{withCredentials:true})
             .then((res) => {
                 if (res.status === 201 && res.data.success === true) {
                     getUserInfo();
@@ -102,13 +103,13 @@ const UserInformation = () => {
     const closeModal = () => {
         setEmail_btn(false);
         setModalOpen(false);
-        setemailBtnloading(false)
+        setemailBtnloading(false);
     }
 
 
     const verifyOTP = (code) => {
         if (code) {
-                axios.get(`http://localhost:3333/api/v2/verify-otp/?OTP=${code}`)
+                axios.get(`${base_url}/api/v2/verify-otp/?OTP=${code}`)
                     .then((res) => {
                        
                         if (res.status === 201 && res.data.success === true) {    
@@ -125,7 +126,7 @@ const UserInformation = () => {
     };
 
     const updateEmail = () => {
-        axios.post('http://localhost:3333/api/v2/update-email',  {email} , { withCredentials: true })
+        axios.post(`${base_url}/api/v2/update-email`,  {email} , { withCredentials: true })
             .then((res) => {
                 if (res.status === 201 && res.data.success === true) {
                     toast.success('Email address updated..');
@@ -170,7 +171,7 @@ const UserInformation = () => {
                       }}/>
 
                       {
-                                per_button === true ? <div className='md:ml-7 h-auto bg-[#135D66] text-white flex  w-20 items-center justify-center'>{userBtnloading?<ButtonLoading/>: <button className='p-2 w-full' id='name' name='name'  onClick={(e)=>edituser(e)}>Save</button>}</div>:''
+                                per_button === true ? <div className='md:ml-7 h-auto bg-[#1c7293] font-semibold rounded-md text-white flex  w-20 items-center justify-center'>{userBtnloading?<ButtonLoading/>: <button className='p-2 w-full' id='name' name='name'  onClick={(e)=>edituser(e)}>Save</button>}</div>:''
                       }
                            
                             </div>
@@ -213,7 +214,7 @@ const UserInformation = () => {
                                     setEmail(e.target.value)
                           }}/></div>
                           {
-                                    email_btn === true ? <div className='md:ml-7 h-auto bg-[#135D66] text-white flex  w-20 items-center justify-center'>{ emailBtnloading?<ButtonLoading/>:<button className='p-2 w-full' name='email' onClick={(e)=>edituser(e)}>Save</button>}</div>:''
+                                    email_btn === true ? <div className='md:ml-7 h-auto bg-[#1c7293] font-semibold rounded-md text-white flex  w-20 items-center justify-center'>{ emailBtnloading?<ButtonLoading/>:<button className='p-2 w-full' name='email' onClick={(e)=>edituser(e)}>Save</button>}</div>:''
                       }
 
                                 {modalOpen && <UpdateMail closeModal={closeModal} verifyOTP={verifyOTP} />}

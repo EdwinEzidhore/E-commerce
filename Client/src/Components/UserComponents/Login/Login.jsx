@@ -6,7 +6,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../Redux/Auth/Auth';
 import ButtonLoading from '../Loading/ButtonLoading';
-
+import { base_url } from '../../../Config';
 
 
 function Login() {
@@ -34,7 +34,7 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setBtnLoading(true)
-        await axios.post('http://localhost:3333/api/v2/login', logininfo, { withCredentials: true })
+        await axios.post(`${base_url}/api/v2/login`, logininfo, { withCredentials: true })
             .then((res) => {
                 if (res.data.success == true) {
                    
@@ -50,7 +50,8 @@ function Login() {
             })
             .catch(err => {
                console.log(err);
-                toast.error(err.response.data.message)
+                toast.error(err.response.data.message);
+                setBtnLoading(false)
             });
         
     };

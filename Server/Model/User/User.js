@@ -39,6 +39,10 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default:false,
     },
+    isLoggedin: {
+        type: Boolean,
+        default:false,
+    },
     address: {
         type: mongoose.Schema.Types.ObjectId,
         ref:'addres'

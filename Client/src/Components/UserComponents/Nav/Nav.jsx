@@ -22,6 +22,7 @@ import { TbLogout2 } from "react-icons/tb";
 import { logOutUser } from '../../../Redux/Auth/Auth'; 
 import { logout } from '../../../Redux/Address/AddressSlice'; 
 import { cartlogout } from '../../../Redux/Cart/CartSlice'; 
+import { base_url } from '../../../Config';
 
 const Nav = () => {
       const navigate = useNavigate();
@@ -46,7 +47,7 @@ const Nav = () => {
       
       useEffect(() => {
         
-            axios.get('http://localhost:3333/api/v2/isLoggedIn',{withCredentials:true})
+            axios.get(`${base_url}/api/v2/isLoggedIn`,{withCredentials:true})
                   .then((res) => {
 
                         dispatch(setCartLength(res.data.CartLength));
@@ -63,7 +64,7 @@ const Nav = () => {
       },[searchInput]);
      
       const getSearchItems = () => {
-            axios.get('http://localhost:3333/api/v2/search')
+            axios.get(`${base_url}/api/v2/search`)
                   .then((res) => {
                         let results = res.data.products;
                         results = results.filter((item) => {
@@ -77,7 +78,7 @@ const Nav = () => {
       };
 
       const handleLogOut = () => {
-            axios.get('http://localhost:3333/api/v2/logout',{withCredentials:true})
+            axios.get(`${base_url}/api/v2/logout`,{withCredentials:true})
                 .then((res) => {
                    
                     if (res.status === 200 && res.data.success === true) {
@@ -108,18 +109,10 @@ const Nav = () => {
             <div className='md:flex   lg:justify-center md:justify-between  items-center   md:bg-[#0d1b2a] lg:px-12 md:px-6  md:rounded-full py-2 '>
                   <div className='md:flex lg:space-x-7 md:space-x-3 lg:gap-4 md:gap-3 items-center  tracking-wide'>
                         <div className='relative flex items-center  bg-white rounded-full py-1 px-2 input-container  '>
-                              <input className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none expandable-input ' type="search" placeholder='Search' name="search" id="search" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/> 
+                              <input autoComplete='off' className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none expandable-input ' type="search" placeholder='Search' name="search" id="search" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/> 
                                           {/* <div className='absolute  right-4 search text-xl'><a href="#" className='text-slate-700'><BsSearch /></a></div> */}
                                           <div>{searchInput.length > 0 && <SearchResultsList results={ searchResults} />}</div>
-                                          {/* <div className='p-5 absolute top-10  left-0 right-0  flex flex-col bg-slate-100 sm:w-full md:w-96   rounded-md shadow-md  overflow-y-scroll '>
-                                                {
-                                                      searchResults.map((item,index) => (
-                                                            <div className='mb-4 ' key={index}><button className='text-left text-sm' onClick={()=>getProduct(item)}>{item.description}</button></div>
-                                                      ))
-            
-                                                }
-        
-                                          </div> */}
+
                         </div>
                               <div className='flex sm:justify-between  md:p-0 sm:p-2  ease-out md:text-[white]  uppercase tracking-wider font-light md:bg-transparent sm:bg-[#0d1b2a]'>
                                     <div className=' lg:gap-4 md:space-x-6  md:gap-2 hidden md:block'>
@@ -149,7 +142,7 @@ const Nav = () => {
                                           <div className='flex space-x-1 gap-1 md:hidden '>
                                           {
                                                             user ?
-                                                            user.avatar?<img className='h-8 border rounded-full' src={`http://localhost:3333/${user.avatar.url}`} alt="profile" onClick={()=>navigate('/profile')}/>:<FaUserCircle className='text-2xl' onClick={()=>navigate('/profile')}/>
+                                                            user.avatar?<img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="profile" onClick={()=>navigate('/profile')}/>:<FaUserCircle className='text-2xl' onClick={()=>navigate('/profile')}/>
                                                             : <button className='h-fit text-sm font-semibold bg-orange-400 py-1 px-2 rounded text-white' onClick={() => navigate('/Login')}>Login</button>
                                           }
                                           </div>   
@@ -175,7 +168,7 @@ const Nav = () => {
                         <div className='ml-5'>
                               <button className='text-white text-2xl' onClick={()=>navigate('/profile')}>
                                     {
-                                                      user && user.avatar ? <img className='h-8 border rounded-full' src={`http://localhost:3333/${user.avatar.url}`} alt="profile" /> :
+                                                      user && user.avatar ? <img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="profile" /> :
                                                       <FaUserCircle />
                                     }
                               </button>
@@ -234,7 +227,7 @@ const Nav = () => {
                                     </button>
                                     {
                                           profieInfoOpen && 
-                                          <div className='bg-[#]  shadow-[black] h-fit w-full text-base rounded-md shadow-md'>
+                                          <div className='bg-[#]  shadow-[black] h-fit w-full text-base rounded-md shadow-inner'>
                                                       <ul className='pl-4 py-2 text-slate-300'>
                                                             <li  className='mb-3'><a href="/user-information">Profile Information</a></li>
                                                             <li className='mb-3'><a href="/Address">Manage Address</a></li>
@@ -255,7 +248,7 @@ const Nav = () => {
                                     </button>
                                     {
                                           paymentdropdown && 
-                                          <div className=' shadow-[black] h-fit w-full text-base rounded-md shadow-md'>
+                                          <div className=' shadow-[black] h-fit w-full text-base rounded-md shadow-inner'>
                                                       <ul className='pl-6 py-2 text-slate-300'>
                                                             <li className='mb-3'><a href="/maintenance">Gift Cards</a></li>
                                                             <li className='mb-3'><a href="/maintenance">Saved UPI</a></li>
@@ -276,7 +269,7 @@ const Nav = () => {
                                     </button>
                                     {
                                           myStuffDropdown && 
-                                          <div className='bg-[#383b3d] h-fit w-full text-base rounded-md shadow-md'>
+                                          <div className='shadow-[black] h-fit w-full text-base rounded-md shadow-inner'>
                                                       <ul className='pl-6 py-2 text-slate-300'>
                                                             <li className='mb-3'><a href="/maintenance">My Coupons</a></li>
                                                             <li className='mb-3'><a href="/maintenance">My Reviews and Rating </a></li>
@@ -300,7 +293,7 @@ const Nav = () => {
                                           <div className='flex border-t-2 pt-3'>
                                           <div className='text-3xl text-white'>
                                     {
-                                                user && user.avatar ? <img className='h-8 border rounded-full' src={`http://localhost:3333/${user.avatar.url}`} alt="" />:<FaUserCircle />
+                                                user && user.avatar ? <img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="profile" />:<FaUserCircle />
                                     } 
                                     </div>
                                     <div className='leading-3 ml-1'>

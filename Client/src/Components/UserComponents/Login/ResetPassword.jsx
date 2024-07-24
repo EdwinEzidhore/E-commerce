@@ -4,7 +4,8 @@ import { Toaster} from 'react-hot-toast'
 import { resetPasswordValidation } from '../../../Validators/validate';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { base_url } from '../../../Config';
 
 function ResetPassword() {
 
@@ -21,7 +22,7 @@ function ResetPassword() {
         validateOnChange: false,
         onSubmit: async values => {
             const pass = values.password;
-            axios.post(`http://localhost:3333/api/v2/resetpassword`, { user, pass })
+            axios.post(`${base_url}/api/v2/resetpassword`, { user, pass })
                 .then((res) => {
                    
                     if (res.status === 201 && res.data.success === true) {

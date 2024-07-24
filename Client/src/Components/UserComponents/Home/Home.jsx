@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import Loading from '../Loading/Loading';
 import '../../../css/banner.css';
 import { Carousel } from "flowbite-react";
-
+import { base_url } from '../../../Config';
 
 
 const Home = () => {
@@ -19,8 +19,6 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [networkErr, setNetworkErr] = useState(false);
 
-
-
     useEffect(() => {
         getFeatured();
       
@@ -28,14 +26,12 @@ const Home = () => {
 
 
     const getFeatured = () => {
-        axios.get('http://localhost:3333/api/v2/featured',{withCredentials:true})
+        axios.get(`${base_url}/api/v2/featured`,{withCredentials:true})
         .then((res) => {
             
             setNewArrivals(res.data.products);
             setBrands(res.data.Brands);
-            setLoading(false);
-            
-            
+            setLoading(false);    
         })
         .catch((err) => {
             console.log('this is catch error', err);
@@ -56,7 +52,7 @@ const Home = () => {
     const cart = (product) => {
         let pro_id = product._id;
         
-        axios.get(`http://localhost:3333/api/v2/cart/?id=${product._id}`, { withCredentials: true })
+        axios.get(`${base_url}/api/v2/cart/?id=${product._id}`, { withCredentials: true })
             .then(res => {
                 if (res.data.success == false) {
                     toast.error(res.data.msg);
@@ -72,7 +68,7 @@ const Home = () => {
 
     const setWishList = (product) => {
         const item_id = product._id;
-        axios.post(`http://localhost:3333/api/v2/wishlist/?id=${item_id}`, {},{withCredentials:true})
+        axios.post(`${base_url}/api/v2/wishlist/?id=${item_id}`, {},{withCredentials:true})
             .then((res) => {
                 if (res.status === 200 && res.data.success===true) {
                     navigate('/wishlist');
@@ -180,14 +176,14 @@ const Home = () => {
              
                                     </button>
                                   </div> 
-                                    <img className='h-full w-48 object-contain rounded-lg' src={`http://localhost:3333/${product.productImage[0]}`}  alt="img" onClick={()=>getSingleProduct(product)}/>
+                                    <img className='h-full w-48 object-contain rounded-lg' src={`${base_url}/${product.productImage[0]}`}  alt="img" onClick={()=>getSingleProduct(product)}/>
                               
                           </div>
                                     <div className='text-center text-sm mt-2 tracking-wide text-red-600 font-poppins'>{ true==='Unavailable'?'Currently Unavailable':''}</div>
                               <div className='w-56 p-1 content bg-white'>
                                     <div className='text-xs text-slate-400 uppercase font-semibold mb-1 text-center'>{ product.category}</div>
                                     <div className='md:text-sm sm:text-xs uppercase font-semibold text-slate-600 text-center'>{product.brand }</div>
-                                    <div className='font-semibold md:text-lg sm:text-sm text-[#1e1616] md:leading-5 mb-1 h-12 text-center'><a href='/p' className='hover:text-gray-700 ' onClick={()=>getSingleProduct(product)}>{product.description }</a></div> 
+                                    <div className='font-semibold md:text-lg sm:text-sm text-[#1e1616] line-clamp-1 md:leading-5 mb-1 h-5  text-center'><a href='/p' className='hover:text-gray-700 ' onClick={()=>getSingleProduct(product)}>{product.description }</a></div> 
                               <div className=' space-x-2 items-center justify-between'>
                                   <div className='space-x-3 flex items-center justify-center mt-3'>
                                             <span className='font-semibold  text-lg text-emerald-700'>₹{ product.sellingPrice}</span>
@@ -228,7 +224,7 @@ const Home = () => {
                         brands.length > 0 ? brands.map((item,index) => (
                       
                         <div className=' h-44 md:h-60 bg-red-300 shadow-lg md:w-60 sm:w-40 flex-none md:rounded-lg grid row-span-3 overflow-hidden relative scrollbar-hide' key={index}>
-                        <img className='h-full object-contain hover:scale-105 duration-300' src={`http://localhost:3333/${item.productImage[0]}`} alt="" />
+                        <img className='h-full object-contain hover:scale-105 duration-300' src={`${base_url}/${item.productImage[0]}`} alt="" />
                             <div className='absolute bottom-0 h-auto  w-full bg-gray-300 font-semibold font-serif text-[#100f0f] tracking-wide p-2 uppercase text-center '><span className='md:text-lg sm:text-xs'>{item.brand }</span></div>
                       
                      
@@ -245,60 +241,6 @@ const Home = () => {
             <div className='ad-banner md:container  w-full flex justify-center md:my-12  sm:my-0'>
                 <img className='max-h-full md:w-1/2 sm:w-full' src="/src/images/Black White Bold Fashion Product Promotion Landscape Banner.png" alt="" />
             </div>
-
-
-
-            {/* <div className='featured-cards container mb-16 '>
-                <div className='p-5 tracking-wider text-xl'><span>Featured Products</span></div>
-
-                <div className='flex flex-wrap justify-center   gap-10'>
-                    {
-                        loading===false ?products.map((product, index) => (
-                            <div className='cards bg-gray-50 w-fit h-fit shadow-lg rounded-md overflow-hidden flex flex-col p-1 outline outline-gray-300 hover:scale-105 ease-out duration-200'  key={index}>
-                                <div className='h-60 flex justify-center' onClick={() => getSingleProduct(product)}>
-                                <img className='  object-cover h-full' src={`http://localhost:3333/${product.productImage[0]}`} alt="" />
-                                </div>
-                            
-                            
-                            <div className='p-5 '>
-                                    <div className='w-52'><h2 onClick={() => getSingleProduct(product)} className='cursor-default'>{ product.description}</h2></div>
-                                    <div className='cursor-default'><span onClick={() => getSingleProduct(product)}>Rs.{ product.sellingPrice}</span>
-                                    
-                                        <div className='flex items-center gap-2'><span className='line-through'>{product.originalPrice }</span>
-                                    <span>save upto 20%</span></div>
-                                </div>
-                                <div className='h-auto bg-red-400 w-fit p-2 mt-5 rounded-lg hover:bg-[#c1121f]'>
-                                    <button className='text-white font- uppercase' onClick={()=>cart(product)}>Add to Cart</button>
-                                </div>
-                               
-                            </div>
-                            
-                            </div>
-                        )) :
-                            networkErr === true ?
-                                <div className='flex flex-col'>
-                                    <img className='h-20 object-contain' src="/src/images/delete.png" alt="" />
-                                    <span className='text-slate-500 cursor-default'>Check your Network connection</span>
-                                </div>
-                                
-                                 :
-                                <Loading />
-                    }
-               
-
-                  
-                  
-                   
-                  
-                  
-                    
-                
-
-                </div>
-                
-                
-            </div> */}
-            
 
 
             <Footer/>

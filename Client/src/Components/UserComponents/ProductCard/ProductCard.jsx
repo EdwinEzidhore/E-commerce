@@ -1,4 +1,5 @@
 import React from 'react'
+import {base_url} from '../../../Config'
 
 const ProductCard = React.memo(({ product, AddtoCart, singleProduct, setWishList, toggleFilter }) => {
     
@@ -30,7 +31,7 @@ const ProductCard = React.memo(({ product, AddtoCart, singleProduct, setWishList
                  
                                         </button>
                                       </div> 
-                                        <img className='h-full lg:w-48 object-contain ' src={`http://localhost:3333/${item.productImage[0]}`} alt="img" onClick={()=>singleProduct(item)}/>
+                                        <img className='h-full lg:w-48 object-contain ' src={`${base_url}/${item.productImage[0]}`} alt="img" onClick={()=>singleProduct(item)}/>
                                   
                               </div>
                                         <div className='text-center text-sm lg:mt-2 tracking-wide text-red-600 font-poppins'>{ item.status==='Unavailable'?'Currently Unavailable':''}</div>

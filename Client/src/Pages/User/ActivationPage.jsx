@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom';
-
+import {base_url} from '../../Config'
 
 const ActivationPage = () => {
 
@@ -13,7 +13,7 @@ const ActivationPage = () => {
   useEffect(() => {
     if (activation_token) {
       const sendRequest = async () => {
-        await axios.post(`http://localhost:3333/api/v2/activation`, {
+        await axios.post(`${base_url}/api/v2/activation`, {
           activation_token,
         }).then((response) => console.log(response))
           .catch(err => {

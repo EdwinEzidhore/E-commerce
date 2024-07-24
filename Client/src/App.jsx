@@ -36,6 +36,9 @@ import ForgotPassword from './Components/UserComponents/Login/ForgotPassword';
 import ResetPassword from './Components/UserComponents/Login/ResetPassword';
 import OTP from './Components/UserComponents/Login/OTP';
 import {Protected,LoginProtectedRoute} from './Protected/Protected';
+import EditProductForm from './Components/AdminComponents/EditProductForm';
+import AdminHeader from './Components/AdminComponents/AdminHeader';
+import AdminLoginProtected from './Protected/AdminLoginProtected';
 
 function App() {
 
@@ -43,82 +46,58 @@ function App() {
   let persistor = persistStore(store);
   return (
     <div>
-      <Provider store={store}>
-      <PersistGate persistor={persistor}>
-      <BrowserRouter>
-      <ScrollToTop/>
-        <Routes>
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+            <BrowserRouter>
+              <ScrollToTop/>
+                <Routes>
         
-          {/*User routes */}
+                  {/*User routes */}
          
-              <Route path='/' element={<HomePage />}></Route>
+                  <Route path='/' element={<HomePage />}></Route>
+                  <Route element={<LoginProtectedRoute />}>
+                    <Route path='/login' element={<Loginpage />}></Route>
+                    <Route path='/signup' element={<Signuppage />}></Route>
+                  </Route>
+                  <Route path='/forgot-password' element={< ForgotPassword />}></Route>
+                  <Route element={<Protected />}>
+                    <Route path='/reset-password' element={< ResetPassword/>}></Route>
+                  </Route>
+                  <Route path='/activation/:activation_token' element={<ActivationPage />}></Route>
+                  <Route path='/profile' element={<ProfilePage />}></Route>
+                  <Route path='/p' element={<ProductSinglePage />}></Route>
+                  <Route path='/cart' element={<CartPage />}></Route>
+                  <Route path='/payment' element={<PaymentPage />}></Route>
+                  <Route path='/payment-sucess' element={<PaymentSucesspage />}></Route>
+                  <Route path='/women' element={<Womens />}></Route>
+                  <Route path='/Address' element={<Address />}></Route>
+                  <Route path='/men' element={<Men />}></Route>
+                  <Route path='/cat' element={<CategoryPage />}></Route>
+                  <Route path='/wishlist' element={<Wishlist />}></Route>
+                  <Route path='/orders' element={<Orders />}></Route>
+                  <Route path='/user-information' element={<UserInformation />}></Route>
+                  <Route path='/maintenance' element={<Maintenance />}></Route>
 
-              <Route element={<LoginProtectedRoute />}>
-                <Route path='/login' element={<Loginpage />}></Route>
-                <Route path='/signup' element={<Signuppage />}></Route>
-              </Route>
-
+                  {/*Admin Routess */}
              
-              <Route path='/forgot-password' element={< ForgotPassword />}></Route>
-              {/* <Route path='/verify-otp' element={< OTP />}></Route> */}
+                  <Route path='/Admin' element={<AdminLoginPage />} />
+                  <Route  element={<AdminHeader />} />
+                  <Route element={<AdminLoginProtected />} >
+                    <Route path='/Admin-Home' element={<AdminHomepage />} />
+                    <Route path='/Admin-product' element={ <AdminAddProductpage/>} />
+                    <Route path="/addproduct" element={< AddProductForm />} />
+                    <Route path="/Admin-users" element={<AdminUsers />} />
+                    <Route path="/Admin-orders" element={<AdminOrders />} />
+                    <Route path="/Admin-coupon" element={<AdminCoupon />} />
+                    <Route path="/addCoupon" element={<AddCouponForm />} />
+                    <Route path="/editproduct" element={<EditProductForm/>} />
+                  </Route>
 
-              <Route element={<Protected />}>
-              <Route path='/reset-password' element={< ResetPassword/>}></Route>
-              </Route>
-              
-              <Route path='/activation/:activation_token' element={<ActivationPage />}></Route>
-              <Route path='/profile' element={<ProfilePage />}></Route>
-              <Route path='/p' element={<ProductSinglePage />}></Route>
-              <Route path='/cart' element={<CartPage />}></Route>
-              <Route path='/payment' element={<PaymentPage />}></Route>
-              <Route path='/payment-sucess' element={<PaymentSucesspage />}></Route>
-              <Route path='/women' element={<Womens />}></Route>
-              <Route path='/Address' element={<Address />}></Route>
-              <Route path='/men' element={<Men />}></Route>
-              <Route path='/cat' element={<CategoryPage />}></Route>
-              <Route path='/wishlist' element={<Wishlist />}></Route>
-              <Route path='/orders' element={<Orders />}></Route>
-
-              
-              
-
-              <Route path='/user-information' element={<UserInformation />}></Route>
-             
-
-              
-
-
-
-              
-
-              <Route path='/maintenance' element={<Maintenance />}></Route>
-
-
-
-
-
-
-              
-          
-        
-          {/*Admin Routess */}
-                <Route path='/Admin' element={<AdminLoginPage/> } />   
-                <Route path='/Admin-Home' element={<AdminHomepage />} />
-                <Route path='/Admin-product' element={ <AdminAddProductpage/>} />
-                <Route path="/addproduct" element={< AddProductForm />} />
-              <Route path="/Admin-users" element={<AdminUsers />} />
-              <Route path="/Admin-orders" element={<AdminOrders />} />
-              <Route path="/Admin-coupon" element={<AdminCoupon />} />
-              <Route path="/addCoupon" element={<AddCouponForm/>} />
-              
-              
-              
-          
               </Routes>
               <ToastContainer
               position="top-center"
-                autoClose={5000}
-                hideProgressBar={false}
+                autoClose={3000}
+                hideProgressBar={true}
                 newestOnTop={false}
                 closeOnClick
                 rtl={false}
@@ -128,9 +107,9 @@ function App() {
                 theme="light"
                 transition: Bounce
               />
-          </BrowserRouter>
+            </BrowserRouter>
           </PersistGate>
-          </Provider>
+        </Provider>
     </div>
   )
 }

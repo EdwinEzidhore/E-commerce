@@ -3,6 +3,7 @@ import AdminHeader from '../../Components/AdminComponents/AdminHeader'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { MdDelete } from "react-icons/md";
+import { base_url } from '../../Config';
 
 const AdminCoupon = () => {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ const AdminCoupon = () => {
     }, []);
 
     const getCoupon = () => {
-        axios.get('http://localhost:3333/getCoupon')
+        axios.get(`${base_url}/getCoupon`)
             .then((res) => {
                 console.log(res.data.coupon);
                 setCoupons(res.data.coupon);
@@ -26,7 +27,7 @@ const AdminCoupon = () => {
     const blockCoupon = (coupon) => {
         const coupon_id = coupon._id;
       
-        axios.patch(`http://localhost:3333/block-coupon/?id=${coupon_id}`)
+        axios.patch(`${base_url}/block-coupon/?id=${coupon_id}`)
             .then((res) => {
                 if (res.status === 200 && res.data.success === true) {
                     getCoupon();
@@ -39,7 +40,7 @@ const AdminCoupon = () => {
 
     const deleteCoupon = (coupon) => {
         const coupon_id = coupon._id;
-        axios.delete(`http://localhost:3333/delete-coupon/?id=${coupon_id}`)
+        axios.delete(`${base_url}/delete-coupon/?id=${coupon_id}`)
             .then((res) => {
                 if (res.status === 200 && res.data.success === true) {
                     getCoupon();
