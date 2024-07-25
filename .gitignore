@@ -26,5 +26,5 @@ node_modules
 
 # Ignore environment variables and uploads
 .env
-uploads
+
 Server/Public
