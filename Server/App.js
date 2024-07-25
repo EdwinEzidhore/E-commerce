@@ -11,7 +11,7 @@ app.use(express.static('Public/ProductImageuploads'));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: true,
+    origin: 'https://www.ezirefashion.store',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
