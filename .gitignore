@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Ignore node_modules and build directories
 node_modules
 dist
 dist-ssr
@@ -23,9 +24,7 @@ dist-ssr
 *.sln
 *.sw?
 
-#server side files
+# Ignore environment variables and uploads
 .env
-package-lock.json
-package.json
-node_modules
 uploads
+Public
