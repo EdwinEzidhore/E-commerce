@@ -137,11 +137,11 @@ const ProductSinglePage = () => {
                                       }
                                  </div>
                               </div>
-                              <div className=' lg:w-4/5   p-5'>
-                                  <div className='flex items-center justify-center '>
-                                      <img className='max-h-full  object-contain' src={`${base_url}/${SingleProduct.productImage[Index]}`} alt="img" />
+                             
+                                  <div className='flex items-center lg:w-4/5 justify-center p-4 '>
+                                      <img className='max-h-full w-full  object-contain' src={`${base_url}/${SingleProduct.productImage[Index]}`} alt="img" />
                                   </div>
-                              </div>
+                             
                     </div>
                               <div className='md:w- lg:w-1/2  p-4'>
                                   <div className='flex flex-col items-center justify-center font-sans'>
@@ -204,7 +204,7 @@ const ProductSinglePage = () => {
                                   
                                     <div className='flex items-center gap-3 mb-6 border p-2 mr-5'>
                                         <div>
-                                          <img className='h-8' src="/src/images/fast-delivery.png" alt="" />
+                                          <img className='h-8' src="/Images/fast-delivery.png" alt="" />
                                         </div>
                                             <div>
                                                 <div className='flex space-x-5 mb-1'>
@@ -291,7 +291,7 @@ const ProductSinglePage = () => {
 
               <div className='md:container md:h-48  mt-5 border bg-white shadow-lg'>
                   
-                  <img className='h-full w-full object-contain md:object-cover border shadow-lg' src="/src/images/online-shopping-on-phone-buy-sell-business-digital-web-banner-application-money-advertising-payment-ecommerce-illustration-search-vector.jpg" alt="" />
+                  <img className='h-full w-full object-contain md:object-cover border shadow-lg' src="/Images/online-shopping-on-phone-buy-sell-business-digital-web-banner-application-money-advertising-payment-ecommerce-illustration-search-vector.jpg" alt="" />
                 
               </div>
 

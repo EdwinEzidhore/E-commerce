@@ -158,7 +158,7 @@ const Wishlist = () => {
                                  </div>
                               :
                                 <div className='flex items-center justify-center flex-col h-96'>
-                                  <div className='h-52'><img className='h-full' src="/src/images/10194.jpg" alt="img" /></div>
+                                  <div className='h-52'><img className='h-full' src="/Images/10194.jpg" alt="img" /></div>
                                   {
                                       isUserErr?        <div>
                                       <div className='text-lg font-semibold tracking-wider text-slate-700'>Please Login to add Items</div>

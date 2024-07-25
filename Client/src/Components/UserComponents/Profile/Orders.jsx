@@ -303,7 +303,7 @@ const Orders = () => {
               )) :
                   
                   <div className='flex justify-center items-center mt-12 flex-col'>
-                      <div className='h-48 '><img className='h-full' src="src/images/8401.jpg" alt="" /></div>
+                      <div className='h-48 '><img className='h-full' src="/Images/8401.jpg" alt="" /></div>
                       <div><h1 className=''>No results Found!</h1></div>
                       <div className='mt-5 text-xl font font-semibold tracking-wider text-slate-600'>Don't Wait, Order Now!</div>
                   </div>

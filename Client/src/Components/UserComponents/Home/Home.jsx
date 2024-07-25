@@ -94,17 +94,17 @@ const Home = () => {
             <Carousel>
                             <div className='w-full h-full flex '>
                                 {/* <div className=' max-h-full w-2/5 bg-red-300'>heading</div> */}
-                                <div className=' w-full max-h-full'><img className='h-full w-full object-cover object-center rounded-xl ' src="src/images/Simple Modern Photo Collage Autumn Fashion Sale Banner.png" alt="..." /></div>
+                                <div className=' w-full max-h-full'><img className='h-full w-full object-cover object-center rounded-xl ' src="/Images/Simple Modern Photo Collage Autumn Fashion Sale Banner.png" alt="..." /></div>
                             </div>
 
                             <div className='w-full h-full flex '>
                                 {/* <div className=' max-h-full w-2/5 bg-red-300'>heading</div> */}
-                                <div className=' w-full max-h-full'><img className='h-full w-full object-cover object-center rounded-xl' src="src/images/Simple Modern Photo Collage Autumn Fashion Sale Banner (1).png" alt="..." /></div>
+                                <div className=' w-full max-h-full'><img className='h-full w-full object-cover object-center rounded-xl' src="/Images/Simple Modern Photo Collage Autumn Fashion Sale Banner (1).png" alt="..." /></div>
                             </div>
 
                             <div className='w-full h-full flex '>
                                 {/* <div className=' max-h-full w-2/5 bg-red-300'>heading</div> */}
-                                <div className=' max-h-full w-full'><img className='h-full w-full object-cover object-center rounded-xl' src="src/images/Gray Minimalist Fashion Big Sale Banner (1).png" alt="..." /></div>
+                                <div className=' max-h-full w-full'><img className='h-full w-full object-cover object-center rounded-xl' src="/Images/Gray Minimalist Fashion Big Sale Banner (1).png" alt="..." /></div>
                             </div>
                 
 
@@ -113,7 +113,7 @@ const Home = () => {
  
             <div className='sm:grid sm:grid-cols-2 sm:place-items-center md:flex flex-wrap justify-evenly my-10 p-5 '>
                 <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
-                    <div className='h-10 md:h-12 ' ><img className='h-full ' src="src/images/save-money.png" alt="" /></div>
+                    <div className='h-10 md:h-12 ' ><img className='h-full ' src="/Images/save-money.png" alt="" /></div>
                     <div >
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>Free Delivery</h1>
                         <h4 className='text-xs md:text-sm tracking-wide text-gray-500 '>For all purchases </h4>
@@ -121,7 +121,7 @@ const Home = () => {
                 </div>
 
                 <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
-                    <div className='h-10 md:h-12'><img className='h-full' src="/src/images/delivery-status.png" alt="" /></div>
+                    <div className='h-10 md:h-12'><img className='h-full' src="/Images/delivery-status.png" alt="" /></div>
                     <div>
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>30 Days Return </h1>
                         <h4 className='text-xs md:text-sm tracking-wide text-gray-500 '>after deivery </h4>
@@ -129,7 +129,7 @@ const Home = () => {
                 </div>
 
                 <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
-                    <div className='h-10 md:h-12'><img className='h-full' src="/src/images/secure-payment (1).png" alt="" /></div>
+                    <div className='h-10 md:h-12'><img className='h-full' src="/Images/secure-payment (1).png" alt="" /></div>
                     <div>
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>Secure Payment</h1>
                         <h4 className='text-xs md:text-sm tracking-wide text-gray-500 '>100% secure payment </h4>
@@ -137,7 +137,7 @@ const Home = () => {
                 </div>
 
                 <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
-                    <div className='h-10 md:h-12'><img className='h-full' src="/src/images/customer-support.png" alt="" /></div>
+                    <div className='h-10 md:h-12'><img className='h-full' src="/Images/customer-support.png" alt="" /></div>
                     <div>
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>24/7 Support</h1>
                         <h4 className='text-xs md:text-sm tracking-wide text-gray-500 '>Dedicated support </h4>
@@ -154,7 +154,7 @@ const Home = () => {
                     {
                         newArrivals.length > 0 ? newArrivals.map((product) => (
                             <div className='card h-fit relative  p-4 w-fit  sm:w-auto rounded-lg flex-none   shadow-lg bg-slate-50' key={product._id} >
-                            <img className=' h-12 z-10 absolute left-0 top-0 drop-shadow-md' src="/src/images/new (1).png" alt="products" />
+                            <img className=' h-12 z-10 absolute left-0 top-0 drop-shadow-md' src="/Images/new (1).png" alt="products" />
                               
                               <div className='relative group h-56   flex items-center justify-center md:hover:scale-105 transition duration-500 '>
                                   <div className='absolute hidden group-hover:flex rounded-full   bg-red-100 hover:bg-red-200 heart '>
@@ -203,12 +203,12 @@ const Home = () => {
             </div>
 
             <div className="wrapper container  p-5 h-32 flex flex-wrap  items-center border md:shadow-lg">
-                <div className='item item1 '><img className='h-16 md:h-28  object-center object-contain' src="/src/images/brands/adidas.svg" alt="" /></div>
-                <div className='item item2 '><img className='h-16 md:h-28  object-center object-contain'  src="/src/images/brands/armani (1).svg" alt="" /></div>
-                <div className='item item3 '><img className='h-16 md:h-28  object-center object-contain'  src="/src/images/brands/armani.svg" alt="" /></div>
-                <div className='item item4 '><img className='h-16 md:h-28  object-center object-contain'  src="/src/images/brands/avirex.svg" alt="" /></div>
-                <div className='item item5 '><img className='h-16 md:h-28  object-center object-contain'  src="/src/images/brands/boss.svg" alt="" /></div>
-                <div className='item item6 '><img className='h-16 md:h-28  object-center object-contain'  src="/src/images/brands/calvin.svg" alt="" /></div>
+                <div className='item item1 '><img className='h-16 md:h-28  object-center object-contain' src="/Images/brands/adidas.svg" alt="" /></div>
+                <div className='item item2 '><img className='h-16 md:h-28  object-center object-contain'  src="/Images/brands/armani (1).svg" alt="" /></div>
+                <div className='item item3 '><img className='h-16 md:h-28  object-center object-contain'  src="/Images/brands/armani.svg" alt="" /></div>
+                <div className='item item4 '><img className='h-16 md:h-28  object-center object-contain'  src="/Images/brands/avirex.svg" alt="" /></div>
+                <div className='item item5 '><img className='h-16 md:h-28  object-center object-contain'  src="/Images/brands/boss.svg" alt="" /></div>
+                <div className='item item6 '><img className='h-16 md:h-28  object-center object-contain'  src="/Images/brands/calvin.svg" alt="" /></div>
                 <div className='item item7 hidden md:flex' ><img className='h-8 md:h-12  object-center object-contain' src="/src/images/brands/chanel.svg" alt="" /></div>
                 <div className='item item8 hidden md:flex' ><img className='h-8 md:h-12  object-center object-contain' src="/src/images/brands/gucci.svg" alt="" /></div>
 
@@ -239,7 +239,7 @@ const Home = () => {
             </div>
 
             <div className='ad-banner md:container  w-full flex justify-center md:my-12  sm:my-0'>
-                <img className='max-h-full md:w-1/2 sm:w-full' src="/src/images/Black White Bold Fashion Product Promotion Landscape Banner.png" alt="" />
+                <img className='max-h-full md:w-1/2 sm:w-full' src="/Images/Black White Bold Fashion Product Promotion Landscape Banner.png" alt="" />
             </div>
 
 

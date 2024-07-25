@@ -240,7 +240,7 @@ const CartPage = () => {
           {
               loading && networkErr===false? <div className=' h-96 flex items-center justify-center'><Loading /></div> :
               <div className={networkErr===true?'flex flex-col items-center justify-center h-96':'hidden'}>
-              <img className='sm:h-16 md:h-20 object-contain' src="/src/images/delete.png" alt="" />
+              <img className='sm:h-16 md:h-20 object-contain' src="/Images/delete.png" alt="" />
               <span className='text-slate-500 cursor-default'>Check your Network connection</span>
           </div>
           }
@@ -372,7 +372,7 @@ const CartPage = () => {
 
                           <div className="box-2 hidden lg:block">
                               
-                              <div className='h-20 my-4 shadow-md'><img className='h-full w-full object-cover' src="/src/images/happy-valentine-s-day-sale-banner-or-promotion-on-blue-background-online-shopping-store-with-mobile-credit-cards-and-shop-elements-illustration-free-vector.jpg" alt="" /></div>
+                              <div className='h-20 my-4 shadow-md'><img className='h-full w-full object-cover' src="/Images/happy-valentine-s-day-sale-banner-or-promotion-on-blue-background-online-shopping-store-with-mobile-credit-cards-and-shop-elements-illustration-free-vector.jpg" alt="" /></div>
                           </div>
 
                                   <div className="box-3  p-4 bg-[white] shadow-lg sticky top-20 h-80 rounded-md">
@@ -435,7 +435,7 @@ const CartPage = () => {
                                                   }}/>
                                                   <label htmlFor="home" className='text-sm font-semibold text-slate-700 font-sans'>Cash on Delivery</label>
                                                   <div>
-                                                      <img className='h-9' src="/src/images/cash-on-delivery.png" alt="" />
+                                                      <img className='h-9' src="/Images/cash-on-delivery.png" alt="" />
                                                   </div>
                                               </div>
                                                 
@@ -446,7 +446,7 @@ const CartPage = () => {
                                                 
                                                   <label htmlFor="online" className='font-semibold text-sm font-sans text-slate-700'>Online Payment</label> 
                                                   <div>
-                                                      <img className='h-9' src="/src/images/online-payment.png" alt="online" />
+                                                      <img className='h-9' src="/Images/online-payment.png" alt="online" />
                                                  </div>
                                               </div>
                                               
@@ -485,7 +485,7 @@ const CartPage = () => {
 
                   
                   <div className={loading===false && !networkErr? 'flex justify-center items-center h-fit flex-col relative top-10':'hidden'}>
-                  <div className='sm:h-48 md:h-72'><img className='h-full' src="/src/images/undraw_undraw_undraw_undraw_undraw_undraw_shopping_bags_2ude_-1-_mnw3_-2-_q7y0_muk6_-2-_l1mh_(2)_m4xj.png" alt="" /></div>
+                  <div className='sm:h-48 md:h-72'><img className='h-full' src="/Images/undraw_undraw_undraw_undraw_undraw_undraw_shopping_bags_2ude_-1-_mnw3_-2-_q7y0_muk6_-2-_l1mh_(2)_m4xj.png" alt="" /></div>
                   <div className='sm:text-lg md:text-2xl font-bold'>Hey, it feels so light!</div>
                   {
                       loginerr === true ? <p className='font-semibold text-md mt-4 text-slate-600'>Please login to add product <button className='h-auto p-1 bg-red-200 rounded-md text-red-500 uppercase ml-3' onClick={()=>navigate('/login')}>Login</button></p> :

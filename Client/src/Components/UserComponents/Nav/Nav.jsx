@@ -142,7 +142,8 @@ const Nav = () => {
                                           <div className='flex space-x-1 gap-1 md:hidden '>
                                           {
                                                             user ?
-                                                            user.avatar?<img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="profile" onClick={()=>navigate('/profile')}/>:<FaUserCircle className='text-2xl' onClick={()=>navigate('/profile')}/>
+                                                                  user.avatar ?
+                                                                        <img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="" onClick={() => navigate('/profile')} /> : <FaUserCircle className='text-2xl' onClick={() => navigate('/profile')} />
                                                             : <button className='h-fit text-sm font-semibold bg-orange-400 py-1 px-2 rounded text-white' onClick={() => navigate('/Login')}>Login</button>
                                           }
                                           </div>   
