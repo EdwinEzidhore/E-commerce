@@ -4,7 +4,7 @@ import {add} from '../../../Redux/SingleProduct/SingleProductSlice'
 import { useNavigate } from 'react-router-dom';
 
 
-const SearchResultsList = ({ results }) => {
+const SearchResultsList = ({ results,closeSearch }) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -18,7 +18,7 @@ const SearchResultsList = ({ results }) => {
         
           {
               results.map((item,index) => (
-                  <div className='mb-4 ' key={index}><button className='text-left text-sm' onClick={()=>getProduct(item)}>{item.description}</button></div>
+                  <div className='mb-4 ' onClick={closeSearch(false)} key={index}><button className='text-left text-sm' onClick={()=>getProduct(item)}>{item.description}</button></div>
                 ))
               
          }

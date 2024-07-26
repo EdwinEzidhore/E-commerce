@@ -10,6 +10,8 @@ app.use('/', express.static('uploads'));
 app.use(express.static('Public/ProductImageuploads'));
 app.use(express.json());
 app.use(cookieParser());
+
+
 app.use(cors({
     origin: 'https://www.ezirefashion.store',
     credentials: true,

@@ -250,27 +250,27 @@ const CartPage = () => {
               
                 <div className='lg:grid lg:grid-cols-12 bg-slate-50 font-robo '>
                   <div className='grid lg:col-start-1   xl:col-start-2   col-end-8 p-3'>
-                      <div className=' items-center justify-between p-4  bg-white shadow-md h-fit rounded-md'>
+                      <div className=' items-center justify-between sm:p-2 md:p-4  bg-white shadow-md h-fit rounded-md'>
                               {activeAddress!=null &&  <div className='text-sm font-semibold mb-3'>Deliver to:</div>}
-                                  <div className='flex justify-between items-center'>
+                                  <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
                                       
                                       
                                       {
                                           activeAddress!=null?
                                               
-                                            <div className='w-18 md:ml-2 flex items-center'>
+                                            <div className='w-full md:w-auto md:ml-2 flex items-center'>
                                                 <div className='hidden md:block h-3 w-3 border rounded-full outline outline-1 outline-slate-400 bg-[#15b315]'></div>
                                                 <div className='flex flex-col ml-2' >
                                                     <div className='text-sm w-full sm:w-fit'>{activeAddress.Name }</div>
-                                                  <span className=' font-medium text-slate-600 text-sm  md:tracking-wide' >{activeAddress.main_address}</span>
-                                                  <div><span className='text-sm tracking-wide text-gray-400 mr-2 font-semibold'>landmark:</span><span className='text-sm'>{activeAddress.landmark }</span></div>
+                                                  <span className=' font-medium text-slate-600 text-sm  md:tracking-wide w-fit' >{activeAddress.main_address}</span>
+                                                  <div><span className='text-sm tracking-wide text-gray-400 mr-2 font-semibold w-fit'>landmark:</span><span className='text-sm'>{activeAddress.landmark }</span></div>
                                                   <span className=' text-slate-600 text-sm  md:tracking-wide'><span className='text-slate-800'>ph:</span> {activeAddress.phoneNumber }</span>
                                                 
                                                 </div>
   
                                               </div> :
                                               
-                                              <div className='text-slate-500'>No Active Address added</div>
+                                              <div className='text-slate-500 text-sm'>No Active Address added</div>
                                     
                                     
 
@@ -278,7 +278,7 @@ const CartPage = () => {
                                       
                                      
                                     
-                                      <div className=' sm:text-xs md:text-sm border   rounded-md  bg-[#1c7293] text-white'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
+                                      <div className='sm:mt-2 md:mt-0 sm:text-xs md:text-sm border   rounded-md  bg-[#1c7293] text-white flex-shrink-0 w-fit'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
                                   </div>
 
                       </div>
@@ -297,8 +297,8 @@ const CartPage = () => {
                                 </div>
                                     <div className='w-full'>
                                           <h1 className='sm:text-xs md:text-sm font-semibold text-slate-500'>{item.productID.brand }</h1>
-                                      <div className='sm:w-52 md:w-80 '><h4 className='mt-1 sm:text-sm md:text-base  truncate  '>{item.productID.description }</h4></div>
-                                    <h5 className='sm:text-xs md:text-sm text-slate-500 '>sold by ethinic fashion</h5>
+                                      <div className='sm:w-full md:w-80 '><h4 className='mt-1 sm:text-sm md:text-base  truncate  '>{item.productID.description }</h4></div>
+                                    <h5 className='sm:text-xs md:text-sm text-slate-500 w-fit'>sold by ethinic fashion</h5>
                                     
                                     <div className='flex items-center  md:space-x-5 mt-3 md:gap-5 sm:gap-3 mb-2 '>
                                               <button className='h-auto bg-gray-200  px-2'>size: <span className='font-semibold md:text-sm sm:text-xs me'>{ item.productID.Details.size}</span></button>
@@ -352,7 +352,7 @@ const CartPage = () => {
 
                   <div className='grid col-start-8 lg:col-end-13 xl:col-end-12  p-3'>
                       <div>
-                          <div className='box-1 rounded-md bg-white p-3 shadow-md'>
+                          <div className='box-1 rounded-md bg-white p-3 shadow-md sm:mb-2 md:mb-0'>
                               <div className='mb-3'><span className='text-slate-600 font-semibold text-sm '>Coupons</span></div>
                               <div className='flex justify-between'>
                                   <div className='flex items-center space-x-3'>
@@ -489,7 +489,7 @@ const CartPage = () => {
                   <div className='sm:text-lg md:text-2xl font-bold'>Hey, it feels so light!</div>
                   {
                       loginerr === true ? <p className='font-semibold text-md mt-4 text-slate-600'>Please login to add product <button className='h-auto p-1 bg-red-200 rounded-md text-red-500 uppercase ml-3' onClick={()=>navigate('/login')}>Login</button></p> :
-                          <p className='font-semibold text-base mt-4 text-slate-600'>There is nothing in your cart. Let's add some items</p>
+                          <div className='text-center'><p className='font-semibold text-base mt-4 text-slate-600 text-center'>There is nothing in your cart. Let's add some items</p></div>
                       
                   }
                   {

@@ -43,6 +43,7 @@ const Nav = () => {
       
       const cartLength = useSelector(state => state.cart.length);
       const user = useSelector((state) => state.auth.auth.user);
+      const [openSearchresults, setOpenSearchresults] = useState(false);
       
       
       useEffect(() => {
@@ -68,7 +69,7 @@ const Nav = () => {
                   .then((res) => {
                         let results = res.data.products;
                         results = results.filter((item) => {
-                              return searchInput && item && item.name && item.name.toLowerCase().includes(searchInput) || item.description.toLowerCase().includes(searchInput);
+                              return searchInput && item && item.name && item.name.toLowerCase().includes(searchInput.toLowerCase()) || item.description.toLowerCase().includes(searchInput.toLowerCase());
                         });
                         setSearchResults(results);
                   })
@@ -109,9 +110,9 @@ const Nav = () => {
             <div className='md:flex   lg:justify-center md:justify-between  items-center   md:bg-[#0d1b2a] lg:px-12 md:px-6  md:rounded-full py-2 '>
                   <div className='md:flex lg:space-x-7 md:space-x-3 lg:gap-4 md:gap-3 items-center  tracking-wide'>
                         <div className='relative flex items-center  bg-white rounded-full py-1 px-2 input-container  '>
-                              <input autoComplete='off' className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none expandable-input ' type="search" placeholder='Search' name="search" id="search" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/> 
+                              <input autoComplete='off' className=' bg-[#e0e6ef]  md:w-72 sm:w-full  rounded-full md:py-1 md:px-4 px-5 py-2 outline-none expandable-input ' type="search" placeholder='Search' name="search" id="search" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)} onClick={()=>setOpenSearchresults(true)}/> 
                                           {/* <div className='absolute  right-4 search text-xl'><a href="#" className='text-slate-700'><BsSearch /></a></div> */}
-                                          <div>{searchInput.length > 0 && <SearchResultsList results={ searchResults} />}</div>
+                                          <div>{searchInput.length > 0 && openSearchresults && <SearchResultsList results={searchResults} closeSearch={setOpenSearchresults } />}</div>
 
                         </div>
                               <div className='flex sm:justify-between  md:p-0 sm:p-2  ease-out md:text-[white]  uppercase tracking-wider font-light md:bg-transparent sm:bg-[#0d1b2a]'>

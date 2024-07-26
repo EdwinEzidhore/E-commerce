@@ -161,11 +161,11 @@ const Orders = () => {
               orders.length > 0 ? orders.map((item,index) => (
           
                   item.orderStatus!==''?
-                <div className='card  border p-5 flex justify-between xl:space-x-4 shadow-lg mb-2 relative' key={index} >
+                <div className='card  border p-3 md:p-5 flex justify-between xl:space-x-4 shadow-lg mb-2 relative' key={index} >
                 <div className='h-28  flex  items-center justify-center' >
                     <img className='h-full w-28 object-contain' src={`${base_url}/${item.image_url}`} alt="img" />
                 </div>
-                <div className='hidden xl:block w-30'>
+                <div className='hidden xl:block xl:w-30'>
                           <div><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
                           <div className='max-w-40 font-semibold font-sans leading-5'>{item.description }</div>
                           <div className='flex items-center' >
@@ -176,12 +176,12 @@ const Orders = () => {
                 <div className='hidden xl:block'>
                         <span className='font-semibold text-emerald-600'>₹{ item.price}</span>
                 </div>
-                      <div className='  xl:w-40'>
+                      <div className='  xl:w-40 ml-2'>
                               <div className='font-semibold uppercase text-sm tracking-wide text-slate-800'>{item.orderStatus === 'Delivered' || item.orderStatus === 'Returned'? 'Delivered to:':'Deliver to'}</div>
-                              <div className='text-sm font-sans font-semibold text-slate-600 w-48 leading-4'>{item.address.main_address}</div>
+                              <div className='text-sm font-sans  text-slate-600 w-48 leading-4'>{item.address.main_address}</div>
                               <div className='block xl:hidden mt-2'>
                               <div className='leading-3'><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
-                              <div className='w-36  text-sm font-semibold font-sans truncate'>{item.description }</div>
+                              <div className='w-full text-sm font-semibold font-sans truncate'>{item.description }</div>
                               </div>
                       </div>
                       {
@@ -231,7 +231,7 @@ const Orders = () => {
                                               modal &&
                                               <div className='modal fixed top-0 left-0 right-0 bottom-0 z-10'>
                                               <div className="overlay w-full h-full backdrop-blur-sm"></div>
-                                                <div className='modal-content absolute top-1/2 left-1/2 h-fit w-96 -translate-x-1/2 -translate-y-1/2  bg-slate-100 rounded-md overflow-hidden '>
+                                                <div className='modal-content container absolute top-1/2 left-1/2 h-fit w-full md:w-96 -translate-x-1/2 -translate-y-1/2  bg-slate-100 rounded-md overflow-hidden '>
                                                           <div className='bg-[#40A2E3] h-auto py-2 px-2 text-white font-semibold flex items-center justify-between'>
                                                               <div>Request Return</div>
                                                               <div> <button className='modal-close text-2xl' onClick={()=>setToggleModal(false)}><IoChevronBack /></button></div>
@@ -304,8 +304,8 @@ const Orders = () => {
                   
                   <div className='flex justify-center items-center mt-12 flex-col'>
                       <div className='h-48 '><img className='h-full' src="/Images/8401.jpg" alt="" /></div>
-                      <div><h1 className=''>No results Found!</h1></div>
-                      <div className='mt-5 text-xl font font-semibold tracking-wider text-slate-600'>Don't Wait, Order Now!</div>
+                      <div className='text-center'><h1 className=''>No results Found!</h1></div>
+                      <div className='mt-5 text-xl font font-semibold tracking-wider text-slate-600 text-center'>Don't Wait, Order Now!</div>
                   </div>
                       
           }
