@@ -192,7 +192,13 @@ router.get('/logout',isAuthenticated, async (req, res, next) => {
         if (user) {
             const { token } = req.cookies;
             if (token) {
-                res.clearCookie('token');
+                res.cookie("token", null, {
+                    expires: new Date(Date.now()),
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production' ? true : false,
+                    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                    path: '/'
+                  });
 
                 await UserModel.updateOne(
                     { _id: user._id },

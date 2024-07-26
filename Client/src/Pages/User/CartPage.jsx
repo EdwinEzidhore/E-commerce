@@ -250,7 +250,7 @@ const CartPage = () => {
               
                 <div className='lg:grid lg:grid-cols-12 bg-slate-50 font-robo '>
                   <div className='grid lg:col-start-1   xl:col-start-2   col-end-8 p-3'>
-                      <div className=' items-center justify-between sm:p-2 md:p-4  bg-white shadow-md h-fit rounded-md'>
+                      <div className='container flex  items-center justify-between sm:p-2 md:p-4  bg-white shadow-md h-fit rounded-md'>
                               {activeAddress!=null &&  <div className='text-sm font-semibold mb-3'>Deliver to:</div>}
                                   <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
                                       
