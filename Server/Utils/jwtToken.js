@@ -6,9 +6,10 @@ const sendToken = (user, statusCode, res) => {
     //options for cookies
     const options = {
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-        secure:true,
+        secure:process.env.NODE_ENV === 'production'? true: false,
         httpOnly: true,
-        domain: process.env.NODE_ENV === 'production' ? '.ezirefashion.store' : undefined
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+       
     };
     // console.log(token);
 
