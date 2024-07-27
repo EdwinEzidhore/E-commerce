@@ -205,7 +205,7 @@ const Address = () => {
         {
           userAddress.length > 0 && userAddress.map((user, index) => (
             
-            <div className={activeAddress._id===user._id?'border mt-5 p-5 w-full xl:w-1/2 pr-40 relative bg-gray-200 shadow-xl':'border mt-5 p-5 sm:w-full xl:w-1/2 pr-40 relative'} key={index}>
+            <div className={activeAddress._id===user._id?'border mt-5 sm:p-3 md:p-5 w-full xl:w-1/2 md:pr-40 relative bg-gray-200 shadow-xl':'border mt-5 sm:p-3 md:p-5 sm:w-full xl:w-1/2  md:pr-40 relative'} key={index}>
             <div className='absolute right-5 flex items-center space-x-2 gap-2'>
                 <button className='outline outline-1 px-1 text-sky-700 tracking-wide'  onClick={() => setActiveaddress(user)}>
                   {

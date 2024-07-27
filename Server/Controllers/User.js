@@ -85,7 +85,8 @@ router.post('/create-user', upload.single('file'), async (req, res, next) => {
                         public_id: req.file.filename,
                         url: path.join(req.file.filename)
                     }
-                } :{avatar:null})
+                } : { avatar: null }),
+                
                 
             };
             const activationToken = createActivationToken(user);
@@ -141,6 +142,7 @@ router.post('/activation', CatchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("User Already Exists", 400));
         }
         user = await UserModel.create({ name, email, password, avatar });
+        
         sendToken(user, 201, res);
 
     } catch (error) {
