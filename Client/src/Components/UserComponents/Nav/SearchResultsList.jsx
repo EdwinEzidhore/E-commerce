@@ -11,14 +11,15 @@ const SearchResultsList = ({ results,closeSearch }) => {
 
     const getProduct = (product) => {
         dispatch(add(product));
-        navigate('/p');
+      navigate('/p');
+      closeSearch(false);
     }    
   return (
       <div className='p-5 absolute top-10  left-0 right-0 z-50 flex flex-col bg-slate-100 sm:w-full md:w-96   rounded-md shadow-md h-56 overflow-y-scroll '>
         
           {
               results.map((item,index) => (
-                  <div className='mb-4 ' onClick={closeSearch(false)} key={index}><button className='text-left text-sm' onClick={()=>getProduct(item)}>{item.description}</button></div>
+                  <div className='mb-4 '  key={index}><button className='text-left text-sm' onClick={()=>getProduct(item)}>{item.description}</button></div>
                 ))
               
          }

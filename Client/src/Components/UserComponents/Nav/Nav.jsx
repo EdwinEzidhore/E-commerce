@@ -68,7 +68,7 @@ const Nav = () => {
             axios.get(`${base_url}/api/v2/search`)
                   .then((res) => {
                         let results = res.data.products;
-                        let loweredInput = searchInput.toLowerCase();
+                        const loweredInput = searchInput.toLowerCase();
                         results = results.filter((item) => {
                               return searchInput && item && item.name && item.name.toLowerCase().includes(loweredInput) || item.description.toLowerCase().includes(loweredInput);
                         });
