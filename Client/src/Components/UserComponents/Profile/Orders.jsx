@@ -161,9 +161,9 @@ const Orders = () => {
               orders.length > 0 ? orders.map((item,index) => (
           
                   item.orderStatus!==''?
-                <div className='card  border p-3 md:p-5 flex justify-between xl:space-x-4 shadow-lg mb-2 relative' key={index} >
-                <div className='h-28  flex  items-center justify-center' >
-                    <img className='h-full w-28 object-contain' src={`${base_url}/${item.image_url}`} alt="img" />
+                <div className='card  border p-3 md:p-5 flex items-center justify-between xl:space-x-4 shadow-lg mb-2 relative' key={index} >
+                <div className='h-32  flex  items-center justify-center' >
+                    <img className='max-h-full w-fit object-contain' src={`${base_url}/${item.image_url}`} alt="img" />
                 </div>
                 <div className='hidden xl:block xl:w-30'>
                           <div><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
@@ -176,12 +176,12 @@ const Orders = () => {
                 <div className='hidden xl:block'>
                         <span className='font-semibold text-emerald-600'>₹{ item.price}</span>
                 </div>
-                      <div className='  xl:w-40 ml-2'>
-                              <div className='font-semibold uppercase text-sm tracking-wide text-slate-800'>{item.orderStatus === 'Delivered' || item.orderStatus === 'Returned'? 'Delivered to:':'Deliver to'}</div>
-                              <div className='text-sm font-sans  text-slate-600 w-48 leading-4'>{item.address.main_address}</div>
+                      <div className='  xl:w-40 ml-2 h-fit w-full overflow-hidden'>
+                              <div className='font-semibold uppercase text-xs tracking-wide text-slate-800'>{item.orderStatus === 'Delivered' || item.orderStatus === 'Returned'? 'Delivered to:':'Deliver to'}</div>
+                              <div className='text-sm font-sans  text-slate-500 md:w-48 leading-4'>{item.address.main_address}</div>
                               <div className='block xl:hidden mt-2'>
-                              <div className='leading-3'><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
-                              <div className='w-full text-sm font-semibold font-sans truncate'>{item.description }</div>
+                              <div className='leading-3 w-fit'><span className='uppercase text-sm font-semibold text-slate-500'>{item.name}</span></div>
+                              <div className='text-sm font-semibold font-sans truncate'>{item.description }</div>
                               </div>
                       </div>
                       {

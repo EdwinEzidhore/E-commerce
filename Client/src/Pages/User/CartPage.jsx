@@ -249,8 +249,8 @@ const CartPage = () => {
                 <div className='md:container'>
               
                 <div className='lg:grid lg:grid-cols-12 bg-slate-50 font-robo '>
-                  <div className='grid lg:col-start-1   xl:col-start-2   col-end-8 p-3'>
-                      <div className='container flex  items-center justify-between sm:p-2 md:p-4  bg-white shadow-md h-fit rounded-md'>
+                  <div className='lg:grid lg:col-start-1   xl:col-start-2   col-end-8 p-3'>
+                      <div className='sm:p-2 md:p-4  bg-white shadow-md h-fit rounded-md'>
                               {activeAddress!=null &&  <div className='text-sm font-semibold mb-3'>Deliver to:</div>}
                                   <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
                                       
@@ -278,29 +278,29 @@ const CartPage = () => {
                                       
                                      
                                     
-                                      <div className='sm:mt-2 md:mt-0 sm:text-xs md:text-sm border   rounded-md  bg-[#1c7293] text-white flex-shrink-0 w-fit'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
+                                      <div className='sm:mt-3 md:mt-0 sm:text-xs md:text-sm border   rounded-md  bg-[#1c7293] text-white flex-shrink-0 w-fit'><button className='p-1 px-2' onClick={()=>navigate('/Address')}>{activeAddress!=null ?'Change Address':'Add new address'}</button></div>
                                   </div>
 
                       </div>
 
-                      <div className=' p-1'>
+                      <div className='h-fit overflow-hidden'>
                           {
                                       cartItems.products.map((item, index) => (
                                   <div className='sm:border md:border-none sm:mt-1' key={index}>
-                                          <div className={availability===false && item.productID.status==='Unavailable'?'relative card flex  p-3 gap-3 mb-1 h-fit  bg-gray-300 md:shadow-md   rounded-md' :'relative card flex rounded-md p-3 gap-3  h-fit  bg-white md:shadow-md'} key={index}>
+                                          <div className={availability===false && item.productID.status==='Unavailable'?'relative card flex  p-3 gap-3 mb-1 h-fit  bg-gray-300 md:shadow-md   rounded-md overflow-hidden' :'relative card flex rounded-md p-3 gap-3  h-fit  bg-white md:shadow-md overflow-hidden'} key={index}>
                                 <div className='   object-cover flex gap-1'>
   
-                                    <div className={availability===false && item.productID.status==='Unavailable'?'grayscale h-f w-32 flex justify-center item-center':' h-f w-32 flex justify-center item-center '}>
+                                    <div className={availability===false && item.productID.status==='Unavailable'?'grayscale sm:w-24 md:w-32 flex justify-center item-center':' h-f sm:w-24 md:w-32 flex justify-center item-center '}>
                                     <img className='h-full object-cover' src={`${base_url}/${item.productID.productImage[0]}`} alt="img" />
                                     </div>
                                     
                                 </div>
                                     <div className='w-full'>
-                                          <h1 className='sm:text-xs md:text-sm font-semibold text-slate-500'>{item.productID.brand }</h1>
-                                      <div className='sm:w-full md:w-80 '><h4 className='mt-1 sm:text-sm md:text-base  truncate  '>{item.productID.description }</h4></div>
+                                          <h1 className='sm:text-xs md:text-sm font-semibold text-slate-500 w-fit'>{item.productID.brand }</h1>
+                                      <div className='w-1/2 md:w-80 '><h4 className='mt-1 sm:text-sm md:text-base  truncate  '>{item.productID.description }</h4></div>
                                     <h5 className='sm:text-xs md:text-sm text-slate-500 w-fit'>sold by ethinic fashion</h5>
                                     
-                                    <div className='flex items-center  md:space-x-5 mt-3 md:gap-5 sm:gap-3 mb-2 '>
+                                    <div className='flex items-center  md:space-x-5 mt-3 sm:gap-3 md:gap-5  mb-2 w-fit'>
                                               <button className='h-auto bg-gray-200  px-2'>size: <span className='font-semibold md:text-sm sm:text-xs me'>{ item.productID.Details.size}</span></button>
                                         <div className='flex items-center gap-3'>
                                                   

@@ -102,19 +102,19 @@ const Wishlist = () => {
               {
                   !loading ?  <div>
                   {
-                    wishlist.length > 0? <div className='card-wrapper h-fit sm:flex sm:flex-col sm:items-center  container md:grid md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-2 md:w-fit mb-5 mt-5 ' >
+                    wishlist.length > 0? <div className='card-wrapper h-fit sm:flex sm:flex-col sm:items-center px-2 md:px-0  md:container md:grid md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-2 md:w-fit mb-5 mt-5 ' >
                                 {
                                   wishlist.length > 0 && wishlist.map((product, index) => (
                                  
-                                        <div className='shadow-none sm:shadow-md' key={index}>
-                                          <div className=' card relative sm:flex sm:items-center   md:flex-col  h-fit p-3  md:p-4 sm:pb-0 w-full md:w-fit md:rounded-lg flex-none sm:border sm:border-b-0    md:shadow-lg bg-slate-50 '  key={index} >
+                                        <div className='shadow-none sm:shadow-md overflow-hidden' key={index}>
+                                          <div className=' card relative sm:flex sm:items-center   md:flex-col  h-fit p-2  md:p-4  w-full md:w-fit rounded-md md:rounded-lg flex-none sm:border sm:border-b-0    md:shadow-lg bg-slate-50 '  key={index} >
                                             <div className=' hidden md:block absolute   right-3 top-5 outline outline-1 rounded-full text-red-500'><button className='p-2' onClick={()=>removeItem(product)}><MdDelete /></button></div>
-                                           <div className=' group sm:h-32 md:h-56   flex items-center justify-center lg:hover:scale-105 lg:transition lg:duration-500 ' onClick={()=>singleProduct(product)}>
-                                                  <img className='h-full md:w-48 object-contain rounded-lg' src={`${base_url}/${product.productImage[0]}`} alt="img"  ></img>
+                                           <div className=' group sm:h-40 md:h-56   flex items-center justify-center lg:hover:scale-105 lg:transition lg:duration-500 ' onClick={()=>singleProduct(product)}>
+                                                  <img className='max-h-full w-48 object-contain rounded-lg' src={`${base_url}/${product.productImage[0]}`} alt="img"  ></img>
                                                   
                                            </div>
                                            
-                                           <div className=' md:w-56 p-1 content bg-white ml-0 sm:ml-3 md:mb-1'>
+                                           <div className=' md:w-56 p-1 content bg-white ml-0 sm:ml-2 md:mb-1'>
                                                   <div className='text-xs text-slate-400 uppercase font-semibold mb-1 md:text-center sm:text-start '>{ product.category}</div>
                                                   <div className='sm:text-xs md:text-sm uppercase font-semibold text-slate-600 md:text-center sm:text-start'>{product.brand }</div>
                                                   <div className='font-semibold line-clamp-1  md:text-lg text-[#1e1616] md:leading-5 mb-1   sm:text-start md:text-center  w-full '><a href='' className='hover:text-gray-700 w-full' onClick={(e) => singleProduct(product)}>{product.description }</a></div> 

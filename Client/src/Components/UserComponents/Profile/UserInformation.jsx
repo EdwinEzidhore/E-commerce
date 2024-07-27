@@ -210,7 +210,7 @@ const UserInformation = () => {
                               </div>
                               <div>
                                   <div className='flex'>
-                                <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 w-72 text-slate-600' disabled={!email_btn} value={email} onChange={(e) => {
+                                <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 md:w-72 text-slate-600' disabled={!email_btn} value={email} onChange={(e) => {
                                     setEmail(e.target.value)
                           }}/></div>
                           {
