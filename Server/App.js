@@ -11,10 +11,10 @@ app.use(express.static('Public/ProductImageuploads'));
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = process.env.NODE_ENV === 'PRODUCTION' ? 'https://www.ezirefashion.store' : 'http://localhost:5173';
+
 
 app.use(cors({
-    origin:allowedOrigins,
+    origin: 'https://www.ezirefashion.store',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'

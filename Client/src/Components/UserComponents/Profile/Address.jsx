@@ -145,23 +145,23 @@ const Address = () => {
         <form action="" onSubmit={handleSubmit}>
           <div className='md:flex justify-between md:space-x-2 lg:space-x-4 lg:gap-4'>
 
-          <input type="text" name='name' value={address.name} className='sm:w-full  p-2  outline-1 outline-slate-300 spinner sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' maxLength='20'  placeholder='Name' onChange={handleChange} />
+          <input type="text" name='name' value={address.name} className='sm:w-full  p-2  outline-1 outline-slate-300 spinner sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' maxLength='20'  placeholder='Name' required onChange={handleChange} />
          
-            <input type="text" name='phone' value={address.phone} className='sm:w-full  p-2   spinner rounded-md shadow-md focus:outline-none' maxLength='10'  placeholder='10-digit mobile number' onChange={handleChange} />
+            <input type="text" name='phone' value={address.phone} className='sm:w-full  p-2   spinner rounded-md shadow-md focus:outline-none' required maxLength='10'  placeholder='10-digit mobile number' onChange={handleChange} />
           </div>
 
           <div className='md:flex justify-between md:space-x-2 lg:space-x-4 lg:gap-4 my-5'>
-            <input type="text" name='pincode' value={address.pincode} className='p-2   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' placeholder='pincode' onChange={handleChange}/>
-            <input type="text" name='locality' value={address.locality} className='p-2   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' placeholder='Locality' onChange={handleChange}/>
+            <input type="text" required name='pincode' value={address.pincode} className='p-2   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' placeholder='pincode' onChange={handleChange}/>
+            <input type="text" required name='locality' value={address.locality} className='p-2   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md focus:outline-none' placeholder='Locality' onChange={handleChange}/>
 
           </div>
           <div className='mb-5'>
-            <textarea type="text" name='address' value={address.address} className='p-2    w-full h-24 rounded-md shadow-md focus:outline-none' onChange={handleChange}/>
+            <textarea type="text" required name='address' value={address.address} className='p-2    w-full h-24 rounded-md shadow-md focus:outline-none' onChange={handleChange}/>
           </div>
 
           <div className='md:flex md:justify-evenly lg:justify-between my-5 gap-1 lg:gap-4 lg:space-x-4'>
 
-            <select name="state" value={address.state} id="" placeholder='Select state' className='p-2 focus:outline-none    w-full rounded-md shadow-md  ' onChange={handleChange}>
+            <select name="state" required value={address.state} id="" placeholder='Select state' className='p-2 focus:outline-none    w-full rounded-md shadow-md  ' onChange={handleChange}>
             <option  value="">select State</option>
               {
                     states.map((state) => {
@@ -170,19 +170,19 @@ const Address = () => {
               }
             </select>
             
-            <input type="text" name='city' value={address.city} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md ' placeholder='city/district/town' onChange={handleChange} />
+            <input type="text" required name='city' value={address.city} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md ' placeholder='city/district/town' onChange={handleChange} />
             
           </div>
 
           <div className='mb-5 md:flex justify-between  lg:gap-4 lg:space-x-4'>
-            <input type="text" name='landmark' value={address.landmark} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Landmark(optional)' onChange={handleChange}/>
+            <input type="text"  name='landmark' value={address.landmark} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Landmark(optional)' onChange={handleChange}/>
             <input type="text" name='alternate_phone' value={address.alternate_phone}  className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Alternate Phone(optional)' onChange={handleChange}/>
           </div>
           <div>
             <span className='text-sm text-slate-500 '>Address Type</span>
             <div className='my-4 flex space-x-4'>
               <div className='flex gap-2'>
-              <input type="radio" id='Work' value='Work' name='address_type' checked={checked==='Work'} onChange={toggleChange}/>
+              <input  type="radio" id='Work' value='Work' name='address_type' checked={checked==='Work'} onChange={toggleChange}/>
               <label htmlFor="Work">Work</label>
               </div>
               <div className='flex gap-2'>
@@ -203,7 +203,7 @@ const Address = () => {
 
 
         {
-          userAddress.length > 0 ? (
+          activeAddress!==null && userAddress.length > 0 ? (
             userAddress.map((user, index) => (
             
               <div className={activeAddress._id===user._id?'border mt-5 sm:p-3 md:p-5 w-full xl:w-1/2 md:pr-40 relative bg-gray-200 shadow-xl':'border mt-5 sm:p-3 md:p-5 sm:w-full xl:w-1/2  md:pr-40 relative'} key={index}>
@@ -216,7 +216,7 @@ const Address = () => {
                 <button className='text-2xl' onClick={()=>deleteAddress(user)}><MdOutlineDeleteOutline /></button>
               </div>
   
-                <span className='h-fit bg-slate-100 p-1 text-slate-500 text-sm '>{ user.addressType}</span>
+                { user.addAddressType?<span className='h-fit bg-slate-100 p-1 text-slate-500 text-sm '>{ user.addressType}</span>:''}
                 <div className='flex gap-3  md:space-x-4 font-semibold my-3'>
                   <span>{user.Name }</span>
                   <span>{user.phoneNumber }</span>

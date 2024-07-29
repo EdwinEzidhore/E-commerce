@@ -45,7 +45,7 @@ const ProductCard = React.memo(({ product, AddtoCart, singleProduct, setWishList
                                                     <span className='line-through text-slate-400'>₹{item.originalPrice }</span>
                                       </div>
                                     
-                                          <div className='outline rounded-full mt-2 bg-gray-200 outline-stone-200 hover:bg-[#b5b5ff]'>
+                                          <div className='outline rounded-full mt-2 bg-gray-200 outline-stone-200 md:hover:bg-[#b5b5ff]'>
                                               <button onClick={()=>AddtoCart(item)} className='rounded-full  p-1 
                                               relative before:content-[attr(data-tip)] before:absolute before:px-3 before:py-2 before:left-1/2 before:top-0 before:w-max before:max-w-xs before:-translate-x-1/2 before:-translate-y-full  before:bg-[#5555ca] before:text-white before:rounded-md before:opacity-0
                                        before:transition-all before:text-xs

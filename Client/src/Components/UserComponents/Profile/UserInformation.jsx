@@ -7,6 +7,7 @@ import {toast, Toaster } from 'react-hot-toast';
 import UpdateMail from '../Modal/UpdateMail';
 import ButtonLoading from '../Loading/ButtonLoading';
 import { base_url } from '../../../Config';
+import { useSelector } from 'react-redux';
 
 
 const UserInformation = () => {
@@ -21,6 +22,7 @@ const UserInformation = () => {
     const [emailBtnloading, setemailBtnloading] = useState(false);
 
 
+    const isUser = useSelector((state) => state.auth.auth.user);
     const [modalOpen, setModalOpen] = useState(false)
     
     useEffect(() => {
@@ -151,17 +153,19 @@ const UserInformation = () => {
                             <div className='sm:pb-2 md:py-4 my-2'>
                       <span className='md:text-xl font-medium'>Personal Information</span>
                       {
-                          per_button === false ? <button className='ml-7 text-sky-500' onClick={(e) => {
-                              e.preventDefault();
-                              setper_Button(!per_button);
-                              setName('')
-
-                          }}><span className='sm:text-sm md:text-base'>Edit</span></button> : <button className='ml-7 text-sky-500' onClick={(e) => {
-                              e.preventDefault();
-                                  setper_Button(false);
-                                  setName(user.name);
-                                  
-                           }}><span>cancel</span></button>
+                                isUser && (
+                                    per_button === false  ? <button className='ml-7 text-sky-500' onClick={(e) => {
+                                        e.preventDefault();
+                                        setper_Button(!per_button);
+                                        setName('')
+          
+                                    }}><span className='sm:text-sm md:text-base'>Edit</span></button> : <button className='ml-7 text-sky-500' onClick={(e) => {
+                                        e.preventDefault();
+                                            setper_Button(false);
+                                            setName(user.name);
+                                            
+                                     }}><span>cancel</span></button>
+                        )  
                       }
                       
                             </div>
@@ -196,15 +200,17 @@ const UserInformation = () => {
                               <div className='flex py-4 items-center my-2'>
                       <div><span className='md:text-xl font-medium'>Email Address</span></div>
                       {
-                          email_btn === false ? <button className='ml-7 text-sky-500' onClick={(e) => {
-                              e.preventDefault();
-                              setEmail_btn(!per_button);
-                              setEmail('');
-                          }}><span className=' sm:text-sm md:text-base'>Edit</span></button> : <button className='ml-7 text-sky-500' onClick={(e) => {
-                              e.preventDefault();
-                                  setEmail_btn(false);
-                                  setEmail(user.email)
-                           }}><span>cancel</span></button>
+                                isUser && (
+                                    email_btn === false  ? <button className='ml-7 text-sky-500' onClick={(e) => {
+                                        e.preventDefault();
+                                        setEmail_btn(!per_button);
+                                        setEmail('');
+                                    }}><span className=' sm:text-sm md:text-base'>Edit</span></button> : <button className='ml-7 text-sky-500' onClick={(e) => {
+                                        e.preventDefault();
+                                            setEmail_btn(false);
+                                            setEmail(user.email)
+                                     }}><span>cancel</span></button>
+                        )  
                       }
 
                               </div>
