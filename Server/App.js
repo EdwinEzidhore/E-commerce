@@ -11,9 +11,7 @@ app.use(express.static('Public/ProductImageuploads'));
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = process.env.NODE_ENV === 'development'
-  ? ['http://localhost:3000']
-  : ['https://www.ezirefashion.store'];
+const allowedOrigins = process.env.NODE_ENV === 'PRODUCTION' ? 'https://www.ezirefashion.store' : 'http://localhost:5173';
 
 app.use(cors({
     origin:allowedOrigins,
