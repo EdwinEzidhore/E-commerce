@@ -216,7 +216,7 @@ const Address = () => {
                 <button className='text-2xl' onClick={()=>deleteAddress(user)}><MdOutlineDeleteOutline /></button>
               </div>
   
-                { user.addAddressType?<span className='h-fit bg-slate-100 p-1 text-slate-500 text-sm '>{ user.addressType}</span>:''}
+                { user.addressType!==''&&<span className='h-fit bg-slate-100 p-1 text-slate-500 text-sm '>{ user.addressType}</span>}
                 <div className='flex gap-3  md:space-x-4 font-semibold my-3'>
                   <span>{user.Name }</span>
                   <span>{user.phoneNumber }</span>
