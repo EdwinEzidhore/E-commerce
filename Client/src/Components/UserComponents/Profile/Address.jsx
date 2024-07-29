@@ -97,7 +97,7 @@ const Address = () => {
     const getAddress = () => {
       axios.get(`${base_url}/api/v2/get-address`, { withCredentials: true })
         .then((res) => {
-        console.log(res.data.Address);
+        
           setUserAddress(res.data.Address);
          
         dispatch(setAddresses(res.data.Address));
@@ -129,7 +129,7 @@ const Address = () => {
     dispatch(set_active_address(address))
   };
  
-  console.log(userAddress);
+ 
 
   return (
     <div>
@@ -203,41 +203,39 @@ const Address = () => {
 
 
         {
-          userAddress.length > 0 && userAddress.map((user, index) => (
+          userAddress.length > 0 ? (
+            userAddress.map((user, index) => (
             
-            <div className={activeAddress._id===user._id?'border mt-5 sm:p-3 md:p-5 w-full xl:w-1/2 md:pr-40 relative bg-gray-200 shadow-xl':'border mt-5 sm:p-3 md:p-5 sm:w-full xl:w-1/2  md:pr-40 relative'} key={index}>
-            <div className='absolute right-5 flex items-center space-x-2 gap-2'>
-                <button className='outline outline-1 px-1 text-sky-700 tracking-wide'  onClick={() => setActiveaddress(user)}>
-                  {
-                    activeAddress._id===user._id?'Active ':'Set as Active'
-                  }
-                </button>
-              <button className='text-2xl' onClick={()=>deleteAddress(user)}><MdOutlineDeleteOutline /></button>
+              <div className={activeAddress._id===user._id?'border mt-5 sm:p-3 md:p-5 w-full xl:w-1/2 md:pr-40 relative bg-gray-200 shadow-xl':'border mt-5 sm:p-3 md:p-5 sm:w-full xl:w-1/2  md:pr-40 relative'} key={index}>
+              <div className='absolute right-5 flex items-center space-x-2 gap-2'>
+                  <button className='outline outline-1 px-1 text-sky-700 tracking-wide'  onClick={() => setActiveaddress(user)}>
+                    {
+                      activeAddress._id===user._id?'Active ':'Set as Active'
+                    }
+                  </button>
+                <button className='text-2xl' onClick={()=>deleteAddress(user)}><MdOutlineDeleteOutline /></button>
+              </div>
+  
+                <span className='h-fit bg-slate-100 p-1 text-slate-500 text-sm '>{ user.addressType}</span>
+                <div className='flex gap-3  md:space-x-4 font-semibold my-3'>
+                  <span>{user.Name }</span>
+                  <span>{user.phoneNumber }</span>
+                 
+                </div>
+  
+                <div className='leading-5'>{user.main_address}</div>
+                <div> {user.state} - <span className='font-semibold'>{ user.zipcode}</span></div>
+                <div>
+                  
+                  <span><span className='text-sm tracking-wide text-gray-400 mr-2 font-semibold'>Landmark :</span>{user.landmark}</span>
+                </div>
             </div>
+            ))
+          ) : (
+            < div className='flex justify-center items-center text-lg tracking-wider text-slate-600 mt-4'>No saved Address!</div>
+          )   
 
-              <span className='h-fit bg-slate-100 p-1 text-slate-500 text-sm '>{ user.addressType}</span>
-              <div className='flex gap-3  md:space-x-4 font-semibold my-3'>
-                <span>{user.Name }</span>
-                <span>{user.phoneNumber }</span>
-               
-              </div>
-
-              <div className='leading-5'>{user.main_address}</div>
-              <div> {user.state} - <span className='font-semibold'>{ user.zipcode}</span></div>
-              <div>
-                
-                <span><span className='text-sm tracking-wide text-gray-400 mr-2 font-semibold'>Landmark :</span>{user.landmark}</span>
-              </div>
-          </div>
-          ))
-        
-
-      }
-      {
-        userAddress.length ==0 && < div className='flex justify-center items-center text-lg tracking-wider text-slate-600 mt-4'>No saved Address!</div>
-      }
-
-     
+      }     
       </div>
       <div className='sm:block md:hidden'><Footer/></div>
     </div>
