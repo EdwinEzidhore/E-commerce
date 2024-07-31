@@ -39,6 +39,7 @@ import {Protected,LoginProtectedRoute} from './Protected/Protected';
 import EditProductForm from './Components/AdminComponents/EditProductForm';
 import AdminHeader from './Components/AdminComponents/AdminHeader';
 import AdminLoginProtected from './Protected/AdminLoginProtected';
+import Coupons from './Components/UserComponents/Profile/Coupons';
 
 function App() {
 
@@ -75,6 +76,7 @@ function App() {
                   <Route path='/cat' element={<CategoryPage />}></Route>
                   <Route path='/wishlist' element={<Wishlist />}></Route>
                   <Route path='/orders' element={<Orders />}></Route>
+                  <Route path='/coupon' element={<Coupons />}></Route>
                   <Route path='/user-information' element={<UserInformation />}></Route>
                   <Route path='/maintenance' element={<Maintenance />}></Route>
 

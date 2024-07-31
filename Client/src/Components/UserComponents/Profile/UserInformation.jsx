@@ -216,7 +216,7 @@ const UserInformation = () => {
                               </div>
                               <div>
                                   <div className='flex'>
-                                <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 md:w-72 text-slate-600' disabled={!email_btn} value={email} onChange={(e) => {
+                                <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 md:w-72 text-slate-600 font-poppins' disabled={!email_btn} value={email} onChange={(e) => {
                                     setEmail(e.target.value)
                           }}/></div>
                           {
@@ -254,7 +254,7 @@ const UserInformation = () => {
 
                       </form>
 
-                      <div>
+                      <div className='font-poppins'>
                           <div className='font-semibold mb-6'>FAQ's</div>
                           <h4 className='font-semibold sm:my-1 md:my-2 md:text-base sm:text-sm'>What happens when I update my email address (or mobile number)?</h4>
                           <p className='md:mt-4 text-slate-700 md:text-base sm:text-xs'>Your login email id (or mobile number) changes, likewise. You'll receive all your account related communication on your updated email address (or mobile number).</p>
@@ -263,7 +263,7 @@ const UserInformation = () => {
                           <h4 className='font-semibold my-3 md:text-base sm:text-sm'>What happens to my existing  account when I update my email address (or mobile number)?</h4>
                           <p className='md:mt-4 text-slate-700 md:text-base sm:text-xs'>Updating your email address (or mobile number) doesn't invalidate your account. Your account remains fully functional. You'll continue seeing your Order history, saved information and personal details.</p>
                           <h4 className='font-semibold my-3 md:text-base sm:text-sm'>Does my Seller account get affected when I update my email address?</h4>
-                          <p className='md:mt-4 text-slate-700 md:text-base sm:text-xs'>Flipkart has a 'single sign-on' policy. Any changes will reflect in your Seller account also.</p>
+                          <p className='md:mt-4 text-slate-700 md:text-base sm:text-xs'>EZIRE has a 'single sign-on' policy. Any changes will reflect in your Seller account also.</p>
 
                           
                       </div>
@@ -275,3 +275,4 @@ const UserInformation = () => {
 }
 
 export default UserInformation
+

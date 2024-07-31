@@ -20,6 +20,7 @@
     "axios": "^1.6.8",
     "boxicons": "^2.1.4",
     "country-state-city": "^3.2.1",
+    "dayjs": "^1.11.12",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.9.0",
     "formik": "^2.4.6",

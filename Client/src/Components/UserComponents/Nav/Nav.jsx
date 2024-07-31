@@ -146,7 +146,12 @@ const Nav = () => {
                                                             user ?
                                                                   user.avatar ?
                                                                         <img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="" onClick={() => navigate('/profile')} /> : <FaUserCircle className='text-2xl' onClick={() => navigate('/profile')} />
-                                                            : <button className='h-fit text-sm font-semibold bg-orange-400 py-1 px-2 rounded text-white' onClick={() => navigate('/Login')}>Login</button>
+                                                            : <button  onClick={()=>navigate('/Login')} className="p-[3px] relative">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-[#1c7293] to-[#144c7d] rounded-lg" />
+                                                            <div className="px-3 py-1  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent ">
+                                                              Login
+                                                            </div>
+                                                          </button>
                                           }
                                           </div>   
                                           <button className='p-1 text-2xl ml-2 md:hidden' onClick={toggleMenu}><TiThMenu /></button>
@@ -180,7 +185,13 @@ const Nav = () => {
             </div>
             <div className=' space-x-1 gap-1  hidden lg:flex'>
                   {
-                        user ?'': <button className='h-auto bg-orange-400 py-1 px-2 rounded text-white' onClick={()=>navigate('/Login')}>Login</button>
+                                    // user ?'': <button className='h-auto bg-orange-400 py-1 px-2 rounded text-white' onClick={()=>navigate('/Login')}>Login</button>
+                                    user ?'': <button  onClick={()=>navigate('/Login')} className="p-[3px] relative">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-[#1c7293] to-[#144c7d] rounded-lg" />
+                                    <div className="px-5 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                                      Login
+                                    </div>
+                                  </button>
                   }
             </div>
             </nav>
@@ -234,13 +245,12 @@ const Nav = () => {
                                                       <ul className='pl-4 py-2 text-slate-300'>
                                                             <li  className='mb-3'><a href="/user-information">Profile Information</a></li>
                                                             <li className='mb-3'><a href="/Address">Manage Address</a></li>
-                                                            <li className='mb-3'><a href="/maintenance">PAN Information</a></li>
                                                       </ul>
                                           </div>
                                     }
                               </div>
                    
-                              <div className=' text-white mb-1'>
+                              {/* <div className=' text-white mb-1'>
                                     <button className='flex items-center  white  text-xl mb-3' onClick={() => {
                                           setPaymentdropdown((prev) => !prev);
                                           setMystuffdropdown(false);
@@ -259,7 +269,7 @@ const Nav = () => {
                                                       </ul>
                                           </div>
                                     }
-                              </div>
+                              </div> */}
 
                               <div className=' text-white'>
                                     <button className='flex items-center  white  text-xl mb-3' onClick={() => {
@@ -274,9 +284,7 @@ const Nav = () => {
                                           myStuffDropdown && 
                                           <div className='shadow-[black] h-fit w-full text-base rounded-md shadow-inner'>
                                                       <ul className='pl-6 py-2 text-slate-300'>
-                                                            <li className='mb-3'><a href="/maintenance">My Coupons</a></li>
-                                                            <li className='mb-3'><a href="/maintenance">My Reviews and Rating </a></li>
-                                                            {/* <li className='mb-3'><a href="/maintenance">All Notification</a></li> */}
+                                                            <li className='mb-3'><a href="/coupon">My Coupons</a></li>
                                                             <li className='mb-3'><a href="/wishlist">My Whishlist</a></li>
 
                                                       </ul>

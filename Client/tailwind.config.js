@@ -30,7 +30,7 @@ export default {
       fontFamily: {
         'frank-lukh': '"Frank Ruhl Libre", serif',
         'poppins': '"Poppins", sans-serif',
-      'robo':'"Roboto", sans-serif;'
+        'robo':'"Roboto", sans-serif;'
       },
       container: {
         center:true

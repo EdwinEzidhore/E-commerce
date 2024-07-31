@@ -478,8 +478,6 @@ router.get('/getCartItems',isAuthenticated, async (req, res, next) => {
                   return !coupon.redeemed.some((el) => el.user !== userId );
                 });
                 
-                
-                
                 res.status(200).json({
                     success: true,
                     cart: userCart,
@@ -1006,7 +1004,6 @@ router.patch('/return_order', async (req, res, next) => {
     }
 })
 
-// router.get('/women', async (req, res, next) => {
 //     const page = req.query.page;
 //     const pageLimit = 8;
 //     try {
@@ -1306,7 +1303,7 @@ EZIRE Fashion store
     }
 });
 
-router.post('/update-email',isAuthenticated, async (req, res, next) => {
+router.post('/update-email', isAuthenticated, async (req, res, next) => {
     try {
         const { email } = req.body;
         const userID = req.user._id;
@@ -1329,6 +1326,25 @@ router.post('/update-email',isAuthenticated, async (req, res, next) => {
 
        
         
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+
+router.post('/coupons', async (req, res, next) => {
+    try {
+        const user = req.body.user;
+        const coupons = await CouponModel.find({ status: 'Active' });
+        
+        if (user && user!==null) {
+            let filteredCoupons = coupons.filter((coupon) => {
+              return !coupon.redeemed.some((el) => el.user !== user._id );
+            });
+            return res.status(200).json({ success: true, msg: 'coupons', coupons: filteredCoupons });
+        } else {
+            return res.status(200).json({ success: true, msg: 'coupons', coupons: coupons });
+        }
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
