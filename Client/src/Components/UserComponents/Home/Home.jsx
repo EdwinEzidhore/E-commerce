@@ -112,7 +112,7 @@ const Home = () => {
             </div>
  
             <div className='sm:grid sm:grid-cols-2 sm:place-items-center md:flex flex-wrap justify-evenly my-10 p-5 '>
-                <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
+                <div className='flex items-center space-x-2 md:space-x-4 mb-6 md:mb-0'>
                     <div className='h-10 md:h-12 ' ><img className='h-full ' src="/Images/save-money.png" alt="" /></div>
                     <div >
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>Free Delivery</h1>
@@ -120,7 +120,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
+                <div className='flex items-center space-x-2 md:space-x-4 mb-6 md:mb-0'>
                     <div className='h-10 md:h-12'><img className='h-full' src="/Images/delivery-status.png" alt="" /></div>
                     <div>
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>30 Days Return </h1>
@@ -128,7 +128,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
+                <div className='flex items-center space-x-2 md:space-x-4 mb-6 md:mb-0'>
                     <div className='h-10 md:h-12'><img className='h-full' src="/Images/secure-payment (1).png" alt="" /></div>
                     <div>
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>Secure Payment</h1>
@@ -136,7 +136,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className='flex items-center space-x-2 md:space-x-4 mb-4 md:mb-0'>
+                <div className='flex items-center space-x-2 md:space-x-4 mb-6 md:mb-0'>
                     <div className='h-10 md:h-12'><img className='h-full' src="/Images/customer-support.png" alt="" /></div>
                     <div>
                         <h1 className='font-bold tracking-wide font-sans text-gray-800 text-sm md:text-base'>24/7 Support</h1>
@@ -223,7 +223,7 @@ const Home = () => {
                     {
                         brands.length > 0 ? brands.map((item,index) => (
                       
-                        <div className=' h-44 md:h-60 bg-red-300 shadow-lg md:w-60 sm:w-40 flex-none md:rounded-lg grid row-span-3 overflow-hidden relative scrollbar-hide' key={index}>
+                        <div className=' h-44 md:h-60 bg-red-300 shadow-lg md:w-60 sm:w-40 flex-none rounded-tl-lg rounded-br-lg grid row-span-3 overflow-hidden relative scrollbar-hide' key={index}>
                         <img className='h-full object-contain hover:scale-105 duration-300' src={`${base_url}/${item.productImage[0]}`} alt="" />
                             <div className='absolute bottom-0 h-auto  w-full bg-gray-300 font-semibold font-serif text-[#100f0f] tracking-wide p-2 uppercase text-center '><span className='md:text-lg sm:text-xs'>{item.brand }</span></div>
                       

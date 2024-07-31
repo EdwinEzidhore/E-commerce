@@ -175,7 +175,7 @@ const Address = () => {
           </div>
 
           <div className='mb-5 md:flex justify-between  lg:gap-4 lg:space-x-4'>
-            <input type="text"  name='landmark' value={address.landmark} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Landmark(optional)' onChange={handleChange}/>
+            <input type="text" required  name='landmark' value={address.landmark} className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Landmark(optional)' onChange={handleChange}/>
             <input type="text" name='alternate_phone' value={address.alternate_phone}  className='p-2 focus:outline-none   sm:w-full  sm:mb-2 md:mb-0 rounded-md shadow-md' placeholder='Alternate Phone(optional)' onChange={handleChange}/>
           </div>
           <div>

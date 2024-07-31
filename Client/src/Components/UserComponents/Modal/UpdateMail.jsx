@@ -27,7 +27,7 @@ const UpdateMail = ({ closeModal, verifyOTP }) => {
   return (
       <div className='modal-wrapper fixed top-0 left-0 right-0 bottom-0 backdrop-blur-sm z-10 '>
           <Toaster reverseOrder={ false} />
-          <div className="p-4 modal-container  w-96 bg-[#0d1b2a]  fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md">
+          <div className="p-4 modal container  w-96 bg-[#0d1b2a]  fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md">
               <div>
                   
                       <label className='text-slate-400 text-sm font-poppins tracking-wide ' htmlFor="otp">Enter OTP sent to your e-mail</label>

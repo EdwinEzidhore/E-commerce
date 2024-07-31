@@ -157,7 +157,7 @@ const ProductSinglePage = () => {
                                       </div>
                                       <div className='text-2xl font-semibold'>₹{SingleProduct.sellingPrice}</div>
                                       <div className='mt-1 space-x-2'>
-                                          <span className='text-sm text-slate-800'>MRP</span>
+                                          <span className='text-sm text-slate-800'>MRP :</span>
                                           <span className='line-through text-slate-500'>₹{SingleProduct.originalPrice}</span>
                                           <span className='font-light text-slate-900'>(20% OFF)</span>
                                       </div> 
@@ -213,7 +213,7 @@ const ProductSinglePage = () => {
                                                         <span className='line-through'>₹40</span>
                                                 </div>
                                                 <div className='mb-1 flex space-x-3'>
-                                                    <span>Deliveryin</span>
+                                                    <span>Delivery in</span>
                                                     <span>2 days,Tuesday</span>    
                                                 </div>
                                                 <div>

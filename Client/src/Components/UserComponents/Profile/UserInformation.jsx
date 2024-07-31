@@ -141,6 +141,7 @@ const UserInformation = () => {
                 if (err.response.status === 400) {
                     toast.error('unexpected error!');
                 }
+                setemailBtnloading(false)
         })
     }
     return (
@@ -169,13 +170,13 @@ const UserInformation = () => {
                       }
                       
                             </div>
-                            <div className='flex gap-2'>
-                            <input className='p-2 outline outline-1 outline-slate-300 mx-2 text-slate-600 font-poppins tracking-wide' id='name' type="text" disabled={per_button === false} value={Name} onChange={(e) => {
+                            <div className='flex md:gap-2'>
+                            <input className='p-2 outline outline-1 outline-slate-300 text-slate-600 font-poppins tracking-wide' id='name' type="text" disabled={per_button === false} value={Name} onChange={(e) => {
                                 setName(e.target.value);
                       }}/>
 
                       {
-                                per_button === true ? <div className='md:ml-7 h-auto bg-[#1c7293] font-semibold rounded-md text-white flex  w-20 items-center justify-center'>{userBtnloading?<ButtonLoading/>: <button className='p-2 w-full' id='name' name='name'  onClick={(e)=>edituser(e)}>Save</button>}</div>:''
+                                per_button === true ? <div className='ml-1 md:ml-7 h-auto bg-[#1c7293] font-semibold rounded-md text-white flex  w-20 items-center justify-center'>{userBtnloading?<ButtonLoading/>: <button className='p-2 w-full' id='name' name='name'  onClick={(e)=>edituser(e)}>Save</button>}</div>:''
                       }
                            
                             </div>
@@ -216,11 +217,11 @@ const UserInformation = () => {
                               </div>
                               <div>
                                   <div className='flex'>
-                                <div><input type="email" className='p-2 outline outline-1 outline-slate-300 mx-2 md:w-72 text-slate-600 font-poppins' disabled={!email_btn} value={email} onChange={(e) => {
+                                <div><input type="email" className='p-2 outline outline-1 outline-slate-300  md:w-72 text-slate-600 font-poppins' disabled={!email_btn} value={email} onChange={(e) => {
                                     setEmail(e.target.value)
                           }}/></div>
                           {
-                                    email_btn === true ? <div className='md:ml-7 h-auto bg-[#1c7293] font-semibold rounded-md text-white flex  w-20 items-center justify-center'>{ emailBtnloading?<ButtonLoading/>:<button className='p-2 w-full' name='email' onClick={(e)=>edituser(e)}>Save</button>}</div>:''
+                                    email_btn === true ? <div className='ml-1 md:ml-7 h-auto bg-[#1c7293] font-semibold rounded-md text-white flex  w-20 items-center justify-center'>{ emailBtnloading?<ButtonLoading/>:<button className='p-2 w-full' name='email' onClick={(e)=>edituser(e)}>Save</button>}</div>:''
                       }
 
                                 {modalOpen && <UpdateMail closeModal={closeModal} verifyOTP={verifyOTP} />}

@@ -45,7 +45,7 @@ const Coupon = ({ closeModal, coupons,cartTotal ,activeCoupon}) => {
    
   return (
       <div className='modal-wrapper fixed top-0 left-0 right-0 bottom-0 backdrop-blur-sm z-10'>
-          <div className='modal-container w-96 bg-[#eeeeee]  fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+          <div className='modal container w-96 bg-[#eeeeee]  fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
               <div className='flex items-center justify-between p-2 bg-white'>
                   <div className='text-sm font-semibold uppercase font-sans'>Apply Coupon</div>
                   <div className='text-xl'><button onClick={()=>closeModal(activeCoupon,savings)}><RxCross2 /></button></div>
