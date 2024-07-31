@@ -24,7 +24,7 @@ const Coupons = () => {
                     setnetworkErr(true)
                 })
         }
-        // getCoupons();
+        getCoupons();
     }, []);
     
   return (
@@ -47,7 +47,7 @@ const Coupons = () => {
   
                     ) : (
                             <div className='flex items-center justify-center flex-col text-center'>
-                                <img className='sm:h-48 md:h-72' src="/dist/Images/3778871.jpg" alt="Empty coupon" />
+                                <img className='sm:h-48 md:h-72' src="/Images/3778871.jpg" alt="Empty coupon" />
                                 <h1 className='font-semibold text-md mt-4 text-slate-600'>No Active coupons present!</h1>
                             </div>
                     )
