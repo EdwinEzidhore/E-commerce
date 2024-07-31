@@ -125,7 +125,7 @@ const Orders = () => {
     return (
         <div>
              <div className='sm:block md:hidden sm:py-0'><Nav/></div>
-            <div className='sm:mx-2 xl:p-5 '>
+            <div className='sm:mx-2 xl:p-5 h-screen overflow-auto'>
                 
                 <div className='filter lg:border lg:flex pb-3 md:p-5 md:mb-4 w-full'>
                     <div className='sm:flex justify-center  items-center lg:hidden gap-2 w-full '>
