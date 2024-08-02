@@ -65,7 +65,7 @@ const ProfilePage = () => {
                         {
                             isUser  && (
                                 <div className="sm:hidden  user md:flex items-center p-3 mb-4 shadow-lg bg-white">
-                                    { isUser.avatar? <div><img className='max-h-10 rounded-full' src={user && `${base_url}/${user.avatar.url}`} alt="" /></div>:<FaUserCircle  className='text-xl'/> }
+                                    { isUser.avatar && user ? <div><img className='max-h-10 rounded-full' src={`${user.avatar.url}`} alt="" /></div>:<FaUserCircle  className='text-xl'/> }
                                   <span className='ml-2 cursor-default font-poppins tracking-wide'>{user.name }</span>
                             </div>
                             ) 
