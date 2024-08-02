@@ -145,7 +145,7 @@ const Nav = () => {
                                           {
                                                             user ?
                                                                   user.avatar ?
-                                                                        <img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="" onClick={() => navigate('/profile')} /> : <FaUserCircle className='text-2xl' onClick={() => navigate('/profile')} />
+                                                                        <img className='h-8 border rounded-full' src={`${user.avatar.url}`} alt="" onClick={() => navigate('/profile')} /> : <FaUserCircle className='text-2xl' onClick={() => navigate('/profile')} />
                                                             : <button  onClick={()=>navigate('/Login')} className="p-[3px] relative">
                                                             <div className="absolute inset-0 bg-gradient-to-r from-[#1c7293] to-[#144c7d] rounded-lg" />
                                                             <div className="px-3 py-1  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent ">
@@ -176,7 +176,7 @@ const Nav = () => {
                         <div className='ml-5'>
                               <button className='text-white text-2xl' onClick={()=>navigate('/profile')}>
                                     {
-                                                      user && user.avatar ? <img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="profile" /> :
+                                                      user && user.avatar ? <img className='h-8 border rounded-full' src={`${user.avatar.url}`} alt="profile" /> :
                                                       <FaUserCircle />
                                     }
                               </button>

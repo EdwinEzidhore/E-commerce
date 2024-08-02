@@ -12,16 +12,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 
+const Allowedorigin= process.env.NODE_ENV == 'production' ?  'https://www.ezirefashion.store' : 'http://localhost:5173'
 
 app.use(cors({
-    origin: 'https://www.ezirefashion.store',
+    origin:Allowedorigin,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
 }));
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 
 

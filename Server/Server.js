@@ -19,7 +19,7 @@ process.on("unhandledRejection", (err) => {
 
 
 //config
-if (process.env.NODE_ENV !== 'PRODUCTION') {
+if (process.env.NODE_ENV !== 'production') {
     require("dotenv").config({
         path: 'Config/.env'
     });
@@ -30,6 +30,7 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
 
 ConnectDB();
 
-const server = app.listen(process.env.PORT, () => {
-    console.log(`server is listening on ${process.env.PORT}`);
+const port = process.env.PORT || 3006
+const server = app.listen(port, () => {
+    console.log(`server is listening on ${port}`);
 })

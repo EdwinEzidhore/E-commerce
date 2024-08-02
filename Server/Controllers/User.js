@@ -27,7 +27,7 @@ const Razorpay = require('razorpay');
 const Wishlist = require('../Model/User/Wishlist');
 const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt');
-
+const cloudinary = require('../Utils/Cloudinary')
 
 
 const razorpayInstance = new Razorpay({
@@ -39,81 +39,70 @@ const razorpayInstance = new Razorpay({
 
 router.post('/create-user', upload.single('file'), async (req, res, next) => {
 
-
     try {
         const { name, email, password } = req.body;
 
+        // Check if the email already exists
         const userEmail = await UserModel.findOne({ email });
         if (userEmail) {
-            if (req.file && req.file.filename) {
-                const filename = req.file.filename;
-                const filePath = `uploads/${filename}`;
-                
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.log(err);
-                        res.status(500).json({ message: "Error Deleting File" });
-                    } 
-                });
-            }
-            res.status(400).json({message:'Account already exists'})
-            // return next(new ErrorHandler("Account already exists", 400));
+            return res.status(400).json({ message: 'Account already exists' });
         }
-        if (!userEmail) {
 
-            /* *******Logic to capitalize the first letter of name ******* */
-            let Name = name;
-            let words=Name.trim().split(' ')
+        // Capitalize the first letter of each word in the name
+        const capitalizedName = name.trim().split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
 
-            Name = words.map((word) => {
-                
-                let letters=word.split('');
-                let capitalized=letters[0].toUpperCase(); 
-                letters[0]=capitalized
-                let new_word=letters.join('')
-                return new_word
-            })
+        let avatar = null;
 
-            let new_name=Name.join(' ')
-            
+        console.log(req.file);
+
+        if (req.file) {
+            try {
+                const options = {
+                    use_filename: true,
+                    unique_filename: false,
+                    overwrite: true,
+                };
+                const result = await cloudinary.uploader.upload(req.file.path, options);
+
+                avatar = {
+                    public_id: result.url,
+                    url:result.secure_url,
+                }
+
+            } catch (error) {
+                return next(new ErrorHandler(error.message,500));
+            }
+
+        }
+
+        
             const user = {
-                name: new_name,
+                name: capitalizedName,
                 email: email,
                 password: password,
-                ...(req.file ? {
-                    avatar: {
-                        public_id: req.file.filename,
-                        url: path.join(req.file.filename)
-                    }
-                } : { avatar: null }),
-                
-                
+                avatar
             };
+
             const activationToken = createActivationToken(user);
-            const activationurl = `${process.env.BASE_URL}/activation/${activationToken}`;
-    
-            try {
-                await sendMail({
-                    email: user.email,
-                    subject: 'Activate Your Account',
-                    message: `Hello ${user.name} please Click on the link to activate your account: ${activationurl}
-                    
-warm regards,
-EZIRE Fashion store
-                    `
-                });
-                
-                res.status(201).json({ success:true,message:`Please check your email: ${user.email} to activate your account`})
-    
-            } catch (err) {
-                return next(new ErrorHandler(err.message,500))
-            }
+            const activationUrl = `${process.env.BASE_URL}/activation/${activationToken}`;
+
+            sendMail({
+                email: user.email,
+                subject: 'Activate Your Account',
+                message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}\n\nWarm regards,\nEZIRE Fashion store`
+            })
+                .then(() => {
+                    res.status(201).json({ success: true, message: `Please check your email: ${user.email} to activate your account` });
+                })
+                .catch(err => next(new ErrorHandler(err.message, 500)));
+        
+        
+    } catch (err) {
+        next(new ErrorHandler(err.message, 400));
     }
-      
     
-} catch (err) {
-        return next(new ErrorHandler(err.message,400));
-}   
 });
 
 //function to create activation token
