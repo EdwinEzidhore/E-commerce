@@ -304,7 +304,7 @@ const Nav = () => {
                                           <div className='flex border-t-2 pt-3'>
                                           <div className='text-3xl text-white'>
                                     {
-                                                user && user.avatar ? <img className='h-8 border rounded-full' src={`${base_url}/${user.avatar.url}`} alt="profile" />:<FaUserCircle />
+                                                user && user.avatar ? <img className='h-8 border rounded-full' src={`${user.avatar.url}`} alt="profile" />:<FaUserCircle />
                                     } 
                                     </div>
                                     <div className='leading-3 ml-1'>
