@@ -101,8 +101,8 @@ router.get('/products', async (req, res,next) => {
     try {
         const  page  = parseInt(req.query.page);
         const pagelimit = 5;
-        const products = await ProductModel.find({}).skip((page*pagelimit)-pagelimit).limit(pagelimit)
-        const sorted = products.reverse();
+        const products = await ProductModel.find({}).sort({_id:-1}).skip((page*pagelimit)-pagelimit).limit(pagelimit)
+        // const sorted = products.reverse();
       
 
         if (products) {
