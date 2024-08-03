@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { MdDelete } from "react-icons/md";
 import { base_url } from '../../Config';
+import dayjs from 'dayjs';
 
 const AdminCoupon = () => {
     const navigate = useNavigate();
@@ -73,7 +74,7 @@ const AdminCoupon = () => {
                               <div className='text-center'>{coupon.couponType }</div>
                               <div className='text-center'>₹{ coupon.amount}</div>
                               <div className='text-center'>₹{ coupon.minimumPurchase}</div>
-                              <div className='text-center'>{ coupon.expiryDate}</div>
+                              <div className='text-center'>{dayjs(coupon.expiryDate).format("MMM DD, YYYY")}</div>
                               <div className='text-center font-semibold text-[#256961] uppercase text-sm'>{coupon.status }</div>
                               <div className=' text-center flex items-center justify-center space-x-4 gap-3'>
                                   <button className='uppercase text-sm outline outline-2 px-3 py-1 text-[#c82121] outline-[#c82121] hover:text-white hover:bg-[#d92626] font-semibold duration-300 rounded-md' onClick={() => blockCoupon(coupon)}>{coupon.status === 'Active' ? 'Block' : 'unblock'}</button>
