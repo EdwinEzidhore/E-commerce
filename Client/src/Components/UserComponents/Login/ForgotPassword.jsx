@@ -21,14 +21,16 @@ function ForgotPassword() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
    
-    const user = useSelector((state) => state.auth.auth.username);
+    // const user = useSelector((state) => state.auth.auth.username);
    
 
-    useEffect(() => {
-        if (recoveryMail === user) {
-            generateOTP();
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     if (recoveryMail === user) {
+    //         generateOTP();
+    //         setBtnLoading(false)
+    //         setShowOtpInput(true);
+    //     }
+    // }, [user]);
 
     const checkEmail = (e) => {
         e.preventDefault();
@@ -37,9 +39,10 @@ function ForgotPassword() {
             .then((res) => {
                 if (res.status === 200 & res.data.success === true) {
                    
-                    dispatch(setRecoveryMail(recoveryMail));
-                    setShowOtpInput(true);
+                    // dispatch(setRecoveryMail(recoveryMail));
+                    generateOTP(recoveryMail);
                     setBtnLoading(false)
+                    setShowOtpInput(true);
                 }
                 
             })
@@ -51,10 +54,10 @@ function ForgotPassword() {
             })
     };
 
-    const generateOTP = () => {
+    const generateOTP = (email) => {
         const loadingToastId = toast.loading('Sending OTP...');
 
-        axios.get(`${base_url}/api/v2/generate-otp/?email=${user}`)
+        axios.get(`${base_url}/api/v2/generate-otp/?email=${email}`)
             .then((res) => {
                
                 if (res.status === 201) {
