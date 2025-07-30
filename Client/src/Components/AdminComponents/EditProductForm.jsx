@@ -103,7 +103,7 @@ const EditProductForm = ({ product }) => {
 
     newImages.length > 0 && newImages.forEach((img) => {
       formData.append('file', img.file)
-      console.log(img.file);
+      // console.log(img.file);
     });
 
     let url=`editproduct/?id=${product._id}`

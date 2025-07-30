@@ -5,13 +5,13 @@ import {useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { add } from '../../../Redux/SingleProduct/SingleProductSlice';
 import { toast } from 'react-toastify';
-import Loading from '../Loading/Loading';
 import '../../../css/banner.css';
 import { Carousel } from "flowbite-react";
 import { base_url } from '../../../Config';
 
 
 const Home = () => {
+
     const [newArrivals, setNewArrivals] = useState([]);
     const [brands, setBrands] = useState([]);
     const navigate = useNavigate();
@@ -19,16 +19,17 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [networkErr, setNetworkErr] = useState(false);
 
+
+
     useEffect(() => {
         getFeatured();
-      
     }, []);
 
 
     const getFeatured = () => {
-        axios.get(`${base_url}/api/v2/featured`,{withCredentials:true})
+        axios.get(`http://localhost:3333/api/v2/featured`)
         .then((res) => {
-            
+            // console.log("res is",res);
             setNewArrivals(res.data.products);
             setBrands(res.data.Brands);
             setLoading(false);    
@@ -152,7 +153,7 @@ const Home = () => {
                 </div>
                 <div className='card-wrapper  container grid grid-rows-1 md:grid-cols-3 sm:grid-cols-1 gap-2 w-fit mb-5'>
                     {
-                        newArrivals.length > 0 ? newArrivals.map((product) => (
+                        newArrivals?.length > 0 ? newArrivals.map((product) => (
                             <div className='card h-fit relative  p-4 w-fit  sm:w-auto rounded-lg flex-none   shadow-lg bg-slate-50' key={product._id} >
                             <img className=' h-12 z-10 absolute left-0 top-0 drop-shadow-md' src="/Images/new (1).png" alt="products" />
                               
@@ -193,7 +194,11 @@ const Home = () => {
                               </div>
                           </div>
                         </div>
-                        )):''
+                        )) : (
+                                <div>
+                                    <h2>No featured products</h2>
+                                </div>
+                        )
                     }
 
                     
@@ -221,7 +226,7 @@ const Home = () => {
                 <div className='md:container  side-carosel-items flex  space-x-4 overflow-x-scroll overflow-y-hidden scrollbar-hide mb-5 md:p-5 sm:py-3 '>
                     
                     {
-                        brands.length > 0 ? brands.map((item,index) => (
+                        brands?.length > 0 ? brands.map((item,index) => (
                       
                         <div className=' h-44 md:h-60 bg-red-300 shadow-lg md:w-60 sm:w-40 flex-none rounded-tl-lg rounded-br-lg grid row-span-3 overflow-hidden relative scrollbar-hide' key={index}>
                         <img className='h-full object-contain hover:scale-105 duration-300' src={`${base_url}/${item.productImage[0]}`} alt="" />

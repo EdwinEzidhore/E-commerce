@@ -33,7 +33,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setBtnLoading(true)
+        setBtnLoading(true);
         await axios.post(`${base_url}/api/v2/login`, logininfo, { withCredentials: true })
             .then((res) => {
                 if (res.data.success == true) {

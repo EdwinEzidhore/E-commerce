@@ -464,7 +464,7 @@ router.delete('/image', async (req, res, next) => {
 
                     fs.unlink(filePath, (err) => {
                         if (err) {
-                            console.log(err);
+                            // console.log(err);
                             res.status(500).json({ message: "Error Deleting File" });
                         }
                     });

@@ -6,7 +6,7 @@ const UserModel=require('../Model/User/User')
 const isAuthenticated = CatchAsyncErrors(async (req, res, next) => {
     const {token} = req.cookies;
     
-
+    // console.log(token);
     if (!token) {
         return next(new ErrorHandler("Please login to continue",401));
     

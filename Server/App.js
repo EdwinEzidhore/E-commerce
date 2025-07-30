@@ -1,3 +1,4 @@
+
 const express = require('express');
 const ErrorHandler = require("./Middleware/Error");
 const bodyParser = require("body-parser");
@@ -6,24 +7,38 @@ const cors = require('cors');
 const app = express();
 
 
+const allowedOrigins = [
+  'http://localhost:5173',         
+  'https://ezirefashionstore-edwin-ezidhores-projects.vercel.app/'     
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+
 app.use('/', express.static('uploads'));
 app.use(express.static('Public/ProductImageuploads'));
 app.use(express.json());
 app.use(cookieParser());
 
 
-const Allowedorigin= process.env.NODE_ENV == 'production' ?  'https://www.ezirefashion.store' : 'http://localhost:5173'
 
-app.use(cors({
-    origin:Allowedorigin,
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type,Authorization'
-}));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+app.get("/", (req, res) => {
+  //  console.log("hello");
+   res.send("Server is running!");
+})
 
 
 //user

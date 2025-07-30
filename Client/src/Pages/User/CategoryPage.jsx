@@ -65,7 +65,7 @@ const CategoryPage = ({ category }) => {
     }
     const handleColorChange = (e) => {
         const { value, checked } = e.target;
-        console.log(value);
+        // console.log(value);
         if (checked) {
             setSelectedColor([...selectedColor, value])
         } else {
