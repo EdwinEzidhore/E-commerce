@@ -9,7 +9,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',         
-  'https://ezirefashionstore-edwin-ezidhores-projects.vercel.app/'     
+  'https://ezirefashionstore-edwin-ezidhores-projects.vercel.app'     
 ];
 
 app.use(cors({
