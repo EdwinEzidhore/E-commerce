@@ -27,7 +27,7 @@ const Home = () => {
 
 
     const getFeatured = () => {
-        axios.get(`http://localhost:3333/api/v2/featured`, {withCredentials :true})
+        axios.get(`${base_url}/api/v2/featured`, {withCredentials :true})
         .then((res) => {
             // console.log("res is",res);
             setNewArrivals(res.data.products);
